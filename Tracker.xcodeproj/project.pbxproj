@@ -14,6 +14,7 @@
 		500C65D229CF37A80066BB76 /* Tracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 500C65D029CF37A80066BB76 /* Tracker.xcdatamodeld */; };
 		500C65D429CF37AA0066BB76 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 500C65D329CF37AA0066BB76 /* Assets.xcassets */; };
 		500C65D729CF37AA0066BB76 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 500C65D529CF37AA0066BB76 /* LaunchScreen.storyboard */; };
+		5033715429E17A1300681B3B /* TrackerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5033715329E17A1300681B3B /* TrackerCell.swift */; };
 		5071855E29D8C95D0096588B /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5071855D29D8C95D0096588B /* LaunchScreenViewController.swift */; };
 		50E3248029D997E200C454F9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E3247F29D997E200C454F9 /* TabBarController.swift */; };
 		50E3248229D9985100C454F9 /* StaticticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E3248129D9985100C454F9 /* StaticticViewController.swift */; };
@@ -29,6 +30,7 @@
 		500C65D329CF37AA0066BB76 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		500C65D629CF37AA0066BB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		500C65D829CF37AA0066BB76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5033715329E17A1300681B3B /* TrackerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCell.swift; sourceTree = "<group>"; };
 		5071855D29D8C95D0096588B /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
 		50E3247F29D997E200C454F9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		50E3248129D9985100C454F9 /* StaticticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticticViewController.swift; sourceTree = "<group>"; };
@@ -64,9 +66,9 @@
 		500C65C629CF37A80066BB76 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				5033715129E179E900681B3B /* TrackersViewController */,
 				500C65C729CF37A80066BB76 /* AppDelegate.swift */,
 				500C65C929CF37A80066BB76 /* SceneDelegate.swift */,
-				500C65CB29CF37A80066BB76 /* TrackersViewController.swift */,
 				500C65CD29CF37A80066BB76 /* Main.storyboard */,
 				500C65D329CF37AA0066BB76 /* Assets.xcassets */,
 				500C65D529CF37AA0066BB76 /* LaunchScreen.storyboard */,
@@ -77,6 +79,23 @@
 				50E3248129D9985100C454F9 /* StaticticViewController.swift */,
 			);
 			path = Tracker;
+			sourceTree = "<group>";
+		};
+		5033715129E179E900681B3B /* TrackersViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5033715229E179FD00681B3B /* TrackerCell */,
+				500C65CB29CF37A80066BB76 /* TrackersViewController.swift */,
+			);
+			path = TrackersViewController;
+			sourceTree = "<group>";
+		};
+		5033715229E179FD00681B3B /* TrackerCell */ = {
+			isa = PBXGroup;
+			children = (
+				5033715329E17A1300681B3B /* TrackerCell.swift */,
+			);
+			path = TrackerCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,6 +169,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5033715429E17A1300681B3B /* TrackerCell.swift in Sources */,
 				500C65D229CF37A80066BB76 /* Tracker.xcdatamodeld in Sources */,
 				500C65CC29CF37A80066BB76 /* TrackersViewController.swift in Sources */,
 				5071855E29D8C95D0096588B /* LaunchScreenViewController.swift in Sources */,

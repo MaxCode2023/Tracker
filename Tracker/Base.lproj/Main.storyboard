@@ -23,28 +23,31 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-163" y="-732"/>
+            <point key="canvasLocation" x="762.59541984732823" y="-732.3943661971831"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="ykN-6x-eix">
+        <scene sceneID="eul-hp-Ybs">
             <objects>
-                <navigationController id="mgm-ro-Yjt" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="olc-k8-1f6">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dOr-Tf-qcG" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="0do-sR-NUb">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="OaL-br-Gzy"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="XeM-jn-cRV"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KGy-Rq-sXV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pqH-mk-db1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1121" y="-732"/>
+            <point key="canvasLocation" x="-164.12213740458014" y="-732.3943661971831"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="aJg-rq-v8a">
             <objects>
                 <tabBarController storyboardIdentifier="TabBarViewController" id="j3J-7a-PVs" customClass="TabBarController" customModule="Tracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <nil key="simulatedTopBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="o8B-1N-q9q">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

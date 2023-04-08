@@ -14,13 +14,13 @@ final class TabBarController: UITabBarController {
         
         view.backgroundColor = .white
         
-        let trackersViewController = TrackersViewController()
+        let trackersViewController = UINavigationController(rootViewController: TrackersViewController())
         trackersViewController.tabBarItem = UITabBarItem(
             title: NSLocalizedString("Трекеры", comment: ""),
             image: UIImage(named: "trackers icon"),
             selectedImage: nil)
         
-        let statisticViewController = StatisticViewController()
+        let statisticViewController = UINavigationController(rootViewController: StatisticViewController()) 
         statisticViewController.tabBarItem = UITabBarItem(
             title: NSLocalizedString("Статистика", comment: ""),
             image: UIImage(named: "statistic icon"),
