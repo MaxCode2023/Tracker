@@ -17,12 +17,28 @@ final class TrackersViewController: UIViewController {
     private let emptyTrackersLabel = UILabel()
     private let trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
+    private var categories: [TrackerCategory] = [TrackerCategory]()
+    private var visibleCategories: [TrackerCategory] = [TrackerCategory]()
+    private var completedTrackers: [TrackerRecord] = [TrackerRecord]()
+    private var currentDate: Date = Date()
+    
+    private let params: GeometricParams = GeometricParams(cellCount: 2, leftInset: 12, rightInset: 12, cellSpacing: 9)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setUI()
         setCollection()
         
+        //checkCategories()
+    }
+    
+    private func checkCategories() {
+        if categories.isEmpty && visibleCategories.isEmpty {
+            emptyTrackersView.isHidden = false
+        } else {
+            emptyTrackersView.isHidden = true
+        }
     }
     
     private func setUI() {
@@ -72,8 +88,8 @@ final class TrackersViewController: UIViewController {
             
             trackersCollectionView.topAnchor.constraint(equalTo: searchTextField.bottomAnchor, constant: 34),
             trackersCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            trackersCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            trackersCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+            trackersCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            trackersCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
     
@@ -83,7 +99,7 @@ final class TrackersViewController: UIViewController {
 
 }
 
-extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     private func setCollection() {
         trackersCollectionView.delegate = self
@@ -97,9 +113,36 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "trackerCell", for: indexPath)
-        cell.backgroundColor = .green
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let availableWidth = collectionView.frame.width - params.paddingWidth
+        let cellWidth =  availableWidth / CGFloat(params.cellCount)
+        return CGSize(width: cellWidth, height: 148)
+    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return params.cellSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        UIEdgeInsets(top: 10, left: params.leftInset, bottom: 10, right: params.rightInset)
+    }
+}
+
+struct GeometricParams {
+    let cellCount: Int
+    let leftInset: CGFloat
+    let rightInset: CGFloat
+    let cellSpacing: CGFloat
+    let paddingWidth: CGFloat
+    
+    init(cellCount: Int, leftInset: CGFloat, rightInset: CGFloat, cellSpacing: CGFloat) {
+        self.cellCount = cellCount
+        self.leftInset = leftInset
+        self.rightInset = rightInset
+        self.cellSpacing = cellSpacing
+        self.paddingWidth = leftInset + rightInset + CGFloat(cellCount - 1) * cellSpacing
+    }
 }

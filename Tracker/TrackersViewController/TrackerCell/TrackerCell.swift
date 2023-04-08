@@ -9,36 +9,43 @@ import UIKit
 
 class TrackerCollectionViewCell: UICollectionViewCell {
     let backView = UIView()
-    let icon = UIView(frame: CGRect(x: 0, y: 0, width: 24, height: 24))
-    let iconImage = UIImageView()
+    let emojiView = UIView()
+    let emojiImageView = UIImageView()
     let title = UILabel()
     let count = UILabel()
-    let plusButton = UIButton(frame: CGRect(x: 0, y: 0, width: 34, height: 34))
+    let plusButton = UIView()
+    let plusButtonTittle = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         backView.backgroundColor = .blue
         backView.layer.cornerRadius = 16
-        plusButton.setTitle("+", for: .normal)
         plusButton.backgroundColor = .blue
         plusButton.layer.cornerRadius = 17
         count.text = "1 день"
         title.text = "рандомная ячейка"
+        title.textColor = UIColor(named: "white")
+        plusButtonTittle.textColor = UIColor(named: "white")
         
         contentView.addSubview(backView)
-        backView.addSubview(icon)
+        backView.addSubview(emojiView)
         backView.addSubview(title)
-        icon.addSubview(iconImage)
+        emojiView.addSubview(emojiImageView)
+        plusButton.addSubview(plusButtonTittle)
+        emojiImageView.image = UIImage(named: "statistic icon")
+        plusButtonTittle.text = "+"
         
         contentView.addSubview(count)
         contentView.addSubview(plusButton)
         
         backView.translatesAutoresizingMaskIntoConstraints = false
-        icon.translatesAutoresizingMaskIntoConstraints = false
+        emojiView.translatesAutoresizingMaskIntoConstraints = false
+        emojiImageView.translatesAutoresizingMaskIntoConstraints = false
         title.translatesAutoresizingMaskIntoConstraints = false
         count.translatesAutoresizingMaskIntoConstraints = false
         plusButton.translatesAutoresizingMaskIntoConstraints = false
+        plusButtonTittle.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             backView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -46,18 +53,29 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             backView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             backView.heightAnchor.constraint(equalToConstant: 90),
             
-            icon.topAnchor.constraint(equalTo: backView.topAnchor, constant: 12),
-            icon.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 12),
+            emojiView.topAnchor.constraint(equalTo: backView.topAnchor, constant: 12),
+            emojiView.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 12),
+            emojiView.heightAnchor.constraint(equalToConstant: 24),
+            emojiView.widthAnchor.constraint(equalToConstant: 24),
             
-            title.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: 12),
+            emojiImageView.centerYAnchor.constraint(equalTo: emojiView.centerYAnchor),
+            emojiImageView.centerXAnchor.constraint(equalTo: emojiView.centerXAnchor),
+            
+            title.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -12),
             title.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 12),
+            title.trailingAnchor.constraint(equalTo: backView.trailingAnchor),
             
-            count.topAnchor.constraint(equalTo: backView.bottomAnchor, constant: 16),
-            count.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            count.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 12),
+            plusButton.topAnchor.constraint(equalTo: backView.bottomAnchor, constant: 8),
+            plusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            plusButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            plusButton.heightAnchor.constraint(equalToConstant: 34),
+            plusButton.widthAnchor.constraint(equalToConstant: 34),
             
-            plusButton.centerYAnchor.constraint(equalTo: count.centerYAnchor),
-            plusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12)
+            plusButtonTittle.centerXAnchor.constraint(equalTo: plusButton.centerXAnchor),
+            plusButtonTittle.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),
+            
+            count.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),
+            count.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12)
             
         ])
     }
