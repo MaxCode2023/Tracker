@@ -12,6 +12,17 @@ final class CreateTrackerViewController: UIViewController {
     let createHabit = UIButton()
     let createEvent = UIButton()
     
+    var vc: TrackersViewController
+    
+    init(vc: TrackersViewController) {
+        self.vc = vc
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         title = "Создание трекера"
         
@@ -21,13 +32,18 @@ final class CreateTrackerViewController: UIViewController {
         createEvent.addTarget(self, action: #selector(clickEvent), for: .touchUpInside)
     }
     
+    
     @objc func clickHabit() {
-        let vc = NewTrackerViewController(type: .habit)
+
+        let vc = NewTrackerViewController(type: .habit, vc: self.vc)
+        vc.modalPresentationStyle = .overCurrentContext
         self.present(vc, animated: true)
     }
     
     @objc func clickEvent() {
-        
+        let vc = NewTrackerViewController(type: .event, vc: self.vc)
+        vc.modalPresentationStyle = .overCurrentContext
+        self.present(vc, animated: true)
     }
     
     private func setUI() {

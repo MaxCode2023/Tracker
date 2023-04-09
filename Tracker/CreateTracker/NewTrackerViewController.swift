@@ -17,9 +17,11 @@ final class NewTrackerViewController: UIViewController {
     let cancelButton = UIButton()
     
     var type: TypeTracker
+    var vc: TrackersViewController
     
-    init(type: TypeTracker) {
+    init(type: TypeTracker, vc: TrackersViewController) {
         self.type = type
+        self.vc = vc
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -38,6 +40,17 @@ final class NewTrackerViewController: UIViewController {
         } else {
             
         }
+        
+        createButton.addTarget(self, action: #selector(clickCreate), for: .touchUpInside)
+    }
+    
+    @objc func clickCreate() {
+        let newCategory = TrackerCategory(head: "", trackers: [Tracker(id: 2, name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.friday])])
+        var updateCategoryList = vc.categories
+        updateCategoryList.append(newCategory)
+        
+        vc.categories = updateCategoryList
+        dismiss(animated: true)
     }
     
     private func setUI() {
@@ -63,6 +76,8 @@ final class NewTrackerViewController: UIViewController {
         cancelButton.layer.borderColor = UIColor(named: "red")?.cgColor
         cancelButton.layer.cornerRadius = 16
         cancelButton.tintColor = UIColor(named: "red")
+        nameTrackerTextField.backgroundColor = UIColor(named: "background view")
+        nameTrackerTextField.layer.cornerRadius = 16
         
         titleView.translatesAutoresizingMaskIntoConstraints = false
         nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false

@@ -17,7 +17,7 @@ final class TrackersViewController: UIViewController {
     private let emptyTrackersLabel = UILabel()
     private let trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
-    private var categories: [TrackerCategory] = [TrackerCategory]()
+    public var categories: [TrackerCategory] = [TrackerCategory]()
     private var visibleCategories: [TrackerCategory] = [TrackerCategory]()
     private var completedTrackers: [TrackerRecord] = [TrackerRecord]()
     private var currentDate: Date = Date()
@@ -99,7 +99,8 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc func addButtonTapped() {
-        let vc = CreateTrackerViewController()
+        print("CATEGORIES: \(categories)")
+        let vc = CreateTrackerViewController(vc: self)
         vc.title = "Создание трекера"
         present(vc, animated: true)
     }
