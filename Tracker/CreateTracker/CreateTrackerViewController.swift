@@ -22,7 +22,7 @@ final class CreateTrackerViewController: UIViewController {
     }
     
     @objc func clickHabit() {
-        let vc = NewTrackerViewController()
+        let vc = NewTrackerViewController(type: .habit)
         self.present(vc, animated: true)
     }
     

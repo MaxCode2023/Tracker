@@ -27,10 +27,15 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        categories.append(TrackerCategory(head: "", trackers:
+                                            [Tracker(id: 0, name: "test", color: .orange, emoji: "", schedule: [.friday]),
+                                             Tracker(id: 1, name: "privet", color: .blue, emoji: "", schedule: [.friday])]
+                                         ))
+        
         setUI()
         setCollection()
         
-        //checkCategories()
+        checkCategories()
     }
     
     private func checkCategories() {
@@ -110,12 +115,15 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return categories[section].trackers.count
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "trackerCell", for: indexPath)
-        return cell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "trackerCell", for: indexPath) as? TrackerCollectionViewCell
+        cell?.color = categories[0].trackers[indexPath.row].color
+        cell?.title.text = categories[0].trackers[indexPath.row].name
+        return cell!
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

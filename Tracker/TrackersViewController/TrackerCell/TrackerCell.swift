@@ -8,22 +8,61 @@
 import UIKit
 
 class TrackerCollectionViewCell: UICollectionViewCell {
+    
+    public var color: UIColor? {
+        didSet {
+            backView.backgroundColor = color != nil ? color : .green
+            plusButton.backgroundColor = color != nil ? color : .green
+        }
+    }
+    
     let backView = UIView()
     let emojiView = UIView()
     let emojiImageView = UIImageView()
     let title = UILabel()
-    let count = UILabel()
+    let countLabel = UILabel()
     let plusButton = UIView()
     let plusButtonTittle = UILabel()
+    let plusButtonImage = UIImageView()
+    
+    var count = 0
+    var isCompleted = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backView.backgroundColor = .blue
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickPlus))
+        plusButton.addGestureRecognizer(tapGesture)
+
+        setUI()
+    }
+    
+    @objc func clickPlus() {
+        isCompleted = !isCompleted
+        
+        if isCompleted {
+            plusButton.alpha = 0.3
+            count = count + 1
+            plusButtonImage.isHidden = false
+            plusButtonTittle.isHidden = true
+        } else {
+            plusButton.alpha = 1
+            count = count - 1
+            plusButtonImage.isHidden = true
+            plusButtonTittle.isHidden = false
+        }
+        countLabel.text = "\(count) день"
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setUI() {
+        
         backView.layer.cornerRadius = 16
-        plusButton.backgroundColor = .blue
         plusButton.layer.cornerRadius = 17
-        count.text = "1 день"
+        countLabel.text = "\(count) день"
         title.text = "рандомная ячейка"
         title.textColor = UIColor(named: "white")
         plusButtonTittle.textColor = UIColor(named: "white")
@@ -33,19 +72,23 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         backView.addSubview(title)
         emojiView.addSubview(emojiImageView)
         plusButton.addSubview(plusButtonTittle)
+        plusButton.addSubview(plusButtonImage)
         emojiImageView.image = UIImage(named: "statistic icon")
         plusButtonTittle.text = "+"
+        plusButtonImage.isHidden = true
+        plusButtonImage.image = UIImage(named: "done")
         
-        contentView.addSubview(count)
+        contentView.addSubview(countLabel)
         contentView.addSubview(plusButton)
         
         backView.translatesAutoresizingMaskIntoConstraints = false
         emojiView.translatesAutoresizingMaskIntoConstraints = false
         emojiImageView.translatesAutoresizingMaskIntoConstraints = false
         title.translatesAutoresizingMaskIntoConstraints = false
-        count.translatesAutoresizingMaskIntoConstraints = false
+        countLabel.translatesAutoresizingMaskIntoConstraints = false
         plusButton.translatesAutoresizingMaskIntoConstraints = false
         plusButtonTittle.translatesAutoresizingMaskIntoConstraints = false
+        plusButtonImage.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             backView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -74,14 +117,13 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             plusButtonTittle.centerXAnchor.constraint(equalTo: plusButton.centerXAnchor),
             plusButtonTittle.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),
             
-            count.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),
-            count.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12)
+            plusButtonImage.centerXAnchor.constraint(equalTo: plusButton.centerXAnchor),
+            plusButtonImage.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),
+            
+            countLabel.centerYAnchor.constraint(equalTo: plusButton.centerYAnchor),
+            countLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12)
             
         ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
 }
