@@ -19,6 +19,8 @@
 		5033715929E1AB5300681B3B /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5033715829E1AB5300681B3B /* TrackerCategory.swift */; };
 		5033715B29E1ABDC00681B3B /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5033715A29E1ABDC00681B3B /* TrackerRecord.swift */; };
 		5071855E29D8C95D0096588B /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5071855D29D8C95D0096588B /* LaunchScreenViewController.swift */; };
+		5077620129E2A40A0033FBC4 /* CreateTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5077620029E2A40A0033FBC4 /* CreateTrackerViewController.swift */; };
+		5077620329E2AB4B0033FBC4 /* NewTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5077620229E2AB4B0033FBC4 /* NewTrackerViewController.swift */; };
 		50E3248029D997E200C454F9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E3247F29D997E200C454F9 /* TabBarController.swift */; };
 		50E3248229D9985100C454F9 /* StaticticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E3248129D9985100C454F9 /* StaticticViewController.swift */; };
 /* End PBXBuildFile section */
@@ -38,6 +40,8 @@
 		5033715829E1AB5300681B3B /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
 		5033715A29E1ABDC00681B3B /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
 		5071855D29D8C95D0096588B /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
+		5077620029E2A40A0033FBC4 /* CreateTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerViewController.swift; sourceTree = "<group>"; };
+		5077620229E2AB4B0033FBC4 /* NewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerViewController.swift; sourceTree = "<group>"; };
 		50E3247F29D997E200C454F9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		50E3248129D9985100C454F9 /* StaticticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticticViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -72,6 +76,7 @@
 		500C65C629CF37A80066BB76 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				507761FF29E2A3F30033FBC4 /* CreateTracker */,
 				5033715129E179E900681B3B /* TrackersViewController */,
 				500C65C729CF37A80066BB76 /* AppDelegate.swift */,
 				500C65C929CF37A80066BB76 /* SceneDelegate.swift */,
@@ -113,6 +118,15 @@
 				5033715A29E1ABDC00681B3B /* TrackerRecord.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		507761FF29E2A3F30033FBC4 /* CreateTracker */ = {
+			isa = PBXGroup;
+			children = (
+				5077620029E2A40A0033FBC4 /* CreateTrackerViewController.swift */,
+				5077620229E2AB4B0033FBC4 /* NewTrackerViewController.swift */,
+			);
+			path = CreateTracker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,6 +209,8 @@
 				50E3248029D997E200C454F9 /* TabBarController.swift in Sources */,
 				500C65C829CF37A80066BB76 /* AppDelegate.swift in Sources */,
 				5033715729E1AA3B00681B3B /* Tracker.swift in Sources */,
+				5077620329E2AB4B0033FBC4 /* NewTrackerViewController.swift in Sources */,
+				5077620129E2A40A0033FBC4 /* CreateTrackerViewController.swift in Sources */,
 				50E3248229D9985100C454F9 /* StaticticViewController.swift in Sources */,
 				500C65CA29CF37A80066BB76 /* SceneDelegate.swift in Sources */,
 			);

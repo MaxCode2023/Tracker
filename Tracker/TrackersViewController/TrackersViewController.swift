@@ -94,7 +94,9 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc func addButtonTapped() {
-        print("addButtonTapped")
+        let vc = CreateTrackerViewController()
+        vc.title = "Создание трекера"
+        present(vc, animated: true)
     }
 
 }
