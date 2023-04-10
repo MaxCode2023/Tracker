@@ -19,6 +19,8 @@ final class NewTrackerViewController: UIViewController {
     var type: TypeTracker
     var vc: TrackersViewController
     
+    private let tableNames = ["Категория", "Расписание"]
+    
     init(type: TypeTracker, vc: TrackersViewController) {
         self.type = type
         self.vc = vc
@@ -42,14 +44,23 @@ final class NewTrackerViewController: UIViewController {
         }
         
         createButton.addTarget(self, action: #selector(clickCreate), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(clickCancel), for: .touchUpInside)
+        
+        settingsTrackerTableView.delegate = self
+        settingsTrackerTableView.dataSource = self
+        settingsTrackerTableView.register(NewTrackerTableViewCell.self, forCellReuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
     }
     
     @objc func clickCreate() {
-        let newCategory = TrackerCategory(head: "", trackers: [Tracker(id: 2, name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.friday])])
+        let newCategory = TrackerCategory(head: "", trackers: [Tracker(id: vc.categories[0].trackers.count+1, name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.friday])])
         var updateCategoryList = vc.categories
         updateCategoryList.append(newCategory)
         
         vc.categories = updateCategoryList
+        dismiss(animated: true)
+    }
+    
+    @objc func clickCancel() {
         dismiss(animated: true)
     }
     
@@ -68,16 +79,18 @@ final class NewTrackerViewController: UIViewController {
         createButton.backgroundColor = UIColor(named: "grey")
         createButton.layer.cornerRadius = 16
         createButton.setTitle("Создать", for: .normal)
-        createButton.tintColor = UIColor(named: "white")
+        createButton.setTitleColor(UIColor(named: "white"), for: .normal)
         
         cancelButton.backgroundColor = UIColor(named: "white")
         cancelButton.setTitle("Отменить", for: .normal)
         cancelButton.layer.borderWidth = 1
         cancelButton.layer.borderColor = UIColor(named: "red")?.cgColor
         cancelButton.layer.cornerRadius = 16
-        cancelButton.tintColor = UIColor(named: "red")
+        cancelButton.setTitleColor(UIColor(named: "red"), for: .normal)
         nameTrackerTextField.backgroundColor = UIColor(named: "background view")
         nameTrackerTextField.layer.cornerRadius = 16
+        
+        settingsTrackerTableView.layer.cornerRadius = 16
         
         titleView.translatesAutoresizingMaskIntoConstraints = false
         nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -120,6 +133,23 @@ final class NewTrackerViewController: UIViewController {
         
         
     }
+    
+}
+
+extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return type == .habit ? 2 : 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        let cell = NewTrackerTableViewCell(style: .default, reuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
+        cell.name.text = tableNames[indexPath.row]
+        cell.backgroundColor = UIColor(named: "background view")
+
+        return cell
+    }
+    
     
 }
 

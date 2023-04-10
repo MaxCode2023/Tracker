@@ -23,6 +23,7 @@
 		5077620329E2AB4B0033FBC4 /* NewTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5077620229E2AB4B0033FBC4 /* NewTrackerViewController.swift */; };
 		50E3248029D997E200C454F9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E3247F29D997E200C454F9 /* TabBarController.swift */; };
 		50E3248229D9985100C454F9 /* StaticticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E3248129D9985100C454F9 /* StaticticViewController.swift */; };
+		50ED959929E472590021A5D1 /* NewTrackerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ED959829E472590021A5D1 /* NewTrackerTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		5077620229E2AB4B0033FBC4 /* NewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerViewController.swift; sourceTree = "<group>"; };
 		50E3247F29D997E200C454F9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		50E3248129D9985100C454F9 /* StaticticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticticViewController.swift; sourceTree = "<group>"; };
+		50ED959829E472590021A5D1 /* NewTrackerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,9 +126,18 @@
 			isa = PBXGroup;
 			children = (
 				5077620029E2A40A0033FBC4 /* CreateTrackerViewController.swift */,
-				5077620229E2AB4B0033FBC4 /* NewTrackerViewController.swift */,
+				50ED959729E472370021A5D1 /* NewTracker */,
 			);
 			path = CreateTracker;
+			sourceTree = "<group>";
+		};
+		50ED959729E472370021A5D1 /* NewTracker */ = {
+			isa = PBXGroup;
+			children = (
+				5077620229E2AB4B0033FBC4 /* NewTrackerViewController.swift */,
+				50ED959829E472590021A5D1 /* NewTrackerTableViewCell.swift */,
+			);
+			path = NewTracker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5033715429E17A1300681B3B /* TrackerCell.swift in Sources */,
+				50ED959929E472590021A5D1 /* NewTrackerTableViewCell.swift in Sources */,
 				500C65D229CF37A80066BB76 /* Tracker.xcdatamodeld in Sources */,
 				500C65CC29CF37A80066BB76 /* TrackersViewController.swift in Sources */,
 				5033715B29E1ABDC00681B3B /* TrackerRecord.swift in Sources */,
