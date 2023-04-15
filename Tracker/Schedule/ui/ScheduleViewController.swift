@@ -13,14 +13,27 @@ final class ScheduleViewController: UIViewController {
     private let tableView = UITableView()
     private let confirmButton = UIButton()
     
-    private let scheduleList = ScheduleList()
+    private var scheduleList: [ScheduleElement] = []
+    
+    private var delegate: ScheduleViewControllerDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scheduleList = createCheduleList()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.reuseIdentifier)
         setUi()
+    }
+    
+    private func createCheduleList() -> [ScheduleElement] {
+        [ScheduleElement(weekDay: .monday, isChoosen: false),
+         ScheduleElement(weekDay: .tuesday, isChoosen: false),
+         ScheduleElement(weekDay: .wednesday, isChoosen: false),
+         ScheduleElement(weekDay: .thursday, isChoosen: false),
+         ScheduleElement(weekDay: .friday, isChoosen: false),
+         ScheduleElement(weekDay: .saturday, isChoosen: false),
+         ScheduleElement(weekDay: .sunday, isChoosen: false)]
     }
     
     private func setUi() {
@@ -39,6 +52,7 @@ final class ScheduleViewController: UIViewController {
         confirmButton.titleLabel?.font = .systemFont(ofSize: 16)
         confirmButton.layer.cornerRadius = 16
         confirmButton.backgroundColor = UIColor(named: "black")
+        confirmButton.addTarget(self, action: #selector(clickConfirm), for: .touchUpInside)
         
         titleLabel.text = "Расписание"
         titleLabel.font = .systemFont(ofSize: 16)
@@ -60,11 +74,26 @@ final class ScheduleViewController: UIViewController {
         ])
     }
     
+    @objc private func clickConfirm() {
+        let weekList = scheduleList
+            .filter { $0.isChoosen }
+            .map { $0.weekDay }
+        delegate?.didFinishPickingWeekDays(weekDayList: weekList)
+        dismiss(animated: true)
+    }
+    
+}
+
+extension ScheduleViewController: ScheduleCellDelegate {
+    func didWeekDayIsOnChanged(scheduleElement: ScheduleElement) {
+        scheduleList = scheduleList.filter { $0.weekDay != scheduleElement.weekDay }
+        scheduleList.append(scheduleElement)
+    }
 }
 
 extension ScheduleViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return scheduleList.scheduleList.count
+        return scheduleList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -73,7 +102,8 @@ extension ScheduleViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let scheduleElement = scheduleList.scheduleList[indexPath.row]
+        let scheduleElement = scheduleList[indexPath.row]
+        scheduleListCell.delegate = self
         scheduleListCell.configCell(for: scheduleElement)
         return scheduleListCell
     }
