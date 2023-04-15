@@ -10,17 +10,29 @@ import UIKit
 final class NewTrackerTableViewCell: UITableViewCell {
     static let reuseIdentifier = "newTrackerCell"
     public var name = UILabel()
+    public var arrow = UIImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         addSubview(name)
+        addSubview(arrow)
+        
+        arrow.image = UIImage(named: "arrow")
         
         name.translatesAutoresizingMaskIntoConstraints = false
+        arrow.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            name.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            name.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            
+            self.heightAnchor.constraint(equalToConstant: 75),
+            
+            name.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            name.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            
+            arrow.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            arrow.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16)
+            
         ])
     }
     

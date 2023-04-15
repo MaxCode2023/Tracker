@@ -48,11 +48,13 @@ final class NewTrackerViewController: UIViewController {
         
         settingsTrackerTableView.delegate = self
         settingsTrackerTableView.dataSource = self
+        settingsTrackerTableView.separatorStyle = .singleLine
+        settingsTrackerTableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         settingsTrackerTableView.register(NewTrackerTableViewCell.self, forCellReuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
     }
     
     @objc func clickCreate() {
-        let newCategory = TrackerCategory(head: "", trackers: [Tracker(id: vc.categories[0].trackers.count+1, name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.friday])])
+        let newCategory = TrackerCategory(head: "545", trackers: [Tracker(id: UInt(vc.categories[0].trackers.count+1), name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.friday])])
         var updateCategoryList = vc.categories
         updateCategoryList.append(newCategory)
         
@@ -89,6 +91,13 @@ final class NewTrackerViewController: UIViewController {
         cancelButton.setTitleColor(UIColor(named: "red"), for: .normal)
         nameTrackerTextField.backgroundColor = UIColor(named: "background view")
         nameTrackerTextField.layer.cornerRadius = 16
+        nameTrackerTextField.placeholder = "Введите название трекера"
+        
+        let textFieldPadding = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: nameTrackerTextField.frame.height))
+        nameTrackerTextField.leftView = textFieldPadding
+        nameTrackerTextField.leftViewMode = .always
+        nameTrackerTextField.rightView = textFieldPadding
+        nameTrackerTextField.rightViewMode = .always
         
         settingsTrackerTableView.layer.cornerRadius = 16
         
@@ -111,6 +120,7 @@ final class NewTrackerViewController: UIViewController {
             settingsTrackerTableView.topAnchor.constraint(equalTo: nameTrackerTextField.bottomAnchor, constant: 24),
             settingsTrackerTableView.leadingAnchor.constraint(equalTo: nameTrackerTextField.leadingAnchor),
             settingsTrackerTableView.trailingAnchor.constraint(equalTo: nameTrackerTextField.trailingAnchor),
+            settingsTrackerTableView.heightAnchor.constraint(equalToConstant: 150),
             
             emojiAndColorCollectionView.topAnchor.constraint(equalTo: settingsTrackerTableView.bottomAnchor, constant: 32),
             emojiAndColorCollectionView.leadingAnchor.constraint(equalTo: nameTrackerTextField.leadingAnchor),

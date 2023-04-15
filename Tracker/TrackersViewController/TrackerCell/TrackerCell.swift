@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol TrackerCellDelegate {
+    func appendToCompletedCategories(id: UInt)
+}
+
 class TrackerCollectionViewCell: UICollectionViewCell {
     
     public var color: UIColor? {
@@ -25,6 +29,8 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     let plusButtonTittle = UILabel()
     let plusButtonImage = UIImageView()
     
+    var id: UInt?
+    var delegate: TrackerCellDelegate?
     var count = 0
     var isCompleted = false
     
@@ -45,6 +51,8 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             count = count + 1
             plusButtonImage.isHidden = false
             plusButtonTittle.isHidden = true
+            guard let id = id else {return}
+            delegate?.appendToCompletedCategories(id: id)
         } else {
             plusButton.alpha = 1
             count = count - 1
