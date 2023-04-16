@@ -23,4 +23,14 @@ public enum Week: Int {
     case friday = 6
     case saturday = 7
     case sunday = 1
+//=======
+//public enum Week: String {
+//    case monday = "Понедельник"
+//    case tuesday = "Вторник"
+//    case wednesday = "Среда"
+//    case thursday = "Четверг"
+//    case friday = "Пятница"
+//    case saturday = "Суббота"
+//    case sunday = "Воскресенье"
+//>>>>>>> sprint_14_schedule
 }
