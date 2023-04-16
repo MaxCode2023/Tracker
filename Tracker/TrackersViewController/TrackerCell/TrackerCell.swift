@@ -9,6 +9,7 @@ import UIKit
 
 protocol TrackerCellDelegate {
     func appendToCompletedCategories(id: UInt)
+    func removeCompletedCategories(id: UInt)
 }
 
 class TrackerCollectionViewCell: UICollectionViewCell {
@@ -30,6 +31,7 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     let plusButtonImage = UIImageView()
     
     var id: UInt?
+    var date: Date?
     var delegate: TrackerCellDelegate?
     var count = 0
     var isCompleted = false
@@ -44,22 +46,27 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func clickPlus() {
-        isCompleted = !isCompleted
-        
-        if isCompleted {
-            plusButton.alpha = 0.3
-            count = count + 1
-            plusButtonImage.isHidden = false
-            plusButtonTittle.isHidden = true
-            guard let id = id else {return}
-            delegate?.appendToCompletedCategories(id: id)
+        if date ?? Date() > Date() {
+            return
         } else {
-            plusButton.alpha = 1
-            count = count - 1
-            plusButtonImage.isHidden = true
-            plusButtonTittle.isHidden = false
+            isCompleted = !isCompleted
+            guard let id = id else {return}
+            if isCompleted {
+                plusButton.alpha = 0.3
+                count = count + 1
+                plusButtonImage.isHidden = false
+                plusButtonTittle.isHidden = true
+                
+                delegate?.appendToCompletedCategories(id: id)
+            } else {
+                plusButton.alpha = 1
+                count = count - 1
+                plusButtonImage.isHidden = true
+                plusButtonTittle.isHidden = false
+                delegate?.removeCompletedCategories(id: id)
+            }
+            countLabel.text = "\(count) день"
         }
-        countLabel.text = "\(count) день"
     }
     
     required init?(coder: NSCoder) {

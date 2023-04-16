@@ -9,8 +9,6 @@ import UIKit
 import Foundation
 
 final class TrackersViewController: UIViewController {
-    
-    
 
     private let datePicker = UIDatePicker()
     private let trackersLabel = UILabel()
@@ -22,8 +20,13 @@ final class TrackersViewController: UIViewController {
     
     public var categories: [TrackerCategory] = [TrackerCategory]()
     private var visibleCategories: [TrackerCategory] = [TrackerCategory]()
-    public var completedTrackers: [TrackerRecord] = [TrackerRecord]()
+    private var completedTrackers: [TrackerRecord] = [TrackerRecord]()
+    private var completedTrackerIds = Set<UInt>()
+
     private var currentDate: Date = Date()
+    
+    static let didChangeCollectionNotification = Notification.Name(rawValue: "TrackersCollectionDidChange")
+    private var trackersCollectionObserver: NSObjectProtocol?
     
     private let params: GeometricParams = GeometricParams(cellCount: 2, leftInset: 12, rightInset: 12, cellSpacing: 9)
     
@@ -38,7 +41,7 @@ final class TrackersViewController: UIViewController {
                                             [Tracker(id: 3, name: "test", color: .green, emoji: "", schedule: [.friday])]
                                                            ))
         categories.append(TrackerCategory(head: "testovy3", trackers:
-                                            [Tracker(id: 3, name: "test", color: .gray, emoji: "", schedule: [.friday])]
+                                            [Tracker(id: 4, name: "test", color: .gray, emoji: "", schedule: [.friday])]
                                                            ))
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
@@ -48,6 +51,8 @@ final class TrackersViewController: UIViewController {
         setCollection()
         
         checkCategories()
+        addObserverForCollection()
+        
     }
     
     private func checkCategories() {
@@ -112,9 +117,7 @@ final class TrackersViewController: UIViewController {
     private func setVisibleCategories() {
         let calendar = Calendar.current
         let weekday = calendar.component(.weekday, from: currentDate)
-        
-
-        
+         
         visibleCategories = categories.filter { trackerCategory in
             trackerCategory.trackers.contains { tracker in
                 tracker.schedule.contains { week in
@@ -122,11 +125,22 @@ final class TrackersViewController: UIViewController {
                 }
             }
         }
-        
-//        visibleCategories = filteredCategories
-//        filteredVisibleCategories = visibleCategories
         checkCategories()
         trackersCollectionView.reloadData()
+ 
+    }
+    
+    private func addObserverForCollection() {
+        trackersCollectionObserver = NotificationCenter.default
+            .addObserver(
+                forName: TrackersViewController.didChangeCollectionNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.setVisibleCategories()
+                self.trackersCollectionView.reloadData()
+            }
     }
     
     @objc func addButtonTapped() {
@@ -183,6 +197,7 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
         cell?.color = visibleCategories[indexPath.section].trackers[indexPath.row].color
         cell?.title.text = visibleCategories[indexPath.section].trackers[indexPath.row].name
         cell?.id = visibleCategories[indexPath.section].trackers[indexPath.row].id
+        cell?.date = currentDate
         cell?.delegate = self
         return cell!
     }
@@ -204,7 +219,6 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
 
 extension TrackersViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        let data = visibleCategories
         if searchText.isEmpty || searchText == " " {
             setVisibleCategories()
         } else {
@@ -224,6 +238,11 @@ extension TrackersViewController: UISearchBarDelegate {
 extension TrackersViewController: TrackerCellDelegate {
     func appendToCompletedCategories(id: UInt) {
         completedTrackers.append(TrackerRecord(id: id, date: datePicker.date))
+        completedTrackerIds.insert(id)
+    }
+    
+    func removeCompletedCategories(id: UInt) {
+        completedTrackerIds.remove(id)
     }
 }
 

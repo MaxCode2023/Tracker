@@ -30,8 +30,7 @@ final class NewTrackerViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
+
     override func viewDidLoad() {
         setUI()
         
@@ -54,11 +53,29 @@ final class NewTrackerViewController: UIViewController {
     }
     
     @objc func clickCreate() {
-        let newCategory = TrackerCategory(head: "545", trackers: [Tracker(id: UInt(vc.categories[0].trackers.count+1), name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.friday])])
+        let existTrackerCategory = vc.categories.first {
+            //тут вместо "" надо будет вставить выбранную категорию из таблицы
+            $0.head == ""
+        }
+    
+        var newCategory: TrackerCategory
+        
+        if existTrackerCategory != nil {
+            newCategory = TrackerCategory(head: existTrackerCategory!.head, trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1), name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.friday])])
+        } else {
+            newCategory = TrackerCategory(head: "Новая категория", trackers: [Tracker(id: 0, name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.friday])])
+        }
+        
         var updateCategoryList = vc.categories
         updateCategoryList.append(newCategory)
-        
         vc.categories = updateCategoryList
+        
+        NotificationCenter.default
+            .post(
+                name: TrackersViewController.didChangeCollectionNotification,
+                object: self,
+                userInfo: nil)
+        
         dismiss(animated: true)
     }
     
@@ -120,7 +137,7 @@ final class NewTrackerViewController: UIViewController {
             settingsTrackerTableView.topAnchor.constraint(equalTo: nameTrackerTextField.bottomAnchor, constant: 24),
             settingsTrackerTableView.leadingAnchor.constraint(equalTo: nameTrackerTextField.leadingAnchor),
             settingsTrackerTableView.trailingAnchor.constraint(equalTo: nameTrackerTextField.trailingAnchor),
-            settingsTrackerTableView.heightAnchor.constraint(equalToConstant: 150),
+            settingsTrackerTableView.heightAnchor.constraint(equalToConstant: type == .habit ? 150 : 75),
             
             emojiAndColorCollectionView.topAnchor.constraint(equalTo: settingsTrackerTableView.bottomAnchor, constant: 32),
             emojiAndColorCollectionView.leadingAnchor.constraint(equalTo: nameTrackerTextField.leadingAnchor),
@@ -137,13 +154,8 @@ final class NewTrackerViewController: UIViewController {
             createButton.widthAnchor.constraint(equalToConstant: 161),
             createButton.heightAnchor.constraint(equalToConstant: 60),
             createButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
-            
-            
         ])
-        
-        
     }
-    
 }
 
 extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
@@ -160,7 +172,13 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 {
+            //переход к выбору категории
+        } else if indexPath.row == 1 {
+            //переход к расписанию
+        }
+    }
 }
 
 public enum TypeTracker {
