@@ -23,7 +23,7 @@ final class ScheduleCell: UITableViewCell {
         
         contentView.addSubview(weekDayLabel)
         contentView.addSubview(weekDaySwitch)
-        weekDayLabel.text = element.weekDay.rawValue
+        weekDayLabel.text = element.weekDay.getName()
         weekDayLabel.font = .systemFont(ofSize: 17)
         weekDayLabel.textColor = UIColor(named: "black")
         weekDaySwitch.isOn = element.isChoosen

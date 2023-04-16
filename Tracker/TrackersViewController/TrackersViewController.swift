@@ -196,6 +196,20 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "trackerCell", for: indexPath) as? TrackerCollectionViewCell
         cell?.color = visibleCategories[indexPath.section].trackers[indexPath.row].color
         cell?.title.text = visibleCategories[indexPath.section].trackers[indexPath.row].name
+        
+        let countCompleted = completedTrackers.filter {
+            $0.id == cell?.id
+        }.count
+        cell?.count = countCompleted
+        
+        if completedTrackers.contains(where: {
+            $0.id == cell?.id && $0.date == currentDate
+        }) {
+            cell?.isCompleted = true
+        } else {
+            cell?.isCompleted = false
+        }
+        
         cell?.id = visibleCategories[indexPath.section].trackers[indexPath.row].id
         cell?.date = currentDate
         cell?.delegate = self

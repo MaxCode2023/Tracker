@@ -15,7 +15,7 @@ final class ScheduleViewController: UIViewController {
     
     private var scheduleList: [ScheduleElement] = []
     
-    private var delegate: ScheduleViewControllerDelegate? = nil
+    var delegate: ScheduleViewControllerDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +40,8 @@ final class ScheduleViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(tableView)
         view.addSubview(confirmButton)
+        
+        view.backgroundColor = UIColor(named: "white")
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
