@@ -8,13 +8,8 @@
 import UIKit
 
 final class NewTrackerViewController: UIViewController, ScheduleViewControllerDelegate {
-    func didFinishPickingWeekDays(weekDayList: [Week]) {
-        choosedWeekday = weekDayList
-        settingsTrackerTableView.reloadData()
-    }
     
-    
-    let titleView = UILabel()
+    let titleLabel = UILabel()
     let nameTrackerTextField = UITextField()
     let settingsTrackerTableView = UITableView()
     let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
@@ -61,6 +56,11 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         settingsTrackerTableView.register(NewTrackerTableViewCell.self, forCellReuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
     }
     
+    func didFinishPickingWeekDays(weekDayList: [Week]) {
+        choosedWeekday = weekDayList
+        settingsTrackerTableView.reloadData()
+    }
+    
     @objc func clickCreate() {
         let existTrackerCategory = vc.categories.first {
             //тут вместо "" надо будет вставить выбранную категорию из таблицы
@@ -69,10 +69,14 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
     
         var newCategory: TrackerCategory
         
-        if existTrackerCategory != nil {
-            newCategory = TrackerCategory(head: existTrackerCategory!.head, trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1), name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: choosedWeekday ?? [])])
+        if type == .habit {
+            if existTrackerCategory != nil {
+                newCategory = TrackerCategory(head: existTrackerCategory!.head, trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1), name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: choosedWeekday ?? [])])
+            } else {
+                newCategory = TrackerCategory(head: "Новая категория", trackers: [Tracker(id: 0, name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: choosedWeekday ?? [])])
+            }
         } else {
-            newCategory = TrackerCategory(head: "Новая категория", trackers: [Tracker(id: 0, name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: choosedWeekday ?? [])])
+            newCategory = TrackerCategory(head: existTrackerCategory!.head, trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1), name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.wednesday, .tuesday, .thursday, .sunday, .saturday, .monday, .friday])])
         }
         
         var updateCategoryList = vc.categories
@@ -95,9 +99,9 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
     private func setUI() {
         
         view.backgroundColor = UIColor(named: "white")
-        titleView.text = "Новая привычка"
+        titleLabel.text = "Новая привычка"
         
-        view.addSubview(titleView)
+        view.addSubview(titleLabel)
         view.addSubview(nameTrackerTextField)
         view.addSubview(settingsTrackerTableView)
         view.addSubview(emojiAndColorCollectionView)
@@ -108,13 +112,17 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         createButton.layer.cornerRadius = 16
         createButton.setTitle("Создать", for: .normal)
         createButton.setTitleColor(UIColor(named: "white"), for: .normal)
-        
+        createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+
         cancelButton.backgroundColor = UIColor(named: "white")
         cancelButton.setTitle("Отменить", for: .normal)
         cancelButton.layer.borderWidth = 1
         cancelButton.layer.borderColor = UIColor(named: "red")?.cgColor
         cancelButton.layer.cornerRadius = 16
         cancelButton.setTitleColor(UIColor(named: "red"), for: .normal)
+        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+
+        nameTrackerTextField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         nameTrackerTextField.backgroundColor = UIColor(named: "background view")
         nameTrackerTextField.layer.cornerRadius = 16
         nameTrackerTextField.placeholder = "Введите название трекера"
@@ -127,7 +135,9 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         
         settingsTrackerTableView.layer.cornerRadius = 16
         
-        titleView.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
         settingsTrackerTableView.translatesAutoresizingMaskIntoConstraints = false
         emojiAndColorCollectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -135,10 +145,10 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            titleView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
-            titleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
+            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            nameTrackerTextField.topAnchor.constraint(equalTo: titleView.bottomAnchor, constant: 38),
+            nameTrackerTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
             nameTrackerTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             nameTrackerTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             nameTrackerTextField.heightAnchor.constraint(equalToConstant: 75),
@@ -176,7 +186,7 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
 
         let cell = NewTrackerTableViewCell(style: .default, reuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
         cell.name.text = tableNames[indexPath.row]
-        if indexPath.row == 0 {
+        if indexPath.row == 1 {
             var weekString = ""
             if choosedWeekday != nil {
                 for i in choosedWeekday!.indices {
@@ -196,7 +206,7 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == 0 {
             //переход к выбору категории
         } else if indexPath.row == 1 {
-            scheduleViewController.modalPresentationStyle = .overCurrentContext
+            scheduleViewController.modalPresentationStyle = .automatic
             present(scheduleViewController, animated: true)
         }
     }

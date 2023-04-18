@@ -24,7 +24,7 @@ final class LaunchScreenViewController: UIViewController {
 
     
     private func setUI() {
-        view.backgroundColor = .red
+        view.backgroundColor = UIColor(named: "blue")
         
         view.addSubview(image)
         image.center = view.center

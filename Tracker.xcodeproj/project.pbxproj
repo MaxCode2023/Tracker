@@ -93,7 +93,6 @@
 		500C65C629CF37A80066BB76 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
-				B217110A29EA754200C6325A /* Schedule */,
 				507761FF29E2A3F30033FBC4 /* CreateTracker */,
 				5033715129E179E900681B3B /* TrackersViewController */,
 				500C65C729CF37A80066BB76 /* AppDelegate.swift */,
@@ -159,6 +158,7 @@
 		50ED959729E472370021A5D1 /* NewTracker */ = {
 			isa = PBXGroup;
 			children = (
+				B217110A29EA754200C6325A /* Schedule */,
 				5077620229E2AB4B0033FBC4 /* NewTrackerViewController.swift */,
 				50ED959829E472590021A5D1 /* NewTrackerTableViewCell.swift */,
 			);
@@ -434,7 +434,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -465,7 +465,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Tracker/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";

@@ -20,7 +20,7 @@ final class TrackersViewController: UIViewController {
     
     public var categories: [TrackerCategory] = [TrackerCategory]()
     private var visibleCategories: [TrackerCategory] = [TrackerCategory]()
-    private var completedTrackers: [TrackerRecord] = [TrackerRecord]()
+    private var completedTrackers: Set<TrackerRecord> = []
     private var completedTrackerIds = Set<UInt>()
 
     private var currentDate: Date = Date()
@@ -33,19 +33,6 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        categories.append(TrackerCategory(head: "testovy", trackers:
-                                            [Tracker(id: 0, name: "test", color: .orange, emoji: "", schedule: [.friday]),
-                                             Tracker(id: 1, name: "privet", color: .blue, emoji: "", schedule: [.friday])]
-                                         ))
-        categories.append(TrackerCategory(head: "testovy2", trackers:
-                                            [Tracker(id: 3, name: "test", color: .green, emoji: "", schedule: [.friday])]
-                                                           ))
-        categories.append(TrackerCategory(head: "testovy3", trackers:
-                                            [Tracker(id: 4, name: "test", color: .gray, emoji: "", schedule: [.friday])]
-                                                           ))
-        
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
-        searchTrackersBar.delegate = self
         setUI()
         setVisibleCategories()
         setCollection()
@@ -53,6 +40,8 @@ final class TrackersViewController: UIViewController {
         checkCategories()
         addObserverForCollection()
         
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        searchTrackersBar.delegate = self
     }
     
     private func checkCategories() {
@@ -61,57 +50,6 @@ final class TrackersViewController: UIViewController {
         } else {
             emptyTrackersView.isHidden = true
         }
-    }
-    
-    private func setUI() {
-        view.addSubview(trackersLabel)
-        view.addSubview(datePicker)
-        view.addSubview(searchTrackersBar)
-        view.addSubview(trackersCollectionView)
-        view.addSubview(emptyTrackersView)
-        emptyTrackersView.addArrangedSubview(emptyTrackersImageView)
-        emptyTrackersView.addArrangedSubview(emptyTrackersLabel)
-                
-        trackersLabel.text = "Трекеры"
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .compact
-        searchTrackersBar.placeholder = "Поиск"
-        emptyTrackersImageView.image = UIImage(named: "emptyTrackers")
-        emptyTrackersLabel.text = "Что будем отслеживать?"
-        emptyTrackersView.axis = .vertical
-        emptyTrackersView.alignment = .center
-        emptyTrackersView.spacing = 8
-        emptyTrackersView.isHidden = true
-        searchTrackersBar.layer.cornerRadius = 10
-
-        let addButton = UIBarButtonItem(title: "+", style: .plain, target: self, action: #selector(addButtonTapped))
-        navigationItem.leftBarButtonItem = addButton
-        addButton.tintColor = UIColor(named: "black")
-        
-        trackersLabel.translatesAutoresizingMaskIntoConstraints = false
-        datePicker.translatesAutoresizingMaskIntoConstraints = false
-        searchTrackersBar.translatesAutoresizingMaskIntoConstraints = false
-        emptyTrackersView.translatesAutoresizingMaskIntoConstraints = false
-        emptyTrackersImageView.translatesAutoresizingMaskIntoConstraints = false
-        emptyTrackersLabel.translatesAutoresizingMaskIntoConstraints = false
-        trackersCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            trackersLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            trackersLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
-            datePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            datePicker.centerYAnchor.constraint(equalTo: trackersLabel.centerYAnchor),
-            searchTrackersBar.leadingAnchor.constraint(equalTo: trackersLabel.leadingAnchor),
-            searchTrackersBar.trailingAnchor.constraint(equalTo: datePicker.trailingAnchor),
-            searchTrackersBar.topAnchor.constraint(equalTo: trackersLabel.bottomAnchor, constant: 11),
-            emptyTrackersView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-            emptyTrackersView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            
-            trackersCollectionView.topAnchor.constraint(equalTo: searchTrackersBar.bottomAnchor, constant: 34),
-            trackersCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            trackersCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            trackersCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
-        ])
     }
     
     private func setVisibleCategories() {
@@ -153,6 +91,60 @@ final class TrackersViewController: UIViewController {
         currentDate = datePicker.date
         setVisibleCategories()
     }
+    
+    private func setUI() {
+        view.addSubview(trackersLabel)
+        view.addSubview(datePicker)
+        view.addSubview(searchTrackersBar)
+        view.addSubview(trackersCollectionView)
+        view.addSubview(emptyTrackersView)
+        emptyTrackersView.addArrangedSubview(emptyTrackersImageView)
+        emptyTrackersView.addArrangedSubview(emptyTrackersLabel)
+                
+        trackersLabel.text = "Трекеры"
+        trackersLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .compact
+        emptyTrackersImageView.image = UIImage(named: "emptyTrackers")
+        emptyTrackersLabel.text = "Что будем отслеживать?"
+        emptyTrackersLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        emptyTrackersView.axis = .vertical
+        emptyTrackersView.alignment = .center
+        emptyTrackersView.spacing = 8
+        emptyTrackersView.isHidden = true
+        searchTrackersBar.layer.cornerRadius = 10
+        searchTrackersBar.searchBarStyle = .minimal
+        searchTrackersBar.placeholder = "Поиск"
+
+        let addButton = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(addButtonTapped))
+        navigationItem.leftBarButtonItem = addButton
+        addButton.tintColor = UIColor(named: "black")
+        
+        trackersLabel.translatesAutoresizingMaskIntoConstraints = false
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        searchTrackersBar.translatesAutoresizingMaskIntoConstraints = false
+        emptyTrackersView.translatesAutoresizingMaskIntoConstraints = false
+        emptyTrackersImageView.translatesAutoresizingMaskIntoConstraints = false
+        emptyTrackersLabel.translatesAutoresizingMaskIntoConstraints = false
+        trackersCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            trackersLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            trackersLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
+            datePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            datePicker.centerYAnchor.constraint(equalTo: trackersLabel.centerYAnchor),
+            searchTrackersBar.leadingAnchor.constraint(equalTo: trackersLabel.leadingAnchor),
+            searchTrackersBar.trailingAnchor.constraint(equalTo: datePicker.trailingAnchor),
+            searchTrackersBar.topAnchor.constraint(equalTo: trackersLabel.bottomAnchor, constant: 11),
+            emptyTrackersView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            emptyTrackersView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            
+            trackersCollectionView.topAnchor.constraint(equalTo: searchTrackersBar.bottomAnchor, constant: 34),
+            trackersCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            trackersCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            trackersCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+    }
 }
 
 extension TrackersViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -169,8 +161,7 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let indexPath = IndexPath(row: 0, section: section)
-        return visibleCategories[indexPath.section].trackers.count
+        return visibleCategories[section].trackers.count
     }
     
     
@@ -194,24 +185,18 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "trackerCell", for: indexPath) as? TrackerCollectionViewCell
-        cell?.color = visibleCategories[indexPath.section].trackers[indexPath.row].color
-        cell?.title.text = visibleCategories[indexPath.section].trackers[indexPath.row].name
+
+        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         
         let countCompleted = completedTrackers.filter {
-            $0.id == cell?.id
+            $0.id == tracker.id
         }.count
-        cell?.count = countCompleted
         
-        if completedTrackers.contains(where: {
-            $0.id == cell?.id && $0.date == currentDate
-        }) {
-            cell?.isCompleted = true
-        } else {
-            cell?.isCompleted = false
-        }
+        let isCompleted =  completedTrackers.contains(where: {
+            $0.id == tracker.id && $0.date == currentDate
+        })
         
-        cell?.id = visibleCategories[indexPath.section].trackers[indexPath.row].id
-        cell?.date = currentDate
+        cell?.configCell(tracker: tracker, count: countCompleted, isCompleted: isCompleted)
         cell?.delegate = self
         return cell!
     }
@@ -250,13 +235,24 @@ extension TrackersViewController: UISearchBarDelegate {
 }
 
 extension TrackersViewController: TrackerCellDelegate {
-    func appendToCompletedCategories(id: UInt) {
-        completedTrackers.append(TrackerRecord(id: id, date: datePicker.date))
-        completedTrackerIds.insert(id)
-    }
-    
-    func removeCompletedCategories(id: UInt) {
-        completedTrackerIds.remove(id)
+
+    func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker) {
+        
+        if currentDate > Date() {
+            return
+        } else {
+            let trackerRecord = TrackerRecord(id: tracker.id, date: currentDate)
+            
+            if completedTrackers.contains(where: { $0.date == currentDate && $0.id == tracker.id }) {
+                completedTrackers.remove(trackerRecord)
+                cell.toggleDoneButton(false)
+                cell.decreaseCount()
+            } else {
+                completedTrackers.insert(trackerRecord)
+                cell.toggleDoneButton(true)
+                cell.increaseCount()
+            }
+        }
     }
 }
 

@@ -13,6 +13,8 @@ class SupplementaryView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        titleLabel.font = UIFont.systemFont(ofSize: 19, weight: .bold)
+        
         addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         

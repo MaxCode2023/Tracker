@@ -6,13 +6,13 @@
 //
 
 import UIKit
+import Foundation
 
 protocol TrackerCellDelegate {
-    func appendToCompletedCategories(id: UInt)
-    func removeCompletedCategories(id: UInt)
+    func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker)
 }
 
-class TrackerCollectionViewCell: UICollectionViewCell {
+final class TrackerCollectionViewCell: UICollectionViewCell {
     
     public var color: UIColor? {
         didSet {
@@ -29,44 +29,57 @@ class TrackerCollectionViewCell: UICollectionViewCell {
     let plusButton = UIView()
     let plusButtonTittle = UILabel()
     let plusButtonImage = UIImageView()
+    var tracker: Tracker?
     
     var id: UInt?
-    var date: Date?
     var delegate: TrackerCellDelegate?
-    var count = 0
-    var isCompleted = false
+    var count = 0 {
+        didSet {
+            countLabel.text = "\(count) дней"
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickPlus))
         plusButton.addGestureRecognizer(tapGesture)
-
         setUI()
     }
     
-    @objc func clickPlus() {
-        if date ?? Date() > Date() {
-            return
+    func configCell(tracker: Tracker, count: Int, isCompleted: Bool) {
+        self.tracker = tracker
+        self.count = count
+        color = tracker.color
+        title.text = tracker.name
+        toggleDoneButton(isCompleted)
+    }
+    
+    func toggleDoneButton(_ isCompleted: Bool) {
+        
+        if isCompleted {
+            plusButtonImage.isHidden = false
+            plusButtonTittle.isHidden = true
+            plusButton.alpha = 0.3
+            
         } else {
-            isCompleted = !isCompleted
-            guard let id = id else {return}
-            if isCompleted {
-                plusButton.alpha = 0.3
-                count = count + 1
-                plusButtonImage.isHidden = false
-                plusButtonTittle.isHidden = true
-                
-                delegate?.appendToCompletedCategories(id: id)
-            } else {
-                plusButton.alpha = 1
-                count = count - 1
-                plusButtonImage.isHidden = true
-                plusButtonTittle.isHidden = false
-                delegate?.removeCompletedCategories(id: id)
-            }
-            countLabel.text = "\(count) день"
+            plusButtonImage.isHidden = true
+            plusButtonTittle.isHidden = false
+            plusButton.alpha = 1
         }
+    }
+    
+    func increaseCount() {
+        count += 1
+    }
+    
+    func decreaseCount() {
+        count -= 1
+    }
+    
+    @objc func clickPlus() {
+        guard let tracker else {return}
+        delegate?.clickDoneButton(cell: self, tracker: tracker)
     }
     
     required init?(coder: NSCoder) {
@@ -77,7 +90,6 @@ class TrackerCollectionViewCell: UICollectionViewCell {
         
         backView.layer.cornerRadius = 16
         plusButton.layer.cornerRadius = 17
-        countLabel.text = "\(count) день"
         title.text = "рандомная ячейка"
         title.textColor = UIColor(named: "white")
         plusButtonTittle.textColor = UIColor(named: "white")
@@ -140,5 +152,4 @@ class TrackerCollectionViewCell: UICollectionViewCell {
             
         ])
     }
-    
 }
