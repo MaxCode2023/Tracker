@@ -103,7 +103,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         emojiImageView.image = UIImage(named: "statistic icon")
         plusButtonTittle.text = "+"
         plusButtonImage.isHidden = true
-        plusButtonImage.image = UIImage(named: "done")
+        plusButtonImage.image = UIImage(named: "Done")
         
         contentView.addSubview(countLabel)
         contentView.addSubview(plusButton)
