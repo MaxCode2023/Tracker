@@ -184,7 +184,7 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "trackerCell", for: indexPath) as? TrackerCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "trackerCell", for: indexPath) as? TrackerCollectionViewCell else {return TrackerCollectionViewCell()}
 
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         
@@ -196,9 +196,9 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
             $0.id == tracker.id && $0.date == currentDate
         })
         
-        cell?.configCell(tracker: tracker, count: countCompleted, isCompleted: isCompleted)
-        cell?.delegate = self
-        return cell!
+        cell.configCell(tracker: tracker, count: countCompleted, isCompleted: isCompleted)
+        cell.delegate = self
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

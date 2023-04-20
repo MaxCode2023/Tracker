@@ -71,12 +71,27 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         
         if type == .habit {
             if existTrackerCategory != nil {
-                newCategory = TrackerCategory(head: existTrackerCategory!.head, trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1), name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: choosedWeekday ?? [])])
+                newCategory = TrackerCategory(head: existTrackerCategory!.head,
+                                              trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
+                                                                 name: nameTrackerTextField.text ?? "",
+                                                                 color: .green,
+                                                                 emoji: "",
+                                                                 schedule: choosedWeekday ?? [])])
             } else {
-                newCategory = TrackerCategory(head: "Новая категория", trackers: [Tracker(id: 0, name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: choosedWeekday ?? [])])
+                newCategory = TrackerCategory(head: "Новая категория",
+                                              trackers: [Tracker(id: 0,
+                                                                 name: nameTrackerTextField.text ?? "",
+                                                                 color: .green,
+                                                                 emoji: "",
+                                                                 schedule: choosedWeekday ?? [])])
             }
         } else {
-            newCategory = TrackerCategory(head: existTrackerCategory!.head, trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1), name: nameTrackerTextField.text ?? "", color: .green, emoji: "", schedule: [.wednesday, .tuesday, .thursday, .sunday, .saturday, .monday, .friday])])
+            newCategory = TrackerCategory(head: existTrackerCategory!.head,
+                                          trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
+                                                             name: nameTrackerTextField.text ?? "",
+                                                             color: .green,
+                                                             emoji: "",
+                                                             schedule: [.wednesday, .tuesday, .thursday, .sunday, .saturday, .monday, .friday])])
         }
         
         var updateCategoryList = vc.categories
@@ -188,9 +203,9 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
         cell.name.text = tableNames[indexPath.row]
         if indexPath.row == 1 {
             var weekString = ""
-            if choosedWeekday != nil {
-                for i in choosedWeekday!.indices {
-                    weekString = weekString + (choosedWeekday?[i].getShortName())! + ", "
+            if let choosedWeekday = choosedWeekday {
+                for i in choosedWeekday.indices {
+                    weekString = weekString + (choosedWeekday[i].getShortName()) + ", "
                 }
                 weekString = String(weekString.dropLast(2))
             }
