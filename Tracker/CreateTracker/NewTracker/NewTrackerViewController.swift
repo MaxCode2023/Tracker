@@ -7,12 +7,20 @@
 
 import UIKit
 
-final class NewTrackerViewController: UIViewController, ScheduleViewControllerDelegate {
+final class NewTrackerViewController: UIViewController, ScheduleViewControllerDelegate, EmojiCellDelegate, ColorCellDelegate {
+    func onClickColor(cell: ColorCell, color: UIColor) {
+        print("2")
+    }
+    
+    func onClickEmoji(cell: EmojiCell, emoji: String) {
+        print("1")
+    }
+    
     
     let titleLabel = UILabel()
     let nameTrackerTextField = UITextField()
     let settingsTrackerTableView = UITableView()
-    let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
+    let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     let scheduleViewController = ScheduleViewController()
     let createButton = UIButton()
     let cancelButton = UIButton()
@@ -49,6 +57,8 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
 
     override func viewDidLoad() {
         setUI()
+        
+        setCollection()
         
         if type == .habit {
             //тут надо сделать вкладку "расписание" в таблице
@@ -243,8 +253,6 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    
-    
     private func setCollection() {
         emojiAndColorCollectionView.delegate = self
         emojiAndColorCollectionView.dataSource = self
@@ -258,11 +266,9 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return emojies.count
-        } else if section == 1 {
-            return colors.count
-        }
+        var count: Int?
+        count = section == 0 ? emojies.count : colors.count
+        return count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -289,21 +295,24 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
+        var cell: UICollectionViewCell?
+        
         if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "emojiCell", for: indexPath) as! EmojiCell
-            cell.emoji.text = emojies[indexPath.row]
-            return cell
+            let emojiCell = collectionView.dequeueReusableCell(withReuseIdentifier: "emojiCell", for: indexPath) as! EmojiCell
+            emojiCell.emoji.text = emojies[indexPath.row]
+            emojiCell.delegate = self
+            cell = emojiCell
         } else if indexPath.section == 1 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCell
-            
-            return cell
+            let colorCell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCell
+            colorCell.configCell(color: colors[indexPath.row])
+            colorCell.delegate = self
+            cell = colorCell
         }
+        return cell ?? UICollectionViewCell()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let availableWidth = collectionView.frame.width - params.paddingWidth
-        let cellWidth =  availableWidth / CGFloat(params.cellCount)
-        return CGSize(width: cellWidth, height: 40)
+        return CGSize(width: 40, height: 40)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

@@ -12,11 +12,10 @@ public protocol EmojiCellDelegate {
     func onClickEmoji(cell: EmojiCell, emoji: String)
 }
 
-final class EmojiCell: UICollectionViewCell {
+final public class EmojiCell: UICollectionViewCell {
     
     let emoji = UILabel()
     var delegate: EmojiCellDelegate?
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,16 +30,20 @@ final class EmojiCell: UICollectionViewCell {
     }
     
     private func setUI() {
+        
+        contentView.addSubview(emoji)
+        
+        emoji.text = "1"
+        
         emoji.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            emoji.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            emoji.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            emoji.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            emoji.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
     
     @objc func onClickEmoji() {
-        guard let tracker else {return}
-        delegate?.onClickEmoji(cell: self, emoji: emoji.text)
+        delegate?.onClickEmoji(cell: self, emoji: emoji.text ?? "")
     }
 }
