@@ -23,6 +23,20 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
     
     private let tableNames = ["Категория", "Расписание"]
     
+    private let emojies = [
+        "🙂", "😻", "🌺", "🐶", "❤️", "😱",
+        "😇", "😡", "🥶", "🤔", "🙌", "🍔",
+        "🥦", "🏓", "🥇", "🎸", "🏝", "😪",
+    ]
+    
+    private let colors = [
+        #colorLiteral(red: 0.9921568627, green: 0.2980392157, blue: 0.2862745098, alpha: 1), #colorLiteral(red: 1, green: 0.5333333333, blue: 0.1176470588, alpha: 1), #colorLiteral(red: 0, green: 0.4823529412, blue: 0.9803921569, alpha: 1), #colorLiteral(red: 0.431372549, green: 0.2666666667, blue: 0.9960784314, alpha: 1), #colorLiteral(red: 0.2, green: 0.8117647059, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.9019607843, green: 0.4274509804, blue: 0.831372549, alpha: 1),
+        #colorLiteral(red: 0.9764705882, green: 0.831372549, blue: 0.831372549, alpha: 1), #colorLiteral(red: 0.2039215686, green: 0.6549019608, blue: 0.9960784314, alpha: 1), #colorLiteral(red: 0.2745098039, green: 0.9019607843, blue: 0.6156862745, alpha: 1), #colorLiteral(red: 0.2078431373, green: 0.2039215686, blue: 0.4862745098, alpha: 1), #colorLiteral(red: 1, green: 0.4039215686, blue: 0.3019607843, alpha: 1), #colorLiteral(red: 1, green: 0.6, blue: 0.8, alpha: 1),
+        #colorLiteral(red: 0.9647058824, green: 0.768627451, blue: 0.5450980392, alpha: 1), #colorLiteral(red: 0.4745098039, green: 0.5803921569, blue: 0.9607843137, alpha: 1), #colorLiteral(red: 0.5137254902, green: 0.1725490196, blue: 0.9450980392, alpha: 1), #colorLiteral(red: 0.6784313725, green: 0.337254902, blue: 0.8549019608, alpha: 1), #colorLiteral(red: 0.5529411765, green: 0.4470588235, blue: 0.9019607843, alpha: 1), #colorLiteral(red: 0.1843137255, green: 0.8156862745, blue: 0.3450980392, alpha: 1),
+    ]
+    
+    private let params: GeometricParams = GeometricParams(cellCount: 6, leftInset: 12, rightInset: 12, cellSpacing: 17)
+    
     init(type: TypeTracker, vc: TrackersViewController) {
         self.type = type
         self.vc = vc
@@ -86,7 +100,7 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
                                                                  schedule: choosedWeekday ?? [])])
             }
         } else {
-            newCategory = TrackerCategory(head: existTrackerCategory!.head,
+            newCategory = TrackerCategory(head: "Новая категория",
                                           trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
                                                              name: nameTrackerTextField.text ?? "",
                                                              color: .green,
@@ -224,6 +238,80 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
             scheduleViewController.modalPresentationStyle = .automatic
             present(scheduleViewController, animated: true)
         }
+    }
+}
+
+extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    
+    
+    private func setCollection() {
+        emojiAndColorCollectionView.delegate = self
+        emojiAndColorCollectionView.dataSource = self
+        emojiAndColorCollectionView.register(EmojiCell.self, forCellWithReuseIdentifier: "emojiCell")
+        emojiAndColorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "colorCell")
+        emojiAndColorCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if section == 0 {
+            return emojies.count
+        } else if section == 1 {
+            return colors.count
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as! SupplementaryView
+        if indexPath.section == 0 {
+            view.titleLabel.text = "Emoji"
+        } else if indexPath.section == 1 {
+            view.titleLabel.text = "Цвет"
+        }
+        return view
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        
+        let indexPath = IndexPath(row: 0, section: section)
+        let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
+        
+        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
+                                                         height: UIView.layoutFittingExpandedSize.height),
+                                                  withHorizontalFittingPriority: .required,
+                                                  verticalFittingPriority: .fittingSizeLevel)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        if indexPath.section == 0 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "emojiCell", for: indexPath) as! EmojiCell
+            cell.emoji.text = emojies[indexPath.row]
+            return cell
+        } else if indexPath.section == 1 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCell
+            
+            return cell
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let availableWidth = collectionView.frame.width - params.paddingWidth
+        let cellWidth =  availableWidth / CGFloat(params.cellCount)
+        return CGSize(width: cellWidth, height: 40)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return params.cellSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        UIEdgeInsets(top: 10, left: params.leftInset, bottom: 10, right: params.rightInset)
     }
 }
 
