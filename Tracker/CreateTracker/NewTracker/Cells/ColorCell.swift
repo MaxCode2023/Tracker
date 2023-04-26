@@ -8,9 +8,6 @@
 import UIKit
 import Foundation
 
-public protocol ColorCellDelegate {
-    func onClickColor(cell: ColorCell, color: UIColor)
-}
 
 final public class ColorCell: UICollectionViewCell {
     let mainView = UIView()
@@ -19,13 +16,9 @@ final public class ColorCell: UICollectionViewCell {
             mainView.backgroundColor = color != nil ? color : .green
         }
     }
-    var delegate: ColorCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickColor))
-        self.addGestureRecognizer(tapGesture)
         setUI()
     }
     
@@ -37,9 +30,20 @@ final public class ColorCell: UICollectionViewCell {
         self.color = color
     }
     
+    func toggleCell(_ isSelected: Bool) {
+        if isSelected {
+            contentView.layer.borderWidth = 0
+            contentView.layer.borderColor = color?.withAlphaComponent(0).cgColor
+        } else {
+            contentView.layer.borderWidth = 3
+            contentView.layer.borderColor = color?.withAlphaComponent(0.3).cgColor
+        }
+    }
+    
     private func setUI() {
         
         contentView.addSubview(mainView)
+        contentView.layer.cornerRadius = 8
         
         mainView.layer.cornerRadius = 8
         mainView.translatesAutoresizingMaskIntoConstraints = false
@@ -51,9 +55,5 @@ final public class ColorCell: UICollectionViewCell {
             mainView.widthAnchor.constraint(equalToConstant: 40),
             mainView.heightAnchor.constraint(equalToConstant: 40),
         ])
-    }
-    
-    @objc func onClickColor() {
-        delegate?.onClickColor(cell: self, color: color ?? .gray)
     }
 }

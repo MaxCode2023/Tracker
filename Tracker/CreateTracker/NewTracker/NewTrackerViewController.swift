@@ -7,16 +7,8 @@
 
 import UIKit
 
-final class NewTrackerViewController: UIViewController, ScheduleViewControllerDelegate, EmojiCellDelegate, ColorCellDelegate {
-    func onClickColor(cell: ColorCell, color: UIColor) {
-        print("2")
-    }
-    
-    func onClickEmoji(cell: EmojiCell, emoji: String) {
-        print("1")
-    }
-    
-    
+final class NewTrackerViewController: UIViewController, ScheduleViewControllerDelegate {
+      
     let titleLabel = UILabel()
     let nameTrackerTextField = UITextField()
     let settingsTrackerTableView = UITableView()
@@ -25,6 +17,10 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
     let createButton = UIButton()
     let cancelButton = UIButton()
     private var choosedWeekday: [Week]?
+    private var choosedEmoji: String?
+    private var choosedColor: UIColor?
+    
+    var selectedIndexPaths: [Int: IndexPath] = [:]
     
     var type: TypeTracker
     var vc: TrackersViewController
@@ -43,7 +39,7 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         #colorLiteral(red: 0.9647058824, green: 0.768627451, blue: 0.5450980392, alpha: 1), #colorLiteral(red: 0.4745098039, green: 0.5803921569, blue: 0.9607843137, alpha: 1), #colorLiteral(red: 0.5137254902, green: 0.1725490196, blue: 0.9450980392, alpha: 1), #colorLiteral(red: 0.6784313725, green: 0.337254902, blue: 0.8549019608, alpha: 1), #colorLiteral(red: 0.5529411765, green: 0.4470588235, blue: 0.9019607843, alpha: 1), #colorLiteral(red: 0.1843137255, green: 0.8156862745, blue: 0.3450980392, alpha: 1),
     ]
     
-    private let params: GeometricParams = GeometricParams(cellCount: 6, leftInset: 12, rightInset: 12, cellSpacing: 17)
+    private let params: GeometricParams = GeometricParams(cellCount: 6, leftInset: 12, rightInset: 12, cellSpacing: 5)
     
     init(type: TypeTracker, vc: TrackersViewController) {
         self.type = type
@@ -86,6 +82,12 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
     }
     
     @objc func clickCreate() {
+        
+        if choosedEmoji == nil || choosedColor == nil {
+            //сюда бы по хорошему алерт выдавать, мол выберите цвет и иконку
+            return
+        }
+        
         let existTrackerCategory = vc.categories.first {
             //тут вместо "" надо будет вставить выбранную категорию из таблицы
             $0.head == ""
@@ -98,23 +100,23 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
                 newCategory = TrackerCategory(head: existTrackerCategory!.head,
                                               trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
                                                                  name: nameTrackerTextField.text ?? "",
-                                                                 color: .green,
-                                                                 emoji: "",
+                                                                 color: choosedColor!,
+                                                                 emoji: choosedEmoji!,
                                                                  schedule: choosedWeekday ?? [])])
             } else {
                 newCategory = TrackerCategory(head: "Новая категория",
                                               trackers: [Tracker(id: 0,
                                                                  name: nameTrackerTextField.text ?? "",
-                                                                 color: .green,
-                                                                 emoji: "",
+                                                                 color: choosedColor!,
+                                                                 emoji: choosedEmoji!,
                                                                  schedule: choosedWeekday ?? [])])
             }
         } else {
             newCategory = TrackerCategory(head: "Новая категория",
                                           trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
                                                              name: nameTrackerTextField.text ?? "",
-                                                             color: .green,
-                                                             emoji: "",
+                                                             color: choosedColor!,
+                                                             emoji: choosedEmoji!,
                                                              schedule: [.wednesday, .tuesday, .thursday, .sunday, .saturday, .monday, .friday])])
         }
         
@@ -256,6 +258,7 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDa
     private func setCollection() {
         emojiAndColorCollectionView.delegate = self
         emojiAndColorCollectionView.dataSource = self
+        emojiAndColorCollectionView.allowsMultipleSelection = false
         emojiAndColorCollectionView.register(EmojiCell.self, forCellWithReuseIdentifier: "emojiCell")
         emojiAndColorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "colorCell")
         emojiAndColorCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
@@ -300,19 +303,42 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDa
         if indexPath.section == 0 {
             let emojiCell = collectionView.dequeueReusableCell(withReuseIdentifier: "emojiCell", for: indexPath) as! EmojiCell
             emojiCell.emoji.text = emojies[indexPath.row]
-            emojiCell.delegate = self
+            
+            if let selectedIndexPath = selectedIndexPaths[indexPath.section], indexPath == selectedIndexPath {
+                emojiCell.toggleCell(false)
+                choosedEmoji = emojiCell.emoji.text
+            } else {
+                emojiCell.toggleCell(true)
+            }
             cell = emojiCell
+            
         } else if indexPath.section == 1 {
             let colorCell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCell
             colorCell.configCell(color: colors[indexPath.row])
-            colorCell.delegate = self
+            
+            if let selectedIndexPath = selectedIndexPaths[indexPath.section], indexPath == selectedIndexPath {
+                colorCell.toggleCell(false)
+                choosedColor = colorCell.color
+            } else {
+                colorCell.toggleCell(true)
+            }
             cell = colorCell
         }
         return cell ?? UICollectionViewCell()
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if let selectedIndexPath = selectedIndexPaths[indexPath.section] {
+            selectedIndexPaths[indexPath.section] = nil
+            collectionView.reloadItems(at: [selectedIndexPath])
+        }
+        selectedIndexPaths[indexPath.section] = indexPath
+        collectionView.reloadItems(at: [indexPath])
+    }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 40, height: 40)
+        return CGSize(width: 49, height: 49)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

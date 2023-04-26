@@ -23,7 +23,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     let backView = UIView()
     let emojiView = UIView()
-    let emojiImageView = UIImageView()
+    let emoji = UILabel()
     let title = UILabel()
     let countLabel = UILabel()
     let plusButton = UIView()
@@ -52,6 +52,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         self.count = count
         color = tracker.color
         title.text = tracker.name
+        emoji.text = tracker.emoji
         toggleDoneButton(isCompleted)
     }
     
@@ -93,14 +94,16 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         title.text = "рандомная ячейка"
         title.textColor = UIColor(named: "white")
         plusButtonTittle.textColor = UIColor(named: "white")
+        emojiView.backgroundColor = color?.withAlphaComponent(0.3)
+        emojiView.layer.cornerRadius = 12
         
         contentView.addSubview(backView)
         backView.addSubview(emojiView)
         backView.addSubview(title)
-        emojiView.addSubview(emojiImageView)
+        emojiView.addSubview(emoji)
         plusButton.addSubview(plusButtonTittle)
         plusButton.addSubview(plusButtonImage)
-        emojiImageView.image = UIImage(named: "statistic icon")
+        emoji.text = ""
         plusButtonTittle.text = "+"
         plusButtonImage.isHidden = true
         plusButtonImage.image = UIImage(named: "Done")
@@ -110,7 +113,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         
         backView.translatesAutoresizingMaskIntoConstraints = false
         emojiView.translatesAutoresizingMaskIntoConstraints = false
-        emojiImageView.translatesAutoresizingMaskIntoConstraints = false
+        emoji.translatesAutoresizingMaskIntoConstraints = false
         title.translatesAutoresizingMaskIntoConstraints = false
         countLabel.translatesAutoresizingMaskIntoConstraints = false
         plusButton.translatesAutoresizingMaskIntoConstraints = false
@@ -128,8 +131,8 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             emojiView.heightAnchor.constraint(equalToConstant: 24),
             emojiView.widthAnchor.constraint(equalToConstant: 24),
             
-            emojiImageView.centerYAnchor.constraint(equalTo: emojiView.centerYAnchor),
-            emojiImageView.centerXAnchor.constraint(equalTo: emojiView.centerXAnchor),
+            emoji.centerYAnchor.constraint(equalTo: emojiView.centerYAnchor),
+            emoji.centerXAnchor.constraint(equalTo: emojiView.centerXAnchor),
             
             title.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -12),
             title.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 12),

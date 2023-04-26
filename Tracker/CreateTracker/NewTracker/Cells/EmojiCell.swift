@@ -8,20 +8,12 @@
 import UIKit
 import Foundation
 
-public protocol EmojiCellDelegate {
-    func onClickEmoji(cell: EmojiCell, emoji: String)
-}
-
 final public class EmojiCell: UICollectionViewCell {
     
-    let emoji = UILabel()
-    var delegate: EmojiCellDelegate?
+    public let emoji = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onClickEmoji))
-        self.addGestureRecognizer(tapGesture)
         setUI()
     }
     
@@ -29,8 +21,17 @@ final public class EmojiCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func toggleCell(_ isSelected: Bool) {
+        if isSelected {
+            contentView.backgroundColor = UIColor(named: "white")
+        } else {
+            contentView.backgroundColor = UIColor(named: "lightGray")
+        }
+    }
+    
     private func setUI() {
         
+        contentView.layer.cornerRadius = 16
         contentView.addSubview(emoji)
         
         emoji.text = "1"
@@ -41,9 +42,5 @@ final public class EmojiCell: UICollectionViewCell {
             emoji.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             emoji.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
-    }
-    
-    @objc func onClickEmoji() {
-        delegate?.onClickEmoji(cell: self, emoji: emoji.text ?? "")
     }
 }
