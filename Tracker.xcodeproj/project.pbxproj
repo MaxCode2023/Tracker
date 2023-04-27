@@ -11,7 +11,6 @@
 		500C65CA29CF37A80066BB76 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65C929CF37A80066BB76 /* SceneDelegate.swift */; };
 		500C65CC29CF37A80066BB76 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65CB29CF37A80066BB76 /* TrackersViewController.swift */; };
 		500C65CF29CF37A80066BB76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 500C65CD29CF37A80066BB76 /* Main.storyboard */; };
-		500C65D229CF37A80066BB76 /* Tracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 500C65D029CF37A80066BB76 /* Tracker.xcdatamodeld */; };
 		500C65D429CF37AA0066BB76 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 500C65D329CF37AA0066BB76 /* Assets.xcassets */; };
 		500C65D729CF37AA0066BB76 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 500C65D529CF37AA0066BB76 /* LaunchScreen.storyboard */; };
 		5033715429E17A1300681B3B /* TrackerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5033715329E17A1300681B3B /* TrackerCell.swift */; };
@@ -44,7 +43,6 @@
 		500C65C929CF37A80066BB76 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		500C65CB29CF37A80066BB76 /* TrackersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersViewController.swift; sourceTree = "<group>"; };
 		500C65CE29CF37A80066BB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		500C65D129CF37A80066BB76 /* Tracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Tracker.xcdatamodel; sourceTree = "<group>"; };
 		500C65D329CF37AA0066BB76 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		500C65D629CF37AA0066BB76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		500C65D829CF37AA0066BB76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -111,7 +109,6 @@
 				500C65D329CF37AA0066BB76 /* Assets.xcassets */,
 				500C65D529CF37AA0066BB76 /* LaunchScreen.storyboard */,
 				500C65D829CF37AA0066BB76 /* Info.plist */,
-				500C65D029CF37A80066BB76 /* Tracker.xcdatamodeld */,
 				5071855D29D8C95D0096588B /* LaunchScreenViewController.swift */,
 				50E3247F29D997E200C454F9 /* TabBarController.swift */,
 				50E3248129D9985100C454F9 /* StaticticViewController.swift */,
@@ -290,7 +287,6 @@
 				5033715429E17A1300681B3B /* TrackerCell.swift in Sources */,
 				50ED959929E472590021A5D1 /* NewTrackerTableViewCell.swift in Sources */,
 				504E07E329FAE04D003236B8 /* TrackerStore.swift in Sources */,
-				500C65D229CF37A80066BB76 /* Tracker.xcdatamodeld in Sources */,
 				B217111629EAA15B00C6325A /* ScheduleCellDelegate.swift in Sources */,
 				B217111429EA7B6100C6325A /* ScheduleViewController.swift in Sources */,
 				500C65CC29CF37A80066BB76 /* TrackersViewController.swift in Sources */,
@@ -538,16 +534,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		500C65D029CF37A80066BB76 /* Tracker.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				500C65D129CF37A80066BB76 /* Tracker.xcdatamodel */,
-			);
-			currentVersion = 500C65D129CF37A80066BB76 /* Tracker.xcdatamodel */;
-			path = Tracker.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
 		504E07E829FAE31A003236B8 /* CoreDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

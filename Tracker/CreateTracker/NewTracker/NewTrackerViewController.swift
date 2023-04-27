@@ -24,6 +24,7 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
     
     var type: TypeTracker
     var vc: TrackersViewController
+    var trackerCategoryStore: TrackerCategoryStore
     
     private let tableNames = ["Категория", "Расписание"]
     
@@ -41,9 +42,10 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
     
     private let params: GeometricParams = GeometricParams(cellCount: 6, leftInset: 12, rightInset: 12, cellSpacing: 5)
     
-    init(type: TypeTracker, vc: TrackersViewController) {
+    init(type: TypeTracker, vc: TrackersViewController, trackerCategoryStore: TrackerCategoryStore) {
         self.type = type
         self.vc = vc
+        self.trackerCategoryStore = trackerCategoryStore
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -120,10 +122,12 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
                                                              schedule: [.wednesday, .tuesday, .thursday, .sunday, .saturday, .monday, .friday])])
         }
         
+        
+        
         var updateCategoryList = vc.categories
         updateCategoryList.append(newCategory)
         vc.categories = updateCategoryList
-        
+        try! self.trackerCategoryStore.addNewCategory(newCategory)
         NotificationCenter.default
             .post(
                 name: TrackersViewController.didChangeCollectionNotification,

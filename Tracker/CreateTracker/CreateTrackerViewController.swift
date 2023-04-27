@@ -14,9 +14,11 @@ final class CreateTrackerViewController: UIViewController {
     let createEvent = UIButton()
     
     var vc: TrackersViewController
+    var trackerCategoryStore: TrackerCategoryStore
     
-    init(vc: TrackersViewController) {
+    init(vc: TrackersViewController, trackerCategoryStore: TrackerCategoryStore) {
         self.vc = vc
+        self.trackerCategoryStore = trackerCategoryStore
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,13 +35,13 @@ final class CreateTrackerViewController: UIViewController {
     
     @objc func clickHabit() {
 
-        let vc = NewTrackerViewController(type: .habit, vc: self.vc)
+        let vc = NewTrackerViewController(type: .habit, vc: self.vc, trackerCategoryStore: trackerCategoryStore)
         vc.modalPresentationStyle = .automatic
         self.present(vc, animated: true)
     }
     
     @objc func clickEvent() {
-        let vc = NewTrackerViewController(type: .event, vc: self.vc)
+        let vc = NewTrackerViewController(type: .event, vc: self.vc, trackerCategoryStore: trackerCategoryStore)
         vc.modalPresentationStyle = .automatic
         self.present(vc, animated: true)
     }

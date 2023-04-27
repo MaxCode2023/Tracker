@@ -8,8 +8,10 @@
 import UIKit
 import Foundation
 
-final class TrackersViewController: UIViewController {
-
+final class TrackersViewController: UIViewController, TrackerCategoryStoreDelegate {
+    
+    
+    
     private let datePicker = UIDatePicker()
     private let trackersLabel = UILabel()
     private let searchTrackersBar = UISearchBar()
@@ -17,6 +19,7 @@ final class TrackersViewController: UIViewController {
     private let emptyTrackersImageView = UIImageView()
     private let emptyTrackersLabel = UILabel()
     private let trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let trackerCategoryStore = TrackerCategoryStore()
     
     public var categories: [TrackerCategory] = [TrackerCategory]()
     private var visibleCategories: [TrackerCategory] = [TrackerCategory]()
@@ -34,7 +37,10 @@ final class TrackersViewController: UIViewController {
         super.viewDidLoad()
         
         setUI()
+        trackerCategoryStore.delegate = self
+        categories = trackerCategoryStore.trackerCategories
         setVisibleCategories()
+        
         setCollection()
         
         checkCategories()
@@ -42,6 +48,24 @@ final class TrackersViewController: UIViewController {
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         searchTrackersBar.delegate = self
+    }
+    
+    func store(_ store: TrackerCategoryStore, didUpdate update: TrackerCategoryStoreUpdate) {
+        categories = trackerCategoryStore.trackerCategories
+        trackersCollectionView.performBatchUpdates {
+            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
+            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
+            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: 0) }
+            trackersCollectionView.insertItems(at: insertedIndexPaths)
+            trackersCollectionView.insertItems(at: deletedIndexPaths)
+            trackersCollectionView.insertItems(at: updatedIndexPaths)
+            for move in update.movedIndexes {
+                trackersCollectionView.moveItem(
+                    at: IndexPath(item: move.oldIndex, section: 0),
+                    to: IndexPath(item: move.newIndex, section: 0)
+                )
+            }
+        }
     }
     
     private func checkCategories() {
@@ -77,12 +101,13 @@ final class TrackersViewController: UIViewController {
             ) { [weak self] _ in
                 guard let self = self else { return }
                 self.setVisibleCategories()
+                
                 self.trackersCollectionView.reloadData()
             }
     }
     
     @objc func addButtonTapped() {
-        let vc = CreateTrackerViewController(vc: self)
+        let vc = CreateTrackerViewController(vc: self, trackerCategoryStore: trackerCategoryStore)
         vc.title = "Создание трекера"
         present(vc, animated: true)
     }
