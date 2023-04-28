@@ -22,10 +22,6 @@ final class TrackerStore: NSObject {
     private let trackerCategoryStore = TrackerCategoryStore()
     
     weak var delegate: TrackerStoreDelegate?
-    private var insertedIndexes: IndexSet?
-    private var deletedIndexes: IndexSet?
-    private var updatedIndexes: IndexSet?
-    private var movedIndexes: Set<TrackerStoreUpdate.Move>?
     
     convenience override init() {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -38,12 +34,13 @@ final class TrackerStore: NSObject {
         
         let fetchRequest = TrackerCoreData.fetchRequest()
         fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \TrackerCoreData.category?.categoryId, ascending: true),
             NSSortDescriptor(keyPath: \TrackerCoreData.createdAt, ascending: true)
         ]
         let controller = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
-            sectionNameKeyPath: nil,
+            sectionNameKeyPath: "category",
             cacheName: nil
         )
         controller.delegate = self
@@ -57,8 +54,8 @@ final class TrackerStore: NSObject {
         guard
             let name = coreData.name,
             let emoji = coreData.emoji,
-            let colorHex = coreData.color
-          //  let completedDaysCount = coreData.records
+            let colorHex = coreData.color,
+            let completedDaysCount = coreData.records
         else { throw TrackeStoreError.decodingError }
         let color = uiColorMarshalling.color(from: colorHex)
         let scheduleString = coreData.schedule
@@ -67,12 +64,13 @@ final class TrackerStore: NSObject {
                        name: name,
                        color: color,
                        emoji: emoji,
+                       completedDaysCount: completedDaysCount.count,
                        schedule: schedule)
     }
     
     func getTrackerCoreData(by id: UInt) throws -> TrackerCoreData? {
         fetchedResultsController.fetchRequest.predicate = NSPredicate(
-            format: "%K == %@",
+            format: "%K == %ld",
             #keyPath(TrackerCoreData.idTracker), Int64(id)
         )
         try fetchedResultsController.performFetch()
@@ -109,9 +107,7 @@ final class TrackerStore: NSObject {
         }
         
         fetchedResultsController.fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-        
         try fetchedResultsController.performFetch()
-        
         delegate?.didUpdate()
     }
 }
@@ -171,19 +167,6 @@ protocol TrackerStoreProtocol {
     func addTracker(_ tracker: Tracker, with category: TrackerCategory) throws
 }
 
-struct TrackerStoreUpdate {
-    struct Move: Hashable {
-        let oldIndex: Int
-        let newIndex: Int
-    }
-    let insertedIndexes: IndexSet
-    let deletedIndexes: IndexSet
-    let updatedIndexes: IndexSet
-    let movedIndexes: Set<Move>
-}
-
 enum TrackeStoreError: Error {
     case decodingError
-    case decodingErrorInvalidId
-    case decodingErrorInvalidName
 }

@@ -97,45 +97,57 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
             $0.head == ""
         }
     
+        var newTracker: Tracker
         var newCategory: TrackerCategory
         
         if type == .habit {
             if existTrackerCategory != nil {
+                newTracker = Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor!,
+                                     emoji: choosedEmoji!,
+                                     completedDaysCount: 0,
+                                     schedule: choosedWeekday ?? [])
                 newCategory = TrackerCategory(id: 0,
                                               head: existTrackerCategory!.head,
-                                              trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
-                                                                 name: nameTrackerTextField.text ?? "",
-                                                                 color: choosedColor!,
-                                                                 emoji: choosedEmoji!,
-                                                                 schedule: choosedWeekday ?? [])])
+                                              trackers: [newTracker])
             } else {
-                newCategory = TrackerCategory(id: 1, head: "Новая категория",
-                                              trackers: [Tracker(id: 0,
-                                                                 name: nameTrackerTextField.text ?? "",
-                                                                 color: choosedColor!,
-                                                                 emoji: choosedEmoji!,
-                                                                 schedule: choosedWeekday ?? [])])
+                newTracker = Tracker(id: 0,
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor!,
+                                     emoji: choosedEmoji!,
+                                     completedDaysCount: 0,
+                                     schedule: choosedWeekday ?? [])
+                newCategory = TrackerCategory(id: 0, head: "Новая категория",
+                                              trackers: [newTracker])
             }
         } else {
-            newCategory = TrackerCategory(id: 2, head: "Новая категория",
-                                          trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
-                                                             name: nameTrackerTextField.text ?? "",
-                                                             color: choosedColor!,
-                                                             emoji: choosedEmoji!,
-                                                             schedule: [.wednesday, .tuesday, .thursday, .sunday, .saturday, .monday, .friday])])
+            if existTrackerCategory != nil {
+                newTracker = Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor!,
+                                     emoji: choosedEmoji!,
+                                     completedDaysCount: 0,
+                                     schedule: Week.allCases)
+                newCategory = TrackerCategory(id: 0, head: existTrackerCategory!.head,
+                                              trackers: [newTracker])
+            } else {
+                newTracker = Tracker(id: 0,
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor!,
+                                     emoji: choosedEmoji!,
+                                     completedDaysCount: 0,
+                                     schedule: Week.allCases)
+                newCategory = TrackerCategory(id: 0, head: "Новая категория",
+                                              trackers: [newTracker])
+            }
         }
-        
-        
         
         var updateCategoryList = vc.categories
         updateCategoryList.append(newCategory)
         vc.categories = updateCategoryList
-        try? trackerStore.addTracker(Tracker(id: 2,
-                                             name: nameTrackerTextField.text ?? "",
-                                             color: choosedColor!,
-                                             emoji: choosedEmoji!,
-                                             schedule: choosedWeekday ?? []),
-                                     with: newCategory)
+        try? trackerStore.addTracker(newTracker, with: newCategory)
+        
         NotificationCenter.default
             .post(
                 name: TrackersViewController.didChangeCollectionNotification,

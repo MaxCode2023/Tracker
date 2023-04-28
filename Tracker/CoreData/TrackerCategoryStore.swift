@@ -29,6 +29,7 @@ final class TrackerCategoryStore: NSObject {
         let request = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
         request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.categoryId), String(id))
         let category = try context.fetch(request)
+        print("AAAADSDSDSS \(category)")
         return category[0]
     }
     
@@ -59,13 +60,7 @@ final class TrackerCategoryStore: NSObject {
                                                name: "testTracker",
                                                color: .blue,
                                                emoji: "",
-                                               schedule: [.friday])]),
-            TrackerCategory(id: 1,
-                            head: "test2",
-                            trackers: [Tracker(id: 1,
-                                               name: "testTracker2",
-                                               color: .red,
-                                               emoji: "",
+                                               completedDaysCount: 0,
                                                schedule: [.friday])])
         ].map { category in
             let categoryCoreData = TrackerCategoryCoreData(context: context)

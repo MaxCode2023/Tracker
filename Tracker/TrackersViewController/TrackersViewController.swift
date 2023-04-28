@@ -18,7 +18,6 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         completedTrackers = records
     }
     
-    
     private let datePicker = UIDatePicker()
     private let trackersLabel = UILabel()
     private let searchTrackersBar = UISearchBar()
@@ -51,13 +50,14 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUI()
-        setVisibleCategories()
+       // setVisibleCategories()
         
         setCollection()
         
-        checkCategories()
+        checkTrackers()
+        
+       // checkCategories()
         addObserverForCollection()
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
@@ -84,29 +84,29 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         }
     }
     
-    private func checkCategories() {
-        if visibleCategories.isEmpty {
-            emptyTrackersView.isHidden = false
-        } else {
-            emptyTrackersView.isHidden = true
-        }
-    }
+//    private func checkCategories() {
+//        if visibleCategories.isEmpty {
+//            emptyTrackersView.isHidden = false
+//        } else {
+//            emptyTrackersView.isHidden = true
+//        }
+//    }
     
-    private func setVisibleCategories() {
-        let calendar = Calendar.current
-        let weekday = calendar.component(.weekday, from: currentDate)
-         
-        visibleCategories = categories.filter { trackerCategory in
-            trackerCategory.trackers.contains { tracker in
-                tracker.schedule!.contains { week in
-                    week.rawValue == weekday
-                }
-            }
-        }
-        checkCategories()
-        trackersCollectionView.reloadData()
- 
-    }
+//    private func setVisibleCategories() {
+//        let calendar = Calendar.current
+//        let weekday = calendar.component(.weekday, from: currentDate)
+//
+//        visibleCategories = categories.filter { trackerCategory in
+//            trackerCategory.trackers.contains { tracker in
+//                tracker.schedule!.contains { week in
+//                    week.rawValue == weekday
+//                }
+//            }
+//        }
+//        checkCategories()
+//        trackersCollectionView.reloadData()
+//
+//    }
     
     private func addObserverForCollection() {
         trackersCollectionObserver = NotificationCenter.default
@@ -116,8 +116,8 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
                 queue: .main
             ) { [weak self] _ in
                 guard let self = self else { return }
-                self.setVisibleCategories()
-                
+              //  self.setVisibleCategories()
+                self.checkTrackers()
                 self.trackersCollectionView.reloadData()
             }
     }
@@ -233,15 +233,11 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
               let tracker = trackerStore.tracker(at: indexPath)
         else {return TrackerCollectionViewCell()}
         
-        let countCompleted = completedTrackers.filter {
-            $0.id == tracker.id
-        }.count
-        
-        let isCompleted =  completedTrackers.contains(where: {
-            $0.id == tracker.id && $0.date == currentDate
+        let isCompleted = completedTrackers.contains(where: {
+            $0.trackerId == tracker.id && $0.date == currentDate
         })
         
-        cell.configCell(tracker: tracker, count: countCompleted, isCompleted: isCompleted)
+        cell.configCell(tracker: tracker, count: tracker.completedDaysCount, isCompleted: isCompleted)
         cell.delegate = self
         return cell
     }
@@ -263,18 +259,8 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
 
 extension TrackersViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty || searchText == " " {
-            setVisibleCategories()
-        } else {
-            
-            visibleCategories = visibleCategories.filter({ trackersCategory in
-                let filteredTrackers = trackersCategory.trackers.filter { $0.name.range(of: searchText, options: .caseInsensitive) != nil }
-                return !filteredTrackers.isEmpty
-            }).map { category in
-                TrackerCategory(id: category.id, head: category.head, trackers: category.trackers.filter { $0.name.range(of: searchText, options: .caseInsensitive) != nil })
-            }
-        }
-
+        
+        self.searchText = searchText
         trackersCollectionView.reloadData()
     }
 }
@@ -286,14 +272,14 @@ extension TrackersViewController: TrackerCellDelegate {
         if currentDate > Date() {
             return
         } else {
-            let trackerRecord = TrackerRecord(id: tracker.id, trackerId: 0, date: currentDate)
             
-            if completedTrackers.contains(where: { $0.date == currentDate && $0.id == tracker.id }) {
-                completedTrackers.remove(trackerRecord)
+            if let a = completedTrackers.first(where: { $0.date == currentDate && $0.trackerId == tracker.id }) {
+                try? trackerRecordStore.remove(a)
                 cell.toggleDoneButton(false)
                 cell.decreaseCount()
             } else {
-                completedTrackers.insert(trackerRecord)
+                let trackerRecord = TrackerRecord(id: UUID(), trackerId: tracker.id, date: currentDate)
+                try? trackerRecordStore.addRecord(trackerRecord)
                 cell.toggleDoneButton(true)
                 cell.increaseCount()
             }
