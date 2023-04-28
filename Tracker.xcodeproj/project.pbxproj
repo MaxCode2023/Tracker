@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		227D6D4E29FC07A100CB9801 /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227D6D4D29FC07A100CB9801 /* UIColorMarshalling.swift */; };
 		500C65C829CF37A80066BB76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65C729CF37A80066BB76 /* AppDelegate.swift */; };
 		500C65CA29CF37A80066BB76 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65C929CF37A80066BB76 /* SceneDelegate.swift */; };
 		500C65CC29CF37A80066BB76 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65CB29CF37A80066BB76 /* TrackersViewController.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		227D6D4D29FC07A100CB9801 /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
 		500C65C429CF37A80066BB76 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		500C65C729CF37A80066BB76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		500C65C929CF37A80066BB76 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -81,6 +83,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		227D6D4C29FC078600CB9801 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				227D6D4D29FC07A100CB9801 /* UIColorMarshalling.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		500C65BB29CF37A80066BB76 = {
 			isa = PBXGroup;
 			children = (
@@ -103,6 +113,7 @@
 				507761FF29E2A3F30033FBC4 /* CreateTracker */,
 				5033715129E179E900681B3B /* TrackersViewController */,
 				504E07E129FADF15003236B8 /* CoreData */,
+				227D6D4C29FC078600CB9801 /* Helpers */,
 				500C65C729CF37A80066BB76 /* AppDelegate.swift */,
 				500C65C929CF37A80066BB76 /* SceneDelegate.swift */,
 				500C65CD29CF37A80066BB76 /* Main.storyboard */,
@@ -304,6 +315,7 @@
 				504A849A29F6F42400F23212 /* EmojiCell.swift in Sources */,
 				5077620329E2AB4B0033FBC4 /* NewTrackerViewController.swift in Sources */,
 				5077620129E2A40A0033FBC4 /* CreateTrackerViewController.swift in Sources */,
+				227D6D4E29FC07A100CB9801 /* UIColorMarshalling.swift in Sources */,
 				504E07E729FAE064003236B8 /* TrackerRecordStore.swift in Sources */,
 				504E07E529FAE05A003236B8 /* TrackerCategoryStore.swift in Sources */,
 				5086B04729EB1ECA00B1DFD6 /* SupplementaryView.swift in Sources */,

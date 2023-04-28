@@ -20,6 +20,8 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
     private var choosedEmoji: String?
     private var choosedColor: UIColor?
     
+    private let trackerStore = TrackerStore()
+    
     var selectedIndexPaths: [Int: IndexPath] = [:]
     
     var type: TypeTracker
@@ -99,14 +101,15 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         
         if type == .habit {
             if existTrackerCategory != nil {
-                newCategory = TrackerCategory(head: existTrackerCategory!.head,
+                newCategory = TrackerCategory(id: 0,
+                                              head: existTrackerCategory!.head,
                                               trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
                                                                  name: nameTrackerTextField.text ?? "",
                                                                  color: choosedColor!,
                                                                  emoji: choosedEmoji!,
                                                                  schedule: choosedWeekday ?? [])])
             } else {
-                newCategory = TrackerCategory(head: "Новая категория",
+                newCategory = TrackerCategory(id: 1, head: "Новая категория",
                                               trackers: [Tracker(id: 0,
                                                                  name: nameTrackerTextField.text ?? "",
                                                                  color: choosedColor!,
@@ -114,7 +117,7 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
                                                                  schedule: choosedWeekday ?? [])])
             }
         } else {
-            newCategory = TrackerCategory(head: "Новая категория",
+            newCategory = TrackerCategory(id: 2, head: "Новая категория",
                                           trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
                                                              name: nameTrackerTextField.text ?? "",
                                                              color: choosedColor!,
@@ -127,7 +130,12 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         var updateCategoryList = vc.categories
         updateCategoryList.append(newCategory)
         vc.categories = updateCategoryList
-        try! self.trackerCategoryStore.addNewCategory(newCategory)
+        try? trackerStore.addTracker(Tracker(id: 2,
+                                             name: nameTrackerTextField.text ?? "",
+                                             color: choosedColor!,
+                                             emoji: choosedEmoji!,
+                                             schedule: choosedWeekday ?? []),
+                                     with: newCategory)
         NotificationCenter.default
             .post(
                 name: TrackersViewController.didChangeCollectionNotification,
