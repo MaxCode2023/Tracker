@@ -25,18 +25,18 @@ final class TrackerCategoryStore: NSObject {
         try setupCategories(with: context)
     }
 
-    func categoryCoreData(with id: UInt) throws -> TrackerCategoryCoreData {
+    func categoryCoreData(with id: UUID) throws -> TrackerCategoryCoreData {
         let request = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.categoryId), String(id))
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.categoryId), id.uuidString)
         let category = try context.fetch(request)
-        print("AAAADSDSDSS \(category)")
         return category[0]
     }
     
     private func makeCategory(from coreData: TrackerCategoryCoreData) throws -> TrackerCategory {
         
-        let id = UInt(coreData.categoryId)
         guard
+            let stringId = coreData.categoryId,
+            let id = UUID(uuidString: stringId),
             let head = coreData.head
         else { throw TrackerCagetoryStoreError.decodingError }
         return TrackerCategory(id: id,
@@ -54,9 +54,17 @@ final class TrackerCategoryStore: NSObject {
         }
         
         let _ = [
-            TrackerCategory(id: 0,
+            TrackerCategory(id: UUID(),
                             head: "test",
-                            trackers: [Tracker(id: 0,
+                            trackers: [Tracker(id: UUID(),
+                                               name: "testTracker",
+                                               color: .blue,
+                                               emoji: "",
+                                               completedDaysCount: 0,
+                                               schedule: [.friday])]),
+            TrackerCategory(id: UUID(),
+                            head: "test2",
+                            trackers: [Tracker(id: UUID(),
                                                name: "testTracker",
                                                color: .blue,
                                                emoji: "",
@@ -64,7 +72,7 @@ final class TrackerCategoryStore: NSObject {
                                                schedule: [.friday])])
         ].map { category in
             let categoryCoreData = TrackerCategoryCoreData(context: context)
-            categoryCoreData.categoryId = Int64(category.id)
+            categoryCoreData.categoryId = category.id.uuidString
             categoryCoreData.createdAt = Date()
             categoryCoreData.head = category.head
             return categoryCoreData

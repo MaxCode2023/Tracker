@@ -84,30 +84,6 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         }
     }
     
-//    private func checkCategories() {
-//        if visibleCategories.isEmpty {
-//            emptyTrackersView.isHidden = false
-//        } else {
-//            emptyTrackersView.isHidden = true
-//        }
-//    }
-    
-//    private func setVisibleCategories() {
-//        let calendar = Calendar.current
-//        let weekday = calendar.component(.weekday, from: currentDate)
-//
-//        visibleCategories = categories.filter { trackerCategory in
-//            trackerCategory.trackers.contains { tracker in
-//                tracker.schedule!.contains { week in
-//                    week.rawValue == weekday
-//                }
-//            }
-//        }
-//        checkCategories()
-//        trackersCollectionView.reloadData()
-//
-//    }
-    
     private func addObserverForCollection() {
         trackersCollectionObserver = NotificationCenter.default
             .addObserver(
@@ -233,9 +209,9 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
               let tracker = trackerStore.tracker(at: indexPath)
         else {return TrackerCollectionViewCell()}
         
-        let isCompleted = completedTrackers.contains(where: {
+        let isCompleted = completedTrackers.contains {
             $0.trackerId == tracker.id && $0.date == currentDate
-        })
+        }
         
         cell.configCell(tracker: tracker, count: tracker.completedDaysCount, isCompleted: isCompleted)
         cell.delegate = self

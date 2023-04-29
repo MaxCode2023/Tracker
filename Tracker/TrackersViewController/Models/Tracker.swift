@@ -8,7 +8,7 @@
 import UIKit
 
 public struct Tracker {
-    let id: UInt
+    let id: UUID
     let name: String
     let color: UIColor
     let emoji: String

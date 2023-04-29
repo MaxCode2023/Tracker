@@ -50,8 +50,9 @@ final class TrackerStore: NSObject {
     
     func makeTracker(from coreData: TrackerCoreData) throws -> Tracker {
         
-        let id = UInt(coreData.idTracker)
         guard
+            let stringId = coreData.idTracker,
+            let id = UUID(uuidString: stringId),
             let name = coreData.name,
             let emoji = coreData.emoji,
             let colorHex = coreData.color,
@@ -68,10 +69,10 @@ final class TrackerStore: NSObject {
                        schedule: schedule)
     }
     
-    func getTrackerCoreData(by id: UInt) throws -> TrackerCoreData? {
+    func getTrackerCoreData(by id: UUID) throws -> TrackerCoreData? {
         fetchedResultsController.fetchRequest.predicate = NSPredicate(
-            format: "%K == %ld",
-            #keyPath(TrackerCoreData.idTracker), Int64(id)
+            format: "%K == %@",
+            #keyPath(TrackerCoreData.idTracker), id.uuidString
         )
         try fetchedResultsController.performFetch()
         return fetchedResultsController.fetchedObjects?.first
@@ -143,7 +144,7 @@ extension TrackerStore: TrackerStoreProtocol {
     func addTracker(_ tracker: Tracker, with category: TrackerCategory) throws {
         let categoryCoreData = try trackerCategoryStore.categoryCoreData(with: category.id)
         let trackerCoreData = TrackerCoreData(context: context)
-        trackerCoreData.idTracker = Int64(tracker.id)
+        trackerCoreData.idTracker = tracker.id.uuidString
         trackerCoreData.createdAt = Date()
         trackerCoreData.name = tracker.name
         trackerCoreData.emoji = tracker.emoji

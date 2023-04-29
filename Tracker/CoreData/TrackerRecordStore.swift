@@ -56,20 +56,16 @@ final class TrackerRecordStore: NSObject {
         let request = NSFetchRequest<TrackerRecordCoreData>(entityName: "TrackerRecordCoreData")
         request.returnsObjectsAsFaults = false
         request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerRecordCoreData.date), date as NSDate)
-        print("ADSSSDSD \(request)")
         let recordsCoreData = try context.fetch(request)
-        print("rec \(recordsCoreData)")
         let records = try recordsCoreData.map { try makeTrackerRecord(from: $0) }
-        print("fsfd \(records)")
         completedTrackers = Set(records)
-        print("adsdsds \(completedTrackers)")
         delegate?.didUpdateRecords(completedTrackers)
     }
     
     private func makeTrackerRecord(from coreData: TrackerRecordCoreData) throws -> TrackerRecord {
         guard
-            let idString = coreData.recordId,
-            let id = UUID(uuidString: idString),
+            let stringId = coreData.recordId,
+            let id = UUID(uuidString: stringId),
             let date = coreData.date,
             let trackerCoreData = coreData.tracker,
             let tracker = try? trackerStore.makeTracker(from: trackerCoreData)

@@ -27,6 +27,7 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
     var type: TypeTracker
     var vc: TrackersViewController
     var trackerCategoryStore: TrackerCategoryStore
+    private lazy var category: TrackerCategory? = trackerCategoryStore.categories.randomElement()
     
     private let tableNames = ["Категория", "Расписание"]
     
@@ -102,43 +103,46 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         
         if type == .habit {
             if existTrackerCategory != nil {
-                newTracker = Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
+                newTracker = Tracker(id: UUID(),
                                      name: nameTrackerTextField.text ?? "",
                                      color: choosedColor!,
                                      emoji: choosedEmoji!,
                                      completedDaysCount: 0,
                                      schedule: choosedWeekday ?? [])
-                newCategory = TrackerCategory(id: 0,
+                newCategory = TrackerCategory(id: existTrackerCategory?.id ?? UUID(),
                                               head: existTrackerCategory!.head,
                                               trackers: [newTracker])
             } else {
-                newTracker = Tracker(id: 0,
+                newTracker = Tracker(id: UUID(),
                                      name: nameTrackerTextField.text ?? "",
                                      color: choosedColor!,
                                      emoji: choosedEmoji!,
                                      completedDaysCount: 0,
                                      schedule: choosedWeekday ?? [])
-                newCategory = TrackerCategory(id: 0, head: "Новая категория",
+                newCategory = TrackerCategory(id: category?.id ?? UUID(),
+                                              head: category?.head ?? "",
                                               trackers: [newTracker])
             }
         } else {
             if existTrackerCategory != nil {
-                newTracker = Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
+                newTracker = Tracker(id: UUID(),
                                      name: nameTrackerTextField.text ?? "",
                                      color: choosedColor!,
                                      emoji: choosedEmoji!,
                                      completedDaysCount: 0,
                                      schedule: Week.allCases)
-                newCategory = TrackerCategory(id: 0, head: existTrackerCategory!.head,
+                newCategory = TrackerCategory(id: existTrackerCategory?.id ?? UUID(),
+                                              head: existTrackerCategory!.head,
                                               trackers: [newTracker])
             } else {
-                newTracker = Tracker(id: 0,
+                newTracker = Tracker(id: UUID(),
                                      name: nameTrackerTextField.text ?? "",
                                      color: choosedColor!,
                                      emoji: choosedEmoji!,
                                      completedDaysCount: 0,
                                      schedule: Week.allCases)
-                newCategory = TrackerCategory(id: 0, head: "Новая категория",
+                newCategory = TrackerCategory(id: category?.id ?? UUID(),
+                                              head: category?.head ?? "",
                                               trackers: [newTracker])
             }
         }
