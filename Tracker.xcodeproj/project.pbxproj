@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		227D6D4E29FC07A100CB9801 /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227D6D4D29FC07A100CB9801 /* UIColorMarshalling.swift */; };
+		22A17F952A014AE9003D49B3 /* ButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A17F942A014AE9003D49B3 /* ButtonExtension.swift */; };
 		500C65C829CF37A80066BB76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65C729CF37A80066BB76 /* AppDelegate.swift */; };
 		500C65CA29CF37A80066BB76 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65C929CF37A80066BB76 /* SceneDelegate.swift */; };
 		500C65CC29CF37A80066BB76 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65CB29CF37A80066BB76 /* TrackersViewController.swift */; };
@@ -40,6 +41,7 @@
 
 /* Begin PBXFileReference section */
 		227D6D4D29FC07A100CB9801 /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
+		22A17F942A014AE9003D49B3 /* ButtonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonExtension.swift; sourceTree = "<group>"; };
 		500C65C429CF37A80066BB76 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		500C65C729CF37A80066BB76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		500C65C929CF37A80066BB76 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +93,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		22A17F932A014AD5003D49B3 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				22A17F942A014AE9003D49B3 /* ButtonExtension.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		500C65BB29CF37A80066BB76 = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +124,7 @@
 				5033715129E179E900681B3B /* TrackersViewController */,
 				504E07E129FADF15003236B8 /* CoreData */,
 				227D6D4C29FC078600CB9801 /* Helpers */,
+				22A17F932A014AD5003D49B3 /* Utils */,
 				500C65C729CF37A80066BB76 /* AppDelegate.swift */,
 				500C65C929CF37A80066BB76 /* SceneDelegate.swift */,
 				500C65CD29CF37A80066BB76 /* Main.storyboard */,
@@ -295,6 +306,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22A17F952A014AE9003D49B3 /* ButtonExtension.swift in Sources */,
 				5033715429E17A1300681B3B /* TrackerCell.swift in Sources */,
 				50ED959929E472590021A5D1 /* NewTrackerTableViewCell.swift in Sources */,
 				504E07E329FAE04D003236B8 /* TrackerStore.swift in Sources */,

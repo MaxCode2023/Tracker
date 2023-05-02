@@ -6,11 +6,9 @@
 //
 
 import UIKit
-import Foundation
 
-
-final public class ColorCell: UICollectionViewCell {
-    let mainView = UIView()
+final internal class ColorCell: UICollectionViewCell {
+    private let mainView = UIView()
     public var color: UIColor? {
         didSet {
             mainView.backgroundColor = color != nil ? color : .green

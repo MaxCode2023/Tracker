@@ -51,13 +51,8 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-       // setVisibleCategories()
-        
         setCollection()
-        
-        checkTrackers()
-        
-       // checkCategories()
+
         addObserverForCollection()
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
@@ -74,12 +69,10 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     
     private func checkTrackers() {
         if trackerStore.numberOfTrackers == 0 {
-            emptyTrackersLabel.isHidden = false
-            emptyTrackersImageView.isHidden = false
+            emptyTrackersView.isHidden = false
             trackersCollectionView.isHidden = true
         } else {
-            emptyTrackersLabel.isHidden = true
-            emptyTrackersImageView.isHidden = true
+            emptyTrackersView.isHidden = true
             trackersCollectionView.isHidden = false
         }
     }
@@ -92,7 +85,6 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
                 queue: .main
             ) { [weak self] _ in
                 guard let self = self else { return }
-              //  self.setVisibleCategories()
                 self.checkTrackers()
                 self.trackersCollectionView.reloadData()
             }

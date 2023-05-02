@@ -9,9 +9,9 @@ import UIKit
 
 final class CreateTrackerViewController: UIViewController {
     
-    let titleLabel = UILabel()
-    let createHabit = UIButton()
-    let createEvent = UIButton()
+    private let titleLabel = UILabel()
+    private let createHabit = UIButton()
+    private let createEvent = UIButton()
     
     var vc: TrackersViewController
     var trackerCategoryStore: TrackerCategoryStore

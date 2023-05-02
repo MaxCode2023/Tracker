@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Foundation
 
 protocol TrackerCellDelegate {
     func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker)
@@ -21,15 +20,15 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    let backView = UIView()
-    let emojiView = UIView()
-    let emoji = UILabel()
-    let title = UILabel()
-    let countLabel = UILabel()
-    let plusButton = UIView()
-    let plusButtonTittle = UILabel()
-    let plusButtonImage = UIImageView()
-    var tracker: Tracker?
+    private let backView = UIView()
+    private let emojiView = UIView()
+    private let emoji = UILabel()
+    private let title = UILabel()
+    private let countLabel = UILabel()
+    private let plusButton = UIView()
+    private let plusButtonTittle = UILabel()
+    private let plusButtonImage = UIImageView()
+    private var tracker: Tracker?
     
     var id: UInt?
     var delegate: TrackerCellDelegate?

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class NewTrackerViewController: UIViewController, ScheduleViewControllerDelegate {
+final class NewTrackerViewController: UIViewController, ScheduleViewControllerDelegate, UITextFieldDelegate {
       
     let titleLabel = UILabel()
     let nameTrackerTextField = UITextField()
@@ -80,18 +80,24 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         settingsTrackerTableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         settingsTrackerTableView.register(NewTrackerTableViewCell.self, forCellReuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
     }
+
+    
+    func checkUnblockedButton() {
+        
+        if choosedEmoji == nil || choosedColor == nil || choosedWeekday == nil || nameTrackerTextField.text?.isEmpty ?? true || nameTrackerTextField.text == " " {
+            createButton.blockedButton()
+        } else {
+            createButton.unblockedButton()
+        }
+    }
     
     func didFinishPickingWeekDays(weekDayList: [Week]) {
         choosedWeekday = weekDayList
         settingsTrackerTableView.reloadData()
+        checkUnblockedButton()
     }
     
     @objc func clickCreate() {
-        
-        if choosedEmoji == nil || choosedColor == nil {
-            //сюда бы по хорошему алерт выдавать, мол выберите цвет и иконку
-            return
-        }
         
         let existTrackerCategory = vc.categories.first {
             //тут вместо "" надо будет вставить выбранную категорию из таблицы
@@ -165,8 +171,17 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         dismiss(animated: true)
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        checkUnblockedButton()
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        checkUnblockedButton()
+    }
+    
     private func setUI() {
-        
         view.backgroundColor = UIColor(named: "white")
         titleLabel.text = "Новая привычка"
         
@@ -206,6 +221,8 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
+        nameTrackerTextField.delegate = self
+        
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
         settingsTrackerTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -363,6 +380,7 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDa
         }
         selectedIndexPaths[indexPath.section] = indexPath
         collectionView.reloadItems(at: [indexPath])
+        checkUnblockedButton()
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
