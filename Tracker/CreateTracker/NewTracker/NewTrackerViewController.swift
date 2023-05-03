@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class NewTrackerViewController: UIViewController, ScheduleViewControllerDelegate, UITextFieldDelegate {
+final class NewTrackerViewController: UIViewController, UITextFieldDelegate, ScheduleViewControllerDelegate {
       
     let titleLabel = UILabel()
     let nameTrackerTextField = UITextField()
@@ -80,14 +80,24 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         settingsTrackerTableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         settingsTrackerTableView.register(NewTrackerTableViewCell.self, forCellReuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
     }
-
     
     func checkUnblockedButton() {
         
-        if choosedEmoji == nil || choosedColor == nil || choosedWeekday == nil || nameTrackerTextField.text?.isEmpty ?? true || nameTrackerTextField.text == " " {
-            createButton.blockedButton()
-        } else {
-            createButton.unblockedButton()
+        let checkForEvent = choosedEmoji == nil || choosedColor == nil || nameTrackerTextField.text?.isEmpty ?? true || nameTrackerTextField.text == " "
+        let checkForHabit = checkForEvent || choosedWeekday == nil
+        
+        if type == .event {
+            if checkForEvent {
+                createButton.blockedButton()
+            } else {
+                createButton.unblockedButton()
+            }
+        } else if type == .habit {
+            if checkForHabit {
+                createButton.blockedButton()
+            } else {
+                createButton.unblockedButton()
+            }
         }
     }
     
@@ -97,7 +107,7 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         checkUnblockedButton()
     }
     
-    @objc func clickCreate() {
+    @objc private func clickCreate() {
         
         let existTrackerCategory = vc.categories.first {
             //тут вместо "" надо будет вставить выбранную категорию из таблицы
@@ -167,7 +177,7 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         dismiss(animated: true)
     }
     
-    @objc func clickCancel() {
+    @objc private func clickCancel() {
         dismiss(animated: true)
     }
     

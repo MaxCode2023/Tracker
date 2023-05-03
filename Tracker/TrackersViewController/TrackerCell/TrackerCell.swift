@@ -57,16 +57,10 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     func toggleDoneButton(_ isCompleted: Bool) {
         
-        if isCompleted {
-            plusButtonImage.isHidden = false
-            plusButtonTittle.isHidden = true
-            plusButton.alpha = 0.3
-            
-        } else {
-            plusButtonImage.isHidden = true
-            plusButtonTittle.isHidden = false
-            plusButton.alpha = 1
-        }
+        plusButtonImage.isHidden = !isCompleted
+        plusButtonTittle.isHidden = isCompleted
+        plusButton.alpha = isCompleted ? 0.3 : 1
+
     }
     
     func increaseCount() {
@@ -77,7 +71,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         count -= 1
     }
     
-    @objc func clickPlus() {
+    @objc private func clickPlus() {
         guard let tracker else {return}
         delegate?.clickDoneButton(cell: self, tracker: tracker)
     }

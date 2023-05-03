@@ -33,14 +33,14 @@ final class CreateTrackerViewController: UIViewController {
         createEvent.addTarget(self, action: #selector(clickEvent), for: .touchUpInside)
     }
     
-    @objc func clickHabit() {
+    @objc private func clickHabit() {
 
         let vc = NewTrackerViewController(type: .habit, vc: self.vc, trackerCategoryStore: trackerCategoryStore)
         vc.modalPresentationStyle = .automatic
         self.present(vc, animated: true)
     }
     
-    @objc func clickEvent() {
+    @objc private func clickEvent() {
         let vc = NewTrackerViewController(type: .event, vc: self.vc, trackerCategoryStore: trackerCategoryStore)
         vc.modalPresentationStyle = .automatic
         self.present(vc, animated: true)

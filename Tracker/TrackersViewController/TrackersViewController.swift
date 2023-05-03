@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Foundation
 
 final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate, TrackerStoreDelegate {
     func didUpdate() {
@@ -65,6 +64,13 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         try? trackerRecordStore.loadCompletedTrackers(by: currentDate)
         
         checkTrackers()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func hideKeyboard() {
+        searchTrackersBar.resignFirstResponder()
     }
     
     private func checkTrackers() {
@@ -90,13 +96,13 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
             }
     }
     
-    @objc func addButtonTapped() {
+    @objc private func addButtonTapped() {
         let vc = CreateTrackerViewController(vc: self, trackerCategoryStore: trackerCategoryStore)
         vc.title = "Создание трекера"
         present(vc, animated: true)
     }
     
-    @objc func datePickerValueChanged(_ sender: UIDatePicker) {
+    @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         currentDate = datePicker.date
         do {
             try trackerStore.loadFilteredTrackers(date: currentDate, searchString: searchText)
@@ -227,9 +233,12 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
 
 extension TrackersViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         self.searchText = searchText
         trackersCollectionView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
 
