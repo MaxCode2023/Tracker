@@ -15,7 +15,15 @@ final class LaunchScreenViewController: UIViewController {
     override func viewDidLoad() {
         setUI()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.setTabBarController()
+            let defaults = UserDefaults.standard
+            if !defaults.bool(forKey: "isFirstLaunch") {
+                defaults.set(true, forKey: "isFirstLaunch")
+                guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
+                let onboardingViewController = OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+                window.rootViewController = onboardingViewController
+            } else {
+                self?.setTabBarController()
+            }
         }
     }
     
