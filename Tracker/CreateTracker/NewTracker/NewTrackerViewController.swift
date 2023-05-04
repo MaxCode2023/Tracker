@@ -14,6 +14,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     let settingsTrackerTableView = UITableView()
     let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     let scheduleViewController = ScheduleViewController()
+    let chooseCategoryViewController = ChooseCategoryViewController()
     let createButton = UIButton()
     let cancelButton = UIButton()
     private var choosedWeekday: [Week]?
@@ -60,14 +61,6 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         setUI()
         
         setCollection()
-        
-        if type == .habit {
-            //тут надо сделать вкладку "расписание" в таблице
-        } else if type == .event {
-            //таблица без расписания
-        } else {
-            
-        }
         
         createButton.addTarget(self, action: #selector(clickCreate), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(clickCancel), for: .touchUpInside)
@@ -300,7 +293,8 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            //переход к выбору категории
+            chooseCategoryViewController.modalPresentationStyle = .automatic
+            present(chooseCategoryViewController, animated: true)
         } else if indexPath.row == 1 {
             scheduleViewController.modalPresentationStyle = .automatic
             present(scheduleViewController, animated: true)
