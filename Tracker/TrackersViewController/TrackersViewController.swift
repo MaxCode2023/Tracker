@@ -106,7 +106,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        currentDate = datePicker.date
+        currentDate = Calendar.current.startOfDay(for: datePicker.date)
         do {
             try trackerStore.loadFilteredTrackers(date: currentDate, searchString: searchText)
             try trackerRecordStore.loadCompletedTrackers(by: currentDate)
@@ -248,11 +248,7 @@ extension TrackersViewController: UISearchBarDelegate {
 extension TrackersViewController: TrackerCellDelegate {
 
     func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker) {
-        
-        if currentDate > Calendar.current.startOfDay(for: Date()) {
-            return
-        } else {
-            
+        if currentDate <= Calendar.current.startOfDay(for: Date()) {
             if let a = completedTrackers.first(where: { $0.date == currentDate && $0.trackerId == tracker.id }) {
                 try? trackerRecordStore.remove(a)
                 cell.toggleDoneButton(false)

@@ -122,7 +122,7 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
         ].map { category in
             let categoryCoreData = TrackerCategoryCoreData(context: context)
             categoryCoreData.categoryId = category.id.uuidString
-            categoryCoreData.createdAt = Date()
+            categoryCoreData.createdAt = Calendar.current.startOfDay(for: Date())
             categoryCoreData.head = category.head
             return categoryCoreData
         }
