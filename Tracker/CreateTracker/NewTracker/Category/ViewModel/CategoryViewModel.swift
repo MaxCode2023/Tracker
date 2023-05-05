@@ -14,9 +14,8 @@ protocol CategoryViewModelDelegate {
 
 final class CategoryViewModel: TrackerCategoryStoreDelegate {
     
-    
     private let trackerCategoryStore = TrackerCategoryStore()
-  //  weak var delegate: CategoryViewModelDelegate?
+    var delegate: CategoryViewModelDelegate?
     
     init() {
         trackerCategoryStore.delegate = self
@@ -24,37 +23,72 @@ final class CategoryViewModel: TrackerCategoryStoreDelegate {
     
     private(set) var categoryList: [TrackerCategory]? {
         didSet {
-       //     delegate?.categoryListOnChange()
+            delegate?.categoryListOnChange()
         }
     }
     
     private(set) var selectedCategory: TrackerCategory? = nil {
         didSet {
             guard let selectedCategory else {return}
-        //    delegate?.didSelectCategory(category: selectedCategory)
+            delegate?.didSelectCategory(category: selectedCategory)
         }
+    }
+    
+    func updateCategoryList() {
+        categoryList = getDataFromStore()
+    }
+    
+    func moveCategoryToData(category: TrackerCategory) {
+        guard let categoryList = categoryList else {return}
+        if categoryList.contains(where: {
+            $0.id == category.id
+        }) {
+            saveCategory(category: category)
+        } else {
+            addCategory(name: category.head)
+        }
+    }
+    
+    func removeCategory(category: TrackerCategory) {
+        do {
+            try trackerCategoryStore.removeDataCategory(data: category)
+            updateCategoryList()
+            if category == selectedCategory {
+                selectedCategory = nil
+            }
+        } catch {}
     }
     
     private func getDataFromStore() -> [TrackerCategory] {
         do {
-            let categories = try trackerCategoryStore.categoriesCoreData.map({
+            let categoryList = try trackerCategoryStore.categoriesCoreData.map({
                 try trackerCategoryStore.makeCategory(from: $0)
             })
-            return categories
+            return categoryList
         } catch {
             return []
         }
-        
+    }
+    
+    private func addCategory(name: String) {
+        do {
+            try trackerCategoryStore.addCategory(name: name)
+            updateCategoryList()
+        } catch {}
+    }
+    
+    private func saveCategory(category: TrackerCategory) {
+        do {
+            try trackerCategoryStore.saveDataCategory(data: category)
+            updateCategoryList()
+        } catch {}
     }
     
     func selectCategoryCell(index: IndexPath) {
         selectedCategory = categoryList?[index.row]
     }
     
-    
-    
     func didUpdate() {
         categoryList = getDataFromStore()
     }
-    
 }

@@ -46,8 +46,6 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
     init(context: NSManagedObjectContext) throws {
         self.context = context
         super.init()
-        
-        try setupCategories(with: context)
     }
 
     func categoryCoreData(with id: UUID) throws -> TrackerCategoryCoreData {
@@ -65,8 +63,17 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
             let head = coreData.head
         else { throw TrackerCagetoryStoreError.decodingError }
         return TrackerCategory(id: id,
-                               head: head,
-                               trackers: [])
+                               head: head)
+    }
+    
+    func addCategory(name: String) throws -> TrackerCategory {
+        let category = TrackerCategory(id: UUID(), head: name)
+        let categoryCoreData = TrackerCategoryCoreData(context: context)
+        categoryCoreData.categoryId = category.id.uuidString
+        categoryCoreData.createdAt = Date()
+        categoryCoreData.head = category.head
+        try context.save()
+        return category
     }
     
     private func getCategoryCoreData(by id: UUID) throws -> TrackerCategoryCoreData {
@@ -91,41 +98,6 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
         let categoryToDelete = try getCategoryCoreData(by: data.id)
         context.delete(categoryToDelete)
         try context.save()
-    }
-    
-    private func setupCategories(with context: NSManagedObjectContext) throws {
-        let checkRequest = TrackerCategoryCoreData.fetchRequest()
-        let result = try context.fetch(checkRequest)
-        
-        guard result.count == 0 else {
-            categories = try result.map({ try makeCategory(from: $0) })
-            return
-        }
-        
-        let _ = [
-            TrackerCategory(id: UUID(),
-                            head: "test",
-                            trackers: [Tracker(id: UUID(),
-                                               name: "testTracker",
-                                               color: .blue,
-                                               emoji: "",
-                                               completedDaysCount: 0,
-                                               schedule: [.friday])]),
-            TrackerCategory(id: UUID(),
-                            head: "test2",
-                            trackers: [Tracker(id: UUID(),
-                                               name: "testTracker",
-                                               color: .blue,
-                                               emoji: "",
-                                               completedDaysCount: 0,
-                                               schedule: [.friday])])
-        ].map { category in
-            let categoryCoreData = TrackerCategoryCoreData(context: context)
-            categoryCoreData.categoryId = category.id.uuidString
-            categoryCoreData.createdAt = Calendar.current.startOfDay(for: Date())
-            categoryCoreData.head = category.head
-            return categoryCoreData
-        }
     }
 }
 

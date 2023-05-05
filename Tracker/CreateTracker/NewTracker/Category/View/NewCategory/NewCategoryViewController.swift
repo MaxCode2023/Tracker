@@ -7,12 +7,28 @@
 
 import UIKit
 
+protocol NewCategoryViewControllerDelegate: AnyObject {
+    func didConfirm(category: TrackerCategory)
+}
+
 final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     private let titleView = UILabel()
     private let nameCategory = UITextField()
     private let completeButton = UIButton()
     
     var viewModel: CategoryViewModel?
+    var category: TrackerCategory
+    weak var delegate: NewCategoryViewControllerDelegate?
+    
+    init(category: TrackerCategory = TrackerCategory(id: UUID(), head: "")) {
+        self.category = category
+        super.init(nibName: nil, bundle: nil)
+        nameCategory.text = category.head
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,10 +36,20 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         setUI()
         
         completeButton.addTarget(self, action: #selector(clickCompleteButton), for: .touchUpInside)
+        nameCategory.addTarget(self, action: #selector(didChangedTextField), for: .editingChanged)
     }
     
-    @objc func clickCompleteButton() {
-        
+    @objc private func didChangedTextField(_ sender: UITextField) {
+        if let text = sender.text, !text.isEmpty {
+            category.head = text
+            checkUnblockedButton()
+        } else {
+            checkUnblockedButton()
+        }
+    }
+    
+    @objc private func clickCompleteButton() {
+        delegate?.didConfirm(category: category)
     }
     
     private func setUI() {

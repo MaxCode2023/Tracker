@@ -24,9 +24,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     private let emptyTrackersImageView = UIImageView()
     private let emptyTrackersLabel = UILabel()
     private let trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    
-    public var categories: [TrackerCategory] = [TrackerCategory]()
-    private var visibleCategories: [TrackerCategory] = [TrackerCategory]()
+
     private var completedTrackers: Set<TrackerRecord> = []
     private var completedTrackerIds = Set<UInt>()
 

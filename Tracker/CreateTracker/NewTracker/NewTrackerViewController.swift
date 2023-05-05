@@ -7,8 +7,8 @@
 
 import UIKit
 
-final class NewTrackerViewController: UIViewController, UITextFieldDelegate, ScheduleViewControllerDelegate {
-      
+final class NewTrackerViewController: UIViewController, UITextFieldDelegate, ScheduleViewControllerDelegate, ChooseCategoryViewControllerDelegate {
+    
     let titleLabel = UILabel()
     let nameTrackerTextField = UITextField()
     let settingsTrackerTableView = UITableView()
@@ -18,6 +18,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     let createButton = UIButton()
     let cancelButton = UIButton()
     private var choosedWeekday: [Week]?
+    private var choosedCategory: TrackerCategory?
     private var choosedEmoji: String?
     private var choosedColor: UIColor?
     
@@ -26,7 +27,6 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     var selectedIndexPaths: [Int: IndexPath] = [:]
     
     var type: TypeTracker
-    var vc: TrackersViewController
     var trackerCategoryStore: TrackerCategoryStore
     private lazy var category: TrackerCategory? = trackerCategoryStore.categories.randomElement()
     
@@ -48,7 +48,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     
     init(type: TypeTracker, vc: TrackersViewController, trackerCategoryStore: TrackerCategoryStore) {
         self.type = type
-        self.vc = vc
+        print("TYPETEST \(self.type)")
         self.trackerCategoryStore = trackerCategoryStore
         super.init(nibName: nil, bundle: nil)
     }
@@ -64,6 +64,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         
         createButton.addTarget(self, action: #selector(clickCreate), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(clickCancel), for: .touchUpInside)
+        nameTrackerTextField.addTarget(self, action: #selector(nameDidChanged), for: .editingChanged)
         
         scheduleViewController.delegate = self
         
@@ -74,9 +75,13 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         settingsTrackerTableView.register(NewTrackerTableViewCell.self, forCellReuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
     }
     
+    @objc private func nameDidChanged() {
+        checkUnblockedButton()
+    }
+    
     func checkUnblockedButton() {
         
-        let checkForEvent = choosedEmoji == nil || choosedColor == nil || nameTrackerTextField.text?.isEmpty ?? true || nameTrackerTextField.text == " "
+        let checkForEvent = choosedEmoji == nil || choosedColor == nil || nameTrackerTextField.text?.isEmpty ?? true || nameTrackerTextField.text == " " || choosedCategory == nil
         let checkForHabit = checkForEvent || choosedWeekday == nil
         
         if type == .event {
@@ -100,66 +105,38 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         checkUnblockedButton()
     }
     
+    func didConfirmCategory(category: TrackerCategory) {
+        choosedCategory = category
+        settingsTrackerTableView.reloadData()
+        checkUnblockedButton()
+    }
+    
     @objc private func clickCreate() {
         
-        let existTrackerCategory = vc.categories.first {
-            //тут вместо "" надо будет вставить выбранную категорию из таблицы
-            $0.head == ""
-        }
-    
+        guard let choosedColor = choosedColor,
+              let choosedEmoji = choosedEmoji,
+              let choosedCategory = choosedCategory else {return}
         var newTracker: Tracker
-        var newCategory: TrackerCategory
         
         if type == .habit {
-            if existTrackerCategory != nil {
-                newTracker = Tracker(id: UUID(),
-                                     name: nameTrackerTextField.text ?? "",
-                                     color: choosedColor!,
-                                     emoji: choosedEmoji!,
-                                     completedDaysCount: 0,
-                                     schedule: choosedWeekday ?? [])
-                newCategory = TrackerCategory(id: existTrackerCategory?.id ?? UUID(),
-                                              head: existTrackerCategory!.head,
-                                              trackers: [newTracker])
-            } else {
-                newTracker = Tracker(id: UUID(),
-                                     name: nameTrackerTextField.text ?? "",
-                                     color: choosedColor!,
-                                     emoji: choosedEmoji!,
-                                     completedDaysCount: 0,
-                                     schedule: choosedWeekday ?? [])
-                newCategory = TrackerCategory(id: category?.id ?? UUID(),
-                                              head: category?.head ?? "",
-                                              trackers: [newTracker])
-            }
+            guard let choosedWeekday = choosedWeekday else {return}
+            
+            newTracker = Tracker(id: UUID(),
+                                 name: nameTrackerTextField.text ?? "",
+                                 color: choosedColor,
+                                 emoji: choosedEmoji,
+                                 completedDaysCount: 0,
+                                 schedule: choosedWeekday)
         } else {
-            if existTrackerCategory != nil {
-                newTracker = Tracker(id: UUID(),
-                                     name: nameTrackerTextField.text ?? "",
-                                     color: choosedColor!,
-                                     emoji: choosedEmoji!,
-                                     completedDaysCount: 0,
-                                     schedule: Week.allCases)
-                newCategory = TrackerCategory(id: existTrackerCategory?.id ?? UUID(),
-                                              head: existTrackerCategory!.head,
-                                              trackers: [newTracker])
-            } else {
-                newTracker = Tracker(id: UUID(),
-                                     name: nameTrackerTextField.text ?? "",
-                                     color: choosedColor!,
-                                     emoji: choosedEmoji!,
-                                     completedDaysCount: 0,
-                                     schedule: Week.allCases)
-                newCategory = TrackerCategory(id: category?.id ?? UUID(),
-                                              head: category?.head ?? "",
-                                              trackers: [newTracker])
-            }
+            newTracker = Tracker(id: UUID(),
+                                 name: nameTrackerTextField.text ?? "",
+                                 color: choosedColor,
+                                 emoji: choosedEmoji,
+                                 completedDaysCount: 0,
+                                 schedule: Week.allCases)
         }
-        
-        var updateCategoryList = vc.categories
-        updateCategoryList.append(newCategory)
-        vc.categories = updateCategoryList
-        try? trackerStore.addTracker(newTracker, with: newCategory)
+
+        try? trackerStore.addTracker(newTracker, with: choosedCategory)
         
         NotificationCenter.default
             .post(
@@ -275,6 +252,11 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
 
         let cell = NewTrackerTableViewCell(style: .default, reuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
         cell.name.text = tableNames[indexPath.row]
+        
+        if indexPath.row == 0 {
+            cell.choosedParams.text = choosedCategory?.head
+        }
+        
         if indexPath.row == 1 {
             var weekString = ""
             if let choosedWeekday = choosedWeekday {
@@ -294,6 +276,7 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             chooseCategoryViewController.modalPresentationStyle = .automatic
+            chooseCategoryViewController.delegate = self
             present(chooseCategoryViewController, animated: true)
         } else if indexPath.row == 1 {
             scheduleViewController.modalPresentationStyle = .automatic
