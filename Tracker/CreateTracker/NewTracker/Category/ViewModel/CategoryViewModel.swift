@@ -16,23 +16,22 @@ final class CategoryViewModel: TrackerCategoryStoreDelegate {
     
     
     private let trackerCategoryStore = TrackerCategoryStore()
-    weak var delegate: CategoryViewModelDelegate?
+  //  weak var delegate: CategoryViewModelDelegate?
     
     init() {
         trackerCategoryStore.delegate = self
     }
     
-    
     private(set) var categoryList: [TrackerCategory]? {
         didSet {
-            delegate?.categoryListOnChange()
+       //     delegate?.categoryListOnChange()
         }
     }
     
     private(set) var selectedCategory: TrackerCategory? = nil {
         didSet {
             guard let selectedCategory else {return}
-            delegate?.didSelectCategory(category: selectedCategory)
+        //    delegate?.didSelectCategory(category: selectedCategory)
         }
     }
     

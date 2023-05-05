@@ -15,6 +15,7 @@ final class ChooseCategoryViewController: UIViewController {
     private let emptyCategoryImage = UIImageView()
     private let emptyCategoryLabel = UILabel()
     
+    let viewModel = CategoryViewModel()
     var categoryList = [TrackerCategory]()
     
     override func viewDidLoad() {
@@ -23,10 +24,13 @@ final class ChooseCategoryViewController: UIViewController {
         setUI()
         
         addCategoryButton.addTarget(self, action: #selector(clickAddCategory), for: .touchUpInside)
+        
+      //  categoryList = viewModel.categoryList
     }
     
     @objc func clickAddCategory() {
         let vc = NewCategoryViewController()
+        vc.viewModel = self.viewModel
         self.present(vc, animated: false)
     }
     
@@ -88,10 +92,10 @@ final class ChooseCategoryViewController: UIViewController {
 
 extension ChooseCategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
+        categoryList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+        return UITableViewCell()
     }
 }

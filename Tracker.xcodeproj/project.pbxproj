@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		227D6D4E29FC07A100CB9801 /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227D6D4D29FC07A100CB9801 /* UIColorMarshalling.swift */; };
 		22A17F952A014AE9003D49B3 /* ButtonExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A17F942A014AE9003D49B3 /* ButtonExtension.swift */; };
+		22EEB7442A04F71000521FDA /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EEB7432A04F71000521FDA /* StringExtension.swift */; };
 		500C65C829CF37A80066BB76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65C729CF37A80066BB76 /* AppDelegate.swift */; };
 		500C65CA29CF37A80066BB76 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65C929CF37A80066BB76 /* SceneDelegate.swift */; };
 		500C65CC29CF37A80066BB76 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C65CB29CF37A80066BB76 /* TrackersViewController.swift */; };
@@ -47,6 +48,7 @@
 /* Begin PBXFileReference section */
 		227D6D4D29FC07A100CB9801 /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
 		22A17F942A014AE9003D49B3 /* ButtonExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonExtension.swift; sourceTree = "<group>"; };
+		22EEB7432A04F71000521FDA /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		500C65C429CF37A80066BB76 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		500C65C729CF37A80066BB76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		500C65C929CF37A80066BB76 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				22A17F942A014AE9003D49B3 /* ButtonExtension.swift */,
+				22EEB7432A04F71000521FDA /* StringExtension.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 				500C65C829CF37A80066BB76 /* AppDelegate.swift in Sources */,
 				B217111829EAA27C00C6325A /* ScheduleViewControllerDelegate.swift in Sources */,
 				504E07EA29FAE31A003236B8 /* CoreDataModel.xcdatamodeld in Sources */,
+				22EEB7442A04F71000521FDA /* StringExtension.swift in Sources */,
 				5033715729E1AA3B00681B3B /* Tracker.swift in Sources */,
 				504A849A29F6F42400F23212 /* EmojiCell.swift in Sources */,
 				5077620329E2AB4B0033FBC4 /* NewTrackerViewController.swift in Sources */,

@@ -12,6 +12,8 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     private let nameCategory = UITextField()
     private let completeButton = UIButton()
     
+    var viewModel: CategoryViewModel?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
