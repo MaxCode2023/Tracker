@@ -12,25 +12,6 @@ protocol ChooseCategoryViewControllerDelegate: AnyObject {
 }
 
 final class ChooseCategoryViewController: UIViewController, CategoryViewModelDelegate, NewCategoryViewControllerDelegate {
-    func didConfirm(category: TrackerCategory) {
-        viewModel.moveCategoryToData(category: category)
-        dismiss(animated: true)
-    }
-    
-    func categoryListOnChange() {
-        guard let categoryList = viewModel.categoryList else {return}
-        if categoryList.isEmpty {
-            emptyCategoryStackView.isHidden = false
-        } else {
-            emptyCategoryStackView.isHidden = true
-        }
-        tableCategory.reloadData()
-    }
-    
-    func didSelectCategory(category: TrackerCategory) {
-        delegate?.didConfirmCategory(category: category)
-        tableCategory.reloadData()
-    }
     
     private let titleView = UILabel()
     private let tableCategory = UITableView()
@@ -41,7 +22,7 @@ final class ChooseCategoryViewController: UIViewController, CategoryViewModelDel
     
     let viewModel = CategoryViewModel()
     weak var delegate: ChooseCategoryViewControllerDelegate?
-    var categoryList = [TrackerCategory]()
+    private var categoryList = [TrackerCategory]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,10 +38,30 @@ final class ChooseCategoryViewController: UIViewController, CategoryViewModelDel
         tableCategory.dataSource = self
     }
     
-    @objc func clickAddCategory() {
+    @objc private func clickAddCategory() {
         let vc = NewCategoryViewController()
         vc.delegate = self
         self.present(vc, animated: false)
+    }
+    
+    func didConfirm(category: TrackerCategory) {
+        viewModel.moveCategoryToData(category: category)
+        dismiss(animated: true)
+    }
+    
+    func categoryListOnChange() {
+        guard let categoryList = viewModel.categoryList else {return}
+        emptyCategoryStackView.isHidden = !categoryList.isEmpty
+        tableCategory.reloadData()
+    }
+    
+    func didSelectCategory(category: TrackerCategory) {
+        delegate?.didConfirmCategory(category: category)
+        tableCategory.reloadData()
+    }
+    
+    func showError() {
+        showAlert()
     }
     
     private func replaceCategory(currentCategory: TrackerCategory) {
@@ -84,6 +85,18 @@ final class ChooseCategoryViewController: UIViewController, CategoryViewModelDel
         alert.addAction(cancelAction)
         
         present(alert, animated: true)
+    }
+    
+    private func showAlert() {
+        let alert = UIAlertController(title: "Ошибка при работе с базой данных",
+                                      message: "Повторите попытку позже",
+                                      preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "OK",
+                                      style: .default,
+                                      handler: { _ in
+        }))
+        self.present(alert, animated: true)
     }
     
     private func setUI() {

@@ -10,6 +10,7 @@ import Foundation
 protocol CategoryViewModelDelegate {
     func categoryListOnChange()
     func didSelectCategory(category: TrackerCategory)
+    func showError()
 }
 
 final class CategoryViewModel: TrackerCategoryStoreDelegate {
@@ -56,7 +57,9 @@ final class CategoryViewModel: TrackerCategoryStoreDelegate {
             if category == selectedCategory {
                 selectedCategory = nil
             }
-        } catch {}
+        } catch {
+            delegate?.showError()
+        }
     }
     
     private func getDataFromStore() -> [TrackerCategory] {
@@ -74,14 +77,18 @@ final class CategoryViewModel: TrackerCategoryStoreDelegate {
         do {
             try trackerCategoryStore.addCategory(name: name)
             updateCategoryList()
-        } catch {}
+        } catch {
+            delegate?.showError()
+        }
     }
     
     private func saveCategory(category: TrackerCategory) {
         do {
             try trackerCategoryStore.saveDataCategory(data: category)
             updateCategoryList()
-        } catch {}
+        } catch {
+            delegate?.showError()
+        }
     }
     
     func selectCategoryCell(index: IndexPath) {

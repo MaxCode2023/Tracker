@@ -16,7 +16,6 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     private let nameCategory = UITextField()
     private let completeButton = UIButton()
     
-    var viewModel: CategoryViewModel?
     var category: TrackerCategory
     weak var delegate: NewCategoryViewControllerDelegate?
     
