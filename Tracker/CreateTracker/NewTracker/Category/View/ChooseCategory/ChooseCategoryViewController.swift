@@ -20,9 +20,18 @@ final class ChooseCategoryViewController: UIViewController, CategoryViewModelDel
     private let emptyCategoryImage = UIImageView()
     private let emptyCategoryLabel = UILabel()
     
-    let viewModel = CategoryViewModel()
+    let viewModel: CategoryViewModel
     weak var delegate: ChooseCategoryViewControllerDelegate?
     private var categoryList = [TrackerCategory]()
+    
+    init(trackerCategory: TrackerCategory?) {
+        viewModel = CategoryViewModel(selectedCategory: trackerCategory)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +66,6 @@ final class ChooseCategoryViewController: UIViewController, CategoryViewModelDel
     
     func didSelectCategory(category: TrackerCategory) {
         delegate?.didConfirmCategory(category: category)
-        tableCategory.reloadData()
     }
     
     func showError() {

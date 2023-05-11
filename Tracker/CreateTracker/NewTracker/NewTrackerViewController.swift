@@ -9,14 +9,13 @@ import UIKit
 
 final class NewTrackerViewController: UIViewController, UITextFieldDelegate, ScheduleViewControllerDelegate, ChooseCategoryViewControllerDelegate {
     
-    let titleLabel = UILabel()
-    let nameTrackerTextField = UITextField()
-    let settingsTrackerTableView = UITableView()
-    let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    let scheduleViewController = ScheduleViewController()
-    let chooseCategoryViewController = ChooseCategoryViewController()
-    let createButton = UIButton()
-    let cancelButton = UIButton()
+    private let titleLabel = UILabel()
+    private let nameTrackerTextField = UITextField()
+    private let settingsTrackerTableView = UITableView()
+    private let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let scheduleViewController = ScheduleViewController()
+    private let createButton = UIButton()
+    private let cancelButton = UIButton()
     private var choosedWeekday: [Week]?
     private var choosedCategory: TrackerCategory?
     private var choosedEmoji: String?
@@ -28,7 +27,6 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     
     var type: TypeTracker
     var trackerCategoryStore: TrackerCategoryStore
-    private lazy var category: TrackerCategory? = trackerCategoryStore.categories.randomElement()
     
     private let tableNames = ["Категория", "Расписание"]
     
@@ -108,6 +106,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     func didConfirmCategory(category: TrackerCategory) {
         choosedCategory = category
         settingsTrackerTableView.reloadData()
+        dismiss(animated: true)
         checkUnblockedButton()
     }
     
@@ -275,6 +274,7 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
+            let chooseCategoryViewController = ChooseCategoryViewController(trackerCategory: choosedCategory)
             chooseCategoryViewController.modalPresentationStyle = .automatic
             chooseCategoryViewController.delegate = self
             present(chooseCategoryViewController, animated: true)

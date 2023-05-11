@@ -18,7 +18,8 @@ final class CategoryViewModel: TrackerCategoryStoreDelegate {
     private let trackerCategoryStore = TrackerCategoryStore()
     var delegate: CategoryViewModelDelegate?
     
-    init() {
+    init(selectedCategory: TrackerCategory?) {
+        self.selectedCategory = selectedCategory
         trackerCategoryStore.delegate = self
     }
     
