@@ -258,8 +258,10 @@ extension TrackersViewController: TrackerCellDelegate {
     }
     
     func didDeleteTracker(for cell: TrackerCollectionViewCell) {
-        guard let indexPath = trackersCollectionView.indexPath(for: cell) else { return }
-        try? trackerStore.deleteTracker(indexPath)
+        guard let indexPath = self.trackersCollectionView.indexPath(for: cell) else { return }
+        showAlert {
+            try? self.trackerStore.deleteTracker(indexPath)
+        }
     }
     
     func didEditTracker(for cell: TrackerCollectionViewCell) {
@@ -280,6 +282,20 @@ extension TrackersViewController: TrackerCellDelegate {
                 cell.increaseCount()
             }
         }
+    }
+    
+    private func showAlert(onCompletion: @escaping () -> Void) {
+        let alertController = UIAlertController(title: nil, message: "Уверены, что хотите удалить трекер?", preferredStyle: .actionSheet)
+        
+        let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
+            onCompletion()
+        }
+        alertController.addAction(deleteAction)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 
