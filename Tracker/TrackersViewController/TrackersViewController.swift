@@ -230,6 +230,11 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: 10, left: params.leftInset, bottom: 10, right: params.rightInset)
     }
+    
+//    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+//        
+//    }
+    
 }
 
 extension TrackersViewController: UISearchBarDelegate {
@@ -244,6 +249,23 @@ extension TrackersViewController: UISearchBarDelegate {
 }
 
 extension TrackersViewController: TrackerCellDelegate {
+    func didAttachTracker(for cell: TrackerCollectionViewCell) {
+        
+    }
+    
+    func didUnattachTracker(for cell: TrackerCollectionViewCell) {
+        
+    }
+    
+    func didDeleteTracker(for cell: TrackerCollectionViewCell) {
+        guard let indexPath = trackersCollectionView.indexPath(for: cell) else { return }
+        try? trackerStore.deleteTracker(indexPath)
+    }
+    
+    func didEditTracker(for cell: TrackerCollectionViewCell) {
+        
+    }
+    
 
     func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker) {
         if currentDate <= Calendar.current.startOfDay(for: Date()) {

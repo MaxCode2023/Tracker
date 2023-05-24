@@ -9,9 +9,13 @@ import UIKit
 
 protocol TrackerCellDelegate {
     func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker)
+    func didAttachTracker(for cell: TrackerCollectionViewCell)
+    func didUnattachTracker(for cell: TrackerCollectionViewCell)
+    func didDeleteTracker(for cell: TrackerCollectionViewCell)
+    func didEditTracker(for cell: TrackerCollectionViewCell)
 }
 
-final class TrackerCollectionViewCell: UICollectionViewCell {
+final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuInteractionDelegate {
     
     public var color: UIColor? {
         didSet {
@@ -29,6 +33,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     private let plusButtonTittle = UILabel()
     private let plusButtonImage = UIImageView()
     private var tracker: Tracker?
+    private var attachState: AttachState?
     
     var id: UInt?
     var delegate: TrackerCellDelegate?
@@ -44,6 +49,10 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickPlus))
         plusButton.addGestureRecognizer(tapGesture)
         setUI()
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        backView.addInteraction(interaction)
+        
     }
     
     func configCell(tracker: Tracker, count: Int, isCompleted: Bool) {
@@ -53,6 +62,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         title.text = tracker.name
         emoji.text = tracker.emoji
         toggleDoneButton(isCompleted)
+        attachState = tracker.isAttached ? .attach : .unattach
     }
     
     func toggleDoneButton(_ isCompleted: Bool) {
@@ -148,4 +158,45 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             
         ])
     }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        let configuration = UIContextMenuConfiguration(actionProvider: { _ in
+            
+            let titleAttach = self.attachState == .attach ? "Открепить" : "Закрепить"
+            
+            return UIMenu(children: [
+                UIAction(title: titleAttach) { [weak self] _ in
+                    guard let self = self,
+                          let attachState = attachState else {return}
+                    
+                    switch attachState {
+                    case .attach:
+                        self.attachState = .unattach
+                        self.delegate?.didAttachTracker(for: self)
+                    case .unattach:
+                        self.attachState = .attach
+                        self.delegate?.didUnattachTracker(for: self)
+                    }
+                    print("закреп")
+                },
+                UIAction(title: "Редактировать") { [weak self] _ in
+                    guard let self = self else {return}
+                    self.delegate?.didEditTracker(for: self)
+                    print("редакт")
+                },
+                UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+                    guard let self = self else {return}
+                    self.delegate?.didDeleteTracker(for: self)
+                    print("удалить")
+                }
+            ])
+        })
+        
+        return configuration
+    }
+}
+
+private enum AttachState {
+    case attach
+    case unattach
 }

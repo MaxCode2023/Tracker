@@ -66,7 +66,8 @@ final class TrackerStore: NSObject {
                        color: color,
                        emoji: emoji,
                        completedDaysCount: completedDaysCount.count,
-                       schedule: schedule)
+                       schedule: schedule,
+                       isAttached: false)
     }
     
     func getTrackerCoreData(by id: UUID) throws -> TrackerCoreData? {
@@ -153,6 +154,12 @@ extension TrackerStore: TrackerStoreProtocol {
         trackerCoreData.category = categoryCoreData
         try context.save()
     }
+    
+    func deleteTracker(_ indexPath: IndexPath) throws {
+        let tracker = fetchedResultsController.object(at: indexPath)
+        context.delete(tracker)
+        try context.save()
+    }
 }
 
 protocol TrackerStoreDelegate: AnyObject {
@@ -166,6 +173,7 @@ protocol TrackerStoreProtocol {
     func headerLabelInSection(_ section: Int) -> String?
     func tracker(at indexPath: IndexPath) -> Tracker?
     func addTracker(_ tracker: Tracker, with category: TrackerCategory) throws
+    func deleteTracker(_ indexPath: IndexPath) throws
 }
 
 enum TrackeStoreError: Error {

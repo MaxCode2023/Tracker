@@ -125,14 +125,16 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
                                  color: choosedColor,
                                  emoji: choosedEmoji,
                                  completedDaysCount: 0,
-                                 schedule: choosedWeekday)
+                                 schedule: choosedWeekday,
+                                 isAttached: false)
         } else {
             newTracker = Tracker(id: UUID(),
                                  name: nameTrackerTextField.text ?? "",
                                  color: choosedColor,
                                  emoji: choosedEmoji,
                                  completedDaysCount: 0,
-                                 schedule: Week.allCases)
+                                 schedule: Week.allCases,
+                                 isAttached: false)
         }
 
         try? trackerStore.addTracker(newTracker, with: choosedCategory)
