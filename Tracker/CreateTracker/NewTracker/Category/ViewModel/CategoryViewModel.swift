@@ -65,7 +65,9 @@ final class CategoryViewModel: TrackerCategoryStoreDelegate {
     
     private func getDataFromStore() -> [TrackerCategory] {
         do {
-            let categoryList = try trackerCategoryStore.categoriesCoreData.map({
+            let categoryList = try trackerCategoryStore.categoriesCoreData
+                .filter { $0.head != "Закреплённые" }
+                .map({
                 try trackerCategoryStore.makeCategory(from: $0)
             })
             return categoryList

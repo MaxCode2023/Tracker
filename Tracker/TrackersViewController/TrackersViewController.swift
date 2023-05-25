@@ -47,9 +47,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("TIME \(currentDate)")
-        
+                
         setUI()
         setCollection()
 
@@ -230,11 +228,6 @@ extension TrackersViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         UIEdgeInsets(top: 10, left: params.leftInset, bottom: 10, right: params.rightInset)
     }
-    
-//    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
-//        
-//    }
-    
 }
 
 extension TrackersViewController: UISearchBarDelegate {
@@ -249,22 +242,28 @@ extension TrackersViewController: UISearchBarDelegate {
 }
 
 extension TrackersViewController: TrackerCellDelegate {
-    func didAttachTracker(for cell: TrackerCollectionViewCell) {
-        
+    func didAttachTracker(cell: TrackerCollectionViewCell) {
+        guard let indexPath = self.trackersCollectionView.indexPath(for: cell) else { return }
+        if let tracker = try? trackerStore.getTrackerCoreData(by: indexPath) {
+            trackerCategoryStore.attachTracker(tracker: tracker)
+        }
     }
     
-    func didUnattachTracker(for cell: TrackerCollectionViewCell) {
-        
+    func didUnattachTracker(cell: TrackerCollectionViewCell) {
+        guard let indexPath = self.trackersCollectionView.indexPath(for: cell) else { return }
+        if let tracker = try? trackerStore.getTrackerCoreData(by: indexPath) {
+            trackerCategoryStore.unattachTracker(tracker: tracker)
+        }
     }
     
-    func didDeleteTracker(for cell: TrackerCollectionViewCell) {
+    func didDeleteTracker(cell: TrackerCollectionViewCell) {
         guard let indexPath = self.trackersCollectionView.indexPath(for: cell) else { return }
         showAlert {
             try? self.trackerStore.deleteTracker(indexPath)
         }
     }
     
-    func didEditTracker(for cell: TrackerCollectionViewCell) {
+    func didEditTracker(cell: TrackerCollectionViewCell) {
         
     }
     

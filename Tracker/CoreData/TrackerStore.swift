@@ -57,6 +57,7 @@ final class TrackerStore: NSObject {
             let emoji = coreData.emoji,
             let colorHex = coreData.color,
             let completedDaysCount = coreData.records
+           // let isAttached = coreData.isAttached
         else { throw TrackeStoreError.decodingError }
         let color = uiColorMarshalling.color(from: colorHex)
         let scheduleString = coreData.schedule
@@ -67,7 +68,7 @@ final class TrackerStore: NSObject {
                        emoji: emoji,
                        completedDaysCount: completedDaysCount.count,
                        schedule: schedule,
-                       isAttached: false)
+                       isAttached: coreData.isAttached)
     }
     
     func getTrackerCoreData(by id: UUID) throws -> TrackerCoreData? {
@@ -77,6 +78,10 @@ final class TrackerStore: NSObject {
         )
         try fetchedResultsController.performFetch()
         return fetchedResultsController.fetchedObjects?.first
+    }
+    
+    func getTrackerCoreData(by indexPath: IndexPath) throws -> TrackerCoreData? {
+        return fetchedResultsController.object(at: indexPath)
     }
     
     func loadFilteredTrackers(date: Date, searchString: String) throws {
@@ -152,6 +157,7 @@ extension TrackerStore: TrackerStoreProtocol {
         trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.schedule = Week.code(tracker.schedule)
         trackerCoreData.category = categoryCoreData
+        trackerCoreData.isAttached = tracker.isAttached
         try context.save()
     }
     

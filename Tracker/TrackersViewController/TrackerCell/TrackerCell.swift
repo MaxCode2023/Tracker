@@ -9,10 +9,10 @@ import UIKit
 
 protocol TrackerCellDelegate {
     func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker)
-    func didAttachTracker(for cell: TrackerCollectionViewCell)
-    func didUnattachTracker(for cell: TrackerCollectionViewCell)
-    func didDeleteTracker(for cell: TrackerCollectionViewCell)
-    func didEditTracker(for cell: TrackerCollectionViewCell)
+    func didAttachTracker(cell: TrackerCollectionViewCell)
+    func didUnattachTracker(cell: TrackerCollectionViewCell)
+    func didDeleteTracker(cell: TrackerCollectionViewCell)
+    func didEditTracker(cell: TrackerCollectionViewCell)
 }
 
 final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuInteractionDelegate {
@@ -28,6 +28,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
     private let emojiView = UIView()
     private let emoji = UILabel()
     private let title = UILabel()
+    private let attachedImage = UIImageView()
     private let countLabel = UILabel()
     private let plusButton = UIView()
     private let plusButtonTittle = UILabel()
@@ -61,6 +62,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
         color = tracker.color
         title.text = tracker.name
         emoji.text = tracker.emoji
+        attachedImage.isHidden = !tracker.isAttached
         toggleDoneButton(isCompleted)
         attachState = tracker.isAttached ? .attach : .unattach
     }
@@ -99,10 +101,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
         plusButtonTittle.textColor = UIColor(named: "white")
         emojiView.backgroundColor = color?.withAlphaComponent(0.3)
         emojiView.layer.cornerRadius = 12
+        attachedImage.image = UIImage(named: "attached")
         
         contentView.addSubview(backView)
         backView.addSubview(emojiView)
         backView.addSubview(title)
+        backView.addSubview(attachedImage)
         emojiView.addSubview(emoji)
         plusButton.addSubview(plusButtonTittle)
         plusButton.addSubview(plusButtonImage)
@@ -118,6 +122,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
         emojiView.translatesAutoresizingMaskIntoConstraints = false
         emoji.translatesAutoresizingMaskIntoConstraints = false
         title.translatesAutoresizingMaskIntoConstraints = false
+        attachedImage.translatesAutoresizingMaskIntoConstraints = false
         countLabel.translatesAutoresizingMaskIntoConstraints = false
         plusButton.translatesAutoresizingMaskIntoConstraints = false
         plusButtonTittle.translatesAutoresizingMaskIntoConstraints = false
@@ -140,6 +145,11 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
             title.bottomAnchor.constraint(equalTo: backView.bottomAnchor, constant: -12),
             title.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 12),
             title.trailingAnchor.constraint(equalTo: backView.trailingAnchor),
+            
+            attachedImage.widthAnchor.constraint(equalToConstant: 24),
+            attachedImage.heightAnchor.constraint(equalToConstant: 24),
+            attachedImage.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -4),
+            attachedImage.topAnchor.constraint(equalTo: backView.topAnchor, constant: 12),
             
             plusButton.topAnchor.constraint(equalTo: backView.bottomAnchor, constant: 8),
             plusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
@@ -172,22 +182,19 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
                     switch attachState {
                     case .attach:
                         self.attachState = .unattach
-                        self.delegate?.didAttachTracker(for: self)
+                        self.delegate?.didUnattachTracker(cell: self)
                     case .unattach:
                         self.attachState = .attach
-                        self.delegate?.didUnattachTracker(for: self)
+                        self.delegate?.didAttachTracker(cell: self)
                     }
-                    print("закреп")
                 },
                 UIAction(title: "Редактировать") { [weak self] _ in
                     guard let self = self else {return}
-                    self.delegate?.didEditTracker(for: self)
-                    print("редакт")
+                    self.delegate?.didEditTracker(cell: self)
                 },
                 UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
                     guard let self = self else {return}
-                    self.delegate?.didDeleteTracker(for: self)
-                    print("удалить")
+                    self.delegate?.didDeleteTracker(cell: self)
                 }
             ])
         })

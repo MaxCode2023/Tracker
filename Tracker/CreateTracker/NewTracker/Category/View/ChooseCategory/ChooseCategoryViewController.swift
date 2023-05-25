@@ -41,7 +41,7 @@ final class ChooseCategoryViewController: UIViewController, CategoryViewModelDel
         addCategoryButton.addTarget(self, action: #selector(clickAddCategory), for: .touchUpInside)
         
         viewModel.delegate = self
-        viewModel.didUpdate()
+        viewModel.updateCategoryList()
         
         tableCategory.delegate = self
         tableCategory.dataSource = self
