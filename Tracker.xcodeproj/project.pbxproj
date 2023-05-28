@@ -34,6 +34,7 @@
 		5086B04729EB1ECA00B1DFD6 /* SupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5086B04629EB1ECA00B1DFD6 /* SupplementaryView.swift */; };
 		50C372DE2A21F91000994125 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 506322C52A21DD44009DFFC0 /* XCTest.framework */; platformFilter = ios; };
 		50C372E22A21F95D00994125 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 50C372E12A21F95D00994125 /* SnapshotTesting */; };
+		50C633EA2A234D4A0020C8E4 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C633E92A234D4A0020C8E4 /* StatisticsViewController.swift */; };
 		50E3248029D997E200C454F9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E3247F29D997E200C454F9 /* TabBarController.swift */; };
 		50E3248229D9985100C454F9 /* StaticticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E3248129D9985100C454F9 /* StaticticViewController.swift */; };
 		50EB7C322A04311900055502 /* ChooseCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50EB7C312A04311900055502 /* ChooseCategoryViewController.swift */; };
@@ -101,6 +102,7 @@
 		5077620029E2A40A0033FBC4 /* CreateTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerViewController.swift; sourceTree = "<group>"; };
 		5077620229E2AB4B0033FBC4 /* NewTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerViewController.swift; sourceTree = "<group>"; };
 		5086B04629EB1ECA00B1DFD6 /* SupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementaryView.swift; sourceTree = "<group>"; };
+		50C633E92A234D4A0020C8E4 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		50E3247F29D997E200C454F9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		50E3248129D9985100C454F9 /* StaticticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticticViewController.swift; sourceTree = "<group>"; };
 		50EB7C312A04311900055502 /* ChooseCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCategoryViewController.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 		500C65C629CF37A80066BB76 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				50C633E82A234D340020C8E4 /* Statistics */,
 				506351462A03D12400709D87 /* Onboarding */,
 				507761FF29E2A3F30033FBC4 /* CreateTracker */,
 				5033715129E179E900681B3B /* TrackersViewController */,
@@ -273,6 +276,14 @@
 				50ED959729E472370021A5D1 /* NewTracker */,
 			);
 			path = CreateTracker;
+			sourceTree = "<group>";
+		};
+		50C633E82A234D340020C8E4 /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				50C633E92A234D4A0020C8E4 /* StatisticsViewController.swift */,
+			);
+			path = Statistics;
 			sourceTree = "<group>";
 		};
 		50EB7C302A042FF300055502 /* Category */ = {
@@ -475,6 +486,7 @@
 				50EB7C3A2A04437600055502 /* CategoryCell.swift in Sources */,
 				B217111629EAA15B00C6325A /* ScheduleCellDelegate.swift in Sources */,
 				B217111429EA7B6100C6325A /* ScheduleViewController.swift in Sources */,
+				50C633EA2A234D4A0020C8E4 /* StatisticsViewController.swift in Sources */,
 				500C65CC29CF37A80066BB76 /* TrackersViewController.swift in Sources */,
 				50EB7C342A04313B00055502 /* NewCategoryViewController.swift in Sources */,
 				5033715B29E1ABDC00681B3B /* TrackerRecord.swift in Sources */,
