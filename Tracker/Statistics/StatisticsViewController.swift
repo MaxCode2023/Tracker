@@ -13,6 +13,7 @@ final class StatisticsViewController: UIViewController {
     let emptyStatisticsImage = UIImageView()
     let emptyStatisticsLabel = UILabel()
     let stackView = UIStackView()
+    let trackersCompleteBackgroundView = UIView()
     let trackersCompleteView = UIView()
     let trackersCompleteCount = UILabel()
     let trackersCompleteLabel = UILabel()
@@ -29,7 +30,8 @@ final class StatisticsViewController: UIViewController {
         view.addSubview(stackView)
         emptyStatisticsView.addArrangedSubview(emptyStatisticsImage)
         emptyStatisticsView.addArrangedSubview(emptyStatisticsLabel)
-        stackView.addArrangedSubview(trackersCompleteView)
+        stackView.addArrangedSubview(trackersCompleteBackgroundView)
+        trackersCompleteBackgroundView.addSubview(trackersCompleteView)
         trackersCompleteView.addSubview(trackersCompleteCount)
         trackersCompleteView.addSubview(trackersCompleteLabel)
         
@@ -38,6 +40,7 @@ final class StatisticsViewController: UIViewController {
         emptyStatisticsImage.translatesAutoresizingMaskIntoConstraints = false
         emptyStatisticsLabel.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        trackersCompleteBackgroundView.translatesAutoresizingMaskIntoConstraints = false
         trackersCompleteView.translatesAutoresizingMaskIntoConstraints = false
         trackersCompleteCount.translatesAutoresizingMaskIntoConstraints = false
         trackersCompleteLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -50,11 +53,62 @@ final class StatisticsViewController: UIViewController {
             emptyStatisticsView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 77),
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            trackersCompleteBackgroundView.heightAnchor.constraint(equalToConstant: 90),
+            trackersCompleteBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            trackersCompleteBackgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            trackersCompleteView.leadingAnchor.constraint(equalTo: trackersCompleteBackgroundView.leadingAnchor, constant: 1),
+            trackersCompleteView.trailingAnchor.constraint(equalTo: trackersCompleteBackgroundView.trailingAnchor, constant: -1),
+            trackersCompleteView.topAnchor.constraint(equalTo: trackersCompleteBackgroundView.topAnchor, constant: 1),
+            trackersCompleteView.bottomAnchor.constraint(equalTo: trackersCompleteBackgroundView.bottomAnchor, constant: -1),
+            
+            trackersCompleteCount.leadingAnchor.constraint(equalTo: trackersCompleteView.leadingAnchor, constant: 12),
+            trackersCompleteCount.trailingAnchor.constraint(equalTo: trackersCompleteView.trailingAnchor, constant: -12),
+            trackersCompleteCount.topAnchor.constraint(equalTo: trackersCompleteView.topAnchor, constant: 12),
+
+            trackersCompleteLabel.leadingAnchor.constraint(equalTo: trackersCompleteView.leadingAnchor, constant: 12),
+            trackersCompleteLabel.topAnchor.constraint(equalTo: trackersCompleteCount.bottomAnchor, constant: 7),
+            trackersCompleteLabel.bottomAnchor.constraint(equalTo: trackersCompleteView.bottomAnchor, constant: -12),
+            trackersCompleteLabel.trailingAnchor.constraint(equalTo: trackersCompleteView.trailingAnchor, constant: -12),
+
         ])
         
         titleLabel.text = "Статистика"
+        titleLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        titleLabel.textColor = UIColor(named: "black")
+        
         emptyStatisticsLabel.text = "Анализировать пока нечего"
+        emptyStatisticsLabel.textColor = UIColor(named: "black")
         emptyStatisticsImage.image = UIImage(named: "emptyStatistics")
+        emptyStatisticsView.isHidden = true
+
+        trackersCompleteView.backgroundColor = UIColor(named: "white")
+        trackersCompleteView.layer.cornerRadius = 16
+        trackersCompleteBackgroundView.layer.cornerRadius = 16
+        
+        trackersCompleteCount.text = "0"
+        trackersCompleteCount.textColor = UIColor(named: "black")
+        trackersCompleteCount.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        
+        trackersCompleteLabel.text = "Трекеров завершено"
+        trackersCompleteLabel.textColor = UIColor(named: "black")
+        trackersCompleteLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        let gradient = CAGradientLayer()
+        gradient.frame = CGRect(origin: .zero, size: CGSize(width: trackersCompleteBackgroundView.frame.size.width, height: trackersCompleteBackgroundView.frame.size.height))
+        gradient.colors = [
+            UIColor(named: "gradient2")?.cgColor ?? UIColor.green,
+            UIColor(named: "gradient3")?.cgColor ?? UIColor.red,
+            UIColor(named: "gradient1")?.cgColor ?? UIColor.blue,
+        ]
+        gradient.startPoint = CGPoint(x: 0, y: 0)
+        gradient.endPoint = CGPoint(x: 1, y: 0)
+        gradient.cornerRadius = 16
+        trackersCompleteBackgroundView.layer.insertSublayer(gradient, at: 0)
     }
 }

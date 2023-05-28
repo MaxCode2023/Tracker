@@ -20,7 +20,7 @@ final class TabBarController: UITabBarController {
             image: UIImage(named: "trackers icon"),
             selectedImage: nil)
         
-        let statisticViewController = UINavigationController(rootViewController: StatisticViewController()) 
+        let statisticViewController = UINavigationController(rootViewController: StatisticsViewController()) 
         statisticViewController.tabBarItem = UITabBarItem(
             title: NSLocalizedString("Статистика", comment: ""),
             image: UIImage(named: "statistic icon"),
