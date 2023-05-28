@@ -97,11 +97,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
         backView.layer.cornerRadius = 16
         plusButton.layer.cornerRadius = 17
         title.text = "рандомная ячейка"
-        title.textColor = UIColor(named: "white")
+        title.textColor = UIColor(named: "always white")
         plusButtonTittle.textColor = UIColor(named: "white")
         emojiView.backgroundColor = color?.withAlphaComponent(0.3)
         emojiView.layer.cornerRadius = 12
         attachedImage.image = UIImage(named: "attached")
+        countLabel.textColor = UIColor(named: "black")
         
         contentView.addSubview(backView)
         backView.addSubview(emojiView)

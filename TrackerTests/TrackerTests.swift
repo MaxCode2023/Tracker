@@ -50,9 +50,10 @@ final class TrackerTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        //удаляем тестовый трекер
+        //удаляем тестовый трекер и тестовую категорию
         if let testTrackerCategory = testTrackerCategory {
             try? TrackerStore().deleteTracker(IndexPath(row: 0, section: 0))
+            try? TrackerCategoryStore().removeDataCategory(data: testTrackerCategory)
         }
     }
     
@@ -60,7 +61,12 @@ final class TrackerTests: XCTestCase {
         
         let vc = TrackersViewController()
         vc.viewDidLoad()
+        let window = UIWindow(frame: UIScreen.main.bounds)
         
-        assertSnapshots(matching: vc, as: [.image])
+        window.overrideUserInterfaceStyle = .light
+        assertSnapshots(matching: vc, as: [.image(traits: .init(userInterfaceStyle: .light))])
+
+        window.overrideUserInterfaceStyle = .dark
+        assertSnapshots(matching: vc, as: [.image(traits: .init(userInterfaceStyle: .dark))])
     }
 }

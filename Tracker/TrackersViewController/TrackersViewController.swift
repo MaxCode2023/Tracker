@@ -110,6 +110,18 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         trackersCollectionView.reloadData()
     }
     
+    func findLabelsInDatePicker(view: UIView) -> [UILabel] {
+        var labels: [UILabel] = []
+        for subview in view.subviews {
+            if let label = subview as? UILabel {
+                labels.append(label)
+            } else {
+                labels += findLabelsInDatePicker(view: subview)
+            }
+        }
+        return labels
+    }
+
     private func setUI() {
         view.addSubview(trackersLabel)
         view.addSubview(datePicker)
@@ -121,11 +133,13 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
                 
         trackersLabel.text = "Трекеры"
         trackersLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        trackersLabel.textColor = UIColor(named: "black")
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
         emptyTrackersImageView.image = UIImage(named: "emptyTrackers")
         emptyTrackersLabel.text = "Что будем отслеживать?"
         emptyTrackersLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        emptyTrackersLabel.textColor = UIColor(named: "black")
         emptyTrackersView.axis = .vertical
         emptyTrackersView.alignment = .center
         emptyTrackersView.spacing = 8
@@ -133,6 +147,20 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         searchTrackersBar.layer.cornerRadius = 10
         searchTrackersBar.searchBarStyle = .minimal
         searchTrackersBar.placeholder = "Поиск"
+        searchTrackersBar.tintColor = UIColor(named: "datePicker background")
+        trackersCollectionView.backgroundColor = UIColor(named: "white")
+        
+        datePicker.clipsToBounds = true
+        datePicker.layer.cornerRadius = 8
+        if let datePickerView = datePicker.subviews.first {
+            let labels = findLabelsInDatePicker(view: datePickerView)
+            for label in labels {
+                label.textColor = UIColor(named: "always black")
+            }
+        }
+        datePicker.backgroundColor = UIColor(named: "datePicker background")
+
+        view.backgroundColor = UIColor(named: "white")
 
         let addButton = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(addButtonTapped))
         navigationItem.leftBarButtonItem = addButton
