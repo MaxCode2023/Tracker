@@ -10,6 +10,8 @@ import UIKit
 final class NewTrackerViewController: UIViewController, UITextFieldDelegate, ScheduleViewControllerDelegate, ChooseCategoryViewControllerDelegate {
     
     private let titleLabel = UILabel()
+    private let editCountTrackerView = UIStackView()
+    
     private let nameTrackerTextField = UITextField()
     private let settingsTrackerTableView = UITableView()
     private let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())

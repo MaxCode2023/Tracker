@@ -72,6 +72,9 @@ final class StatisticsViewController: UIViewController {
             trackersCompleteLabel.topAnchor.constraint(equalTo: trackersCompleteCount.bottomAnchor, constant: 7),
             trackersCompleteLabel.bottomAnchor.constraint(equalTo: trackersCompleteView.bottomAnchor, constant: -12),
             trackersCompleteLabel.trailingAnchor.constraint(equalTo: trackersCompleteView.trailingAnchor, constant: -12),
+            
+            emptyStatisticsImage.widthAnchor.constraint(equalToConstant: 80),
+            emptyStatisticsImage.heightAnchor.constraint(equalToConstant: 80),
 
         ])
         
@@ -81,8 +84,9 @@ final class StatisticsViewController: UIViewController {
         
         emptyStatisticsLabel.text = "Анализировать пока нечего"
         emptyStatisticsLabel.textColor = UIColor(named: "black")
+        emptyStatisticsLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         emptyStatisticsImage.image = UIImage(named: "emptyStatistics")
-        emptyStatisticsView.isHidden = true
+        emptyStatisticsView.isHidden = false
 
         trackersCompleteView.backgroundColor = UIColor(named: "white")
         trackersCompleteView.layer.cornerRadius = 16
@@ -95,6 +99,10 @@ final class StatisticsViewController: UIViewController {
         trackersCompleteLabel.text = "Трекеров завершено"
         trackersCompleteLabel.textColor = UIColor(named: "black")
         trackersCompleteLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        
+        emptyStatisticsView.spacing = 8
+        emptyStatisticsView.axis = .vertical
+        emptyStatisticsView.alignment = .center
     }
     
     override func viewDidAppear(_ animated: Bool) {
