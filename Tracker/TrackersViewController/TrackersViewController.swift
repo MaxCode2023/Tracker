@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import YandexMobileMetrica
 
 final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate, TrackerStoreDelegate {
     func didUpdate() {
@@ -31,6 +32,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     private let trackerStore = TrackerStore()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
+    private let analyticsService = AnalyticsServiceImpl()
 
     private var currentDate = Calendar.current.startOfDay(for: Date())
     
@@ -72,6 +74,14 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         searchTrackersBar.resignFirstResponder()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        analyticsService.reportEvent(name: "OpenMainScreen", event: .open, screen: self, item: nil)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        analyticsService.reportEvent(name: "CloseMainScreen", event: .close, screen: self, item: nil)
+    }
+    
     private func checkTrackers() {
         if trackerStore.numberOfTrackers == 0 {
             emptyTrackersView.isHidden = false
@@ -96,6 +106,8 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     }
     
     @objc private func addButtonTapped() {
+        analyticsService.reportEvent(name: "AddTrackerTap", event: .click, screen: self, item: "add_track")
+
         let vc = CreateTrackerViewController(vc: self, trackerCategoryStore: trackerCategoryStore)
         vc.title = "Создание трекера"
         present(vc, animated: true)
@@ -285,6 +297,7 @@ extension TrackersViewController: TrackerCellDelegate {
     }
     
     func didDeleteTracker(cell: TrackerCollectionViewCell) {
+        analyticsService.reportEvent(name: "DeleteTracker", event: .click, screen: self, item: "delete")
         guard let indexPath = self.trackersCollectionView.indexPath(for: cell) else { return }
         showAlert {
             try? self.trackerStore.deleteTracker(indexPath)
@@ -292,7 +305,7 @@ extension TrackersViewController: TrackerCellDelegate {
     }
     
     func didEditTracker(cell: TrackerCollectionViewCell) {
-        
+        analyticsService.reportEvent(name: "EditTracker", event: .click, screen: self, item: "edit")
     }
     
 
@@ -308,6 +321,7 @@ extension TrackersViewController: TrackerCellDelegate {
                 cell.toggleDoneButton(true)
                 cell.increaseCount()
             }
+            analyticsService.reportEvent(name: "TapOnTracker", event: .click, screen: self, item: "track")
         }
     }
     
