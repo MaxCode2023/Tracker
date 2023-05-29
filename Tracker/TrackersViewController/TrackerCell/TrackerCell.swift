@@ -178,7 +178,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
             return UIMenu(children: [
                 UIAction(title: titleAttach) { [weak self] _ in
                     guard let self = self,
-                          let attachState = attachState else {return}
+                          let attachState = self.attachState else {return}
                     
                     switch attachState {
                     case .attach:
