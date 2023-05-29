@@ -9,8 +9,15 @@ import UIKit
 
 final class NewTrackerViewController: UIViewController, UITextFieldDelegate, ScheduleViewControllerDelegate, ChooseCategoryViewControllerDelegate {
     
+    private let titleStackView = UIStackView()
     private let titleLabel = UILabel()
-    private let editCountTrackerView = UIStackView()
+    
+    private let editTrackerView = UIStackView()
+    private let editTrackerCountLabel = UILabel()
+    private let editTrackerPlusButton = UIView()
+    private let editTrackerMinusButton = UIView()
+    private let editTrackerPlusLabel = UILabel()
+    private let editTrackerMinusLabel = UILabel()
     
     private let nameTrackerTextField = UITextField()
     private let settingsTrackerTableView = UITableView()
@@ -48,7 +55,6 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     
     init(type: TypeTracker, vc: TrackersViewController, trackerCategoryStore: TrackerCategoryStore) {
         self.type = type
-        print("TYPETEST \(self.type)")
         self.trackerCategoryStore = trackerCategoryStore
         super.init(nibName: nil, bundle: nil)
     }
@@ -166,14 +172,29 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     
     private func setUI() {
         view.backgroundColor = UIColor(named: "white")
+        
+        view.addSubview(titleStackView)
+        titleStackView.addArrangedSubview(titleLabel)
+        titleStackView.addArrangedSubview(editTrackerView)
+       
+        titleStackView.axis = .vertical
+        titleStackView.spacing = 24
+        titleStackView.alignment = .center
+        
         titleLabel.text = "Новая привычка"
         
-        view.addSubview(titleLabel)
+//        view.addSubview(titleLabel)
         view.addSubview(nameTrackerTextField)
         view.addSubview(settingsTrackerTableView)
         view.addSubview(emojiAndColorCollectionView)
         view.addSubview(createButton)
         view.addSubview(cancelButton)
+       // view.addSubview(editTrackerView)
+        editTrackerView.addArrangedSubview(editTrackerMinusButton)
+        editTrackerView.addArrangedSubview(editTrackerCountLabel)
+        editTrackerView.addArrangedSubview(editTrackerPlusButton)
+        editTrackerMinusButton.addSubview(editTrackerMinusLabel)
+        editTrackerPlusButton.addSubview(editTrackerPlusLabel)
         
         createButton.backgroundColor = UIColor(named: "grey")
         createButton.layer.cornerRadius = 16
@@ -203,9 +224,26 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         settingsTrackerTableView.layer.cornerRadius = 16
         
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        
+        editTrackerView.axis = .horizontal
+        editTrackerView.spacing = 24
+        editTrackerView.alignment = .center
+        
+        editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")
+        editTrackerMinusButton.layer.cornerRadius = 17
+        editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")
+        editTrackerPlusButton.layer.cornerRadius = 17
+        editTrackerCountLabel.text = "5 дней"
+        editTrackerCountLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
 
         nameTrackerTextField.delegate = self
         
+        titleStackView.translatesAutoresizingMaskIntoConstraints = false
+        editTrackerView.translatesAutoresizingMaskIntoConstraints = false
+        editTrackerMinusButton.translatesAutoresizingMaskIntoConstraints = false
+        editTrackerPlusButton.translatesAutoresizingMaskIntoConstraints = false
+        editTrackerMinusLabel.translatesAutoresizingMaskIntoConstraints = false
+        editTrackerPlusLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
         settingsTrackerTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -214,10 +252,16 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            nameTrackerTextField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
+            titleStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
+            titleStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            titleStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            titleStackView.bottomAnchor.constraint(equalTo: nameTrackerTextField.topAnchor, constant: -40),
+            
+//            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
+//            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            nameTrackerTextField.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: 38),
             nameTrackerTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             nameTrackerTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             nameTrackerTextField.heightAnchor.constraint(equalToConstant: 75),
@@ -230,6 +274,12 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
             emojiAndColorCollectionView.topAnchor.constraint(equalTo: settingsTrackerTableView.bottomAnchor, constant: 32),
             emojiAndColorCollectionView.leadingAnchor.constraint(equalTo: nameTrackerTextField.leadingAnchor),
             emojiAndColorCollectionView.trailingAnchor.constraint(equalTo: nameTrackerTextField.trailingAnchor),
+            
+            editTrackerMinusButton.heightAnchor.constraint(equalToConstant: 34),
+            editTrackerMinusButton.widthAnchor.constraint(equalToConstant: 34),
+            
+            editTrackerPlusButton.heightAnchor.constraint(equalToConstant: 34),
+            editTrackerPlusButton.widthAnchor.constraint(equalToConstant: 34),
             
             cancelButton.topAnchor.constraint(equalTo: emojiAndColorCollectionView.bottomAnchor, constant: 46),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
