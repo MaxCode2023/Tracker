@@ -18,6 +18,9 @@ final class StatisticsViewController: UIViewController {
     let trackersCompleteCount = UILabel()
     let trackersCompleteLabel = UILabel()
     
+    let trackerStore = TrackerStore()
+    let trackerRecordStore = TrackerRecordStore()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -86,13 +89,20 @@ final class StatisticsViewController: UIViewController {
         emptyStatisticsLabel.textColor = UIColor(named: "black")
         emptyStatisticsLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         emptyStatisticsImage.image = UIImage(named: "emptyStatistics")
-        emptyStatisticsView.isHidden = false
+        
+        if trackerStore.numberOfTrackers == 0 {
+            emptyStatisticsView.isHidden = false
+            trackersCompleteBackgroundView.isHidden = true
+        } else {
+            emptyStatisticsView.isHidden = true
+            trackersCompleteBackgroundView.isHidden = false
+        }
 
         trackersCompleteView.backgroundColor = UIColor(named: "white")
         trackersCompleteView.layer.cornerRadius = 16
         trackersCompleteBackgroundView.layer.cornerRadius = 16
         
-        trackersCompleteCount.text = "0"
+        
         trackersCompleteCount.textColor = UIColor(named: "black")
         trackersCompleteCount.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         
@@ -106,6 +116,7 @@ final class StatisticsViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        try? trackersCompleteCount.text = String(trackerRecordStore.getCompletedTrackersCount())
         
         let gradient = CAGradientLayer()
         gradient.frame = CGRect(origin: .zero, size: CGSize(width: trackersCompleteBackgroundView.frame.size.width, height: trackersCompleteBackgroundView.frame.size.height))
