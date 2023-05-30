@@ -306,6 +306,13 @@ extension TrackersViewController: TrackerCellDelegate {
     
     func didEditTracker(cell: TrackerCollectionViewCell) {
         analyticsService.reportEvent(name: "EditTracker", event: .click, screen: self, item: "edit")
+        guard let indexPath = self.trackersCollectionView.indexPath(for: cell) else { return }
+        if let tracker = try? self.trackerStore.tracker(at: indexPath) {
+            
+            let typeTracker: TypeTracker = tracker.schedule == Week.allCases ? .event : .habit
+            let vc = NewTrackerViewController(type: typeTracker, tracker)
+            present(vc, animated: true)
+        }
     }
     
 

@@ -35,7 +35,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     var selectedIndexPaths: [Int: IndexPath] = [:]
     
     var type: TypeTracker
-    var trackerCategoryStore: TrackerCategoryStore
+    var editableTracker: Tracker? = nil
     
     private let tableNames = ["Категория", "Расписание"]
     
@@ -53,9 +53,9 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     
     private let params: GeometricParams = GeometricParams(cellCount: 6, leftInset: 12, rightInset: 12, cellSpacing: 5)
     
-    init(type: TypeTracker, vc: TrackersViewController, trackerCategoryStore: TrackerCategoryStore) {
+    init(type: TypeTracker, _ editableTracker: Tracker?) {
         self.type = type
-        self.trackerCategoryStore = trackerCategoryStore
+        self.editableTracker = editableTracker
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -71,6 +71,10 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         createButton.addTarget(self, action: #selector(clickCreate), for: .touchUpInside)
         cancelButton.addTarget(self, action: #selector(clickCancel), for: .touchUpInside)
         nameTrackerTextField.addTarget(self, action: #selector(nameDidChanged), for: .editingChanged)
+        let tapMinusButton = UITapGestureRecognizer(target: self, action: #selector(clickMinusButton))
+        editTrackerMinusButton.addGestureRecognizer(tapMinusButton)
+        let tapPlusButton = UITapGestureRecognizer(target: self, action: #selector(clickPlusButton))
+        editTrackerPlusButton.addGestureRecognizer(tapPlusButton)
         
         scheduleViewController.delegate = self
         
@@ -119,33 +123,36 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     }
     
     @objc private func clickCreate() {
-        
-        guard let choosedColor = choosedColor,
-              let choosedEmoji = choosedEmoji,
-              let choosedCategory = choosedCategory else {return}
-        var newTracker: Tracker
-        
-        if type == .habit {
-            guard let choosedWeekday = choosedWeekday else {return}
+        if editableTracker == nil {
+            guard let choosedColor = choosedColor,
+                  let choosedEmoji = choosedEmoji,
+                  let choosedCategory = choosedCategory else {return}
+            var newTracker: Tracker
             
-            newTracker = Tracker(id: UUID(),
-                                 name: nameTrackerTextField.text ?? "",
-                                 color: choosedColor,
-                                 emoji: choosedEmoji,
-                                 completedDaysCount: 0,
-                                 schedule: choosedWeekday,
-                                 isAttached: false)
-        } else {
-            newTracker = Tracker(id: UUID(),
-                                 name: nameTrackerTextField.text ?? "",
-                                 color: choosedColor,
-                                 emoji: choosedEmoji,
-                                 completedDaysCount: 0,
-                                 schedule: Week.allCases,
-                                 isAttached: false)
-        }
+            if type == .habit {
+                guard let choosedWeekday = choosedWeekday else {return}
+                
+                newTracker = Tracker(id: UUID(),
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor,
+                                     emoji: choosedEmoji,
+                                     completedDaysCount: 0,
+                                     schedule: choosedWeekday,
+                                     isAttached: false)
+            } else {
+                newTracker = Tracker(id: UUID(),
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor,
+                                     emoji: choosedEmoji,
+                                     completedDaysCount: 0,
+                                     schedule: Week.allCases,
+                                     isAttached: false)
+            }
 
-        try? trackerStore.addTracker(newTracker, with: choosedCategory)
+            try? trackerStore.addTracker(newTracker, with: choosedCategory)
+        } else {
+            
+        }
         
         NotificationCenter.default
             .post(
@@ -158,6 +165,14 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     
     @objc private func clickCancel() {
         dismiss(animated: true)
+    }
+    
+    @objc private func clickMinusButton() {
+        
+    }
+    
+    @objc private func clickPlusButton() {
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -181,7 +196,22 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         titleStackView.spacing = 24
         titleStackView.alignment = .center
         
-        titleLabel.text = "Новая привычка"
+        if editableTracker != nil {
+            titleLabel.text = "Редактирование привычки"
+            editTrackerView.isHidden = false
+            createButton.setTitle("Сохранить", for: .normal)
+            nameTrackerTextField.text = editableTracker?.name
+            choosedWeekday = editableTracker?.schedule
+            choosedColor = editableTracker?.color
+            choosedEmoji = editableTracker?.emoji
+            let daysLabel = NSLocalizedString("days", comment: "")
+            editTrackerCountLabel.text = "\(String(describing: editableTracker?.completedDaysCount ?? 0)) \(daysLabel)"
+            
+        } else {
+            titleLabel.text = "Новая привычка"
+            editTrackerView.isHidden = true
+            createButton.setTitle("Создать", for: .normal)
+        }
         
         view.addSubview(nameTrackerTextField)
         view.addSubview(settingsTrackerTableView)
@@ -196,7 +226,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         
         createButton.backgroundColor = UIColor(named: "grey")
         createButton.layer.cornerRadius = 16
-        createButton.setTitle("Создать", for: .normal)
+        
         createButton.setTitleColor(UIColor(named: "white"), for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
@@ -229,9 +259,16 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         
         editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")
         editTrackerMinusButton.layer.cornerRadius = 17
+        editTrackerMinusLabel.text = "-"
+        editTrackerMinusLabel.textColor = UIColor(named: "always white")
+        editTrackerMinusLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        
         editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")
         editTrackerPlusButton.layer.cornerRadius = 17
-        editTrackerCountLabel.text = "5 дней"
+        editTrackerPlusLabel.text = "+"
+        editTrackerPlusLabel.textColor = UIColor(named: "always white")
+        editTrackerPlusLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        
         editTrackerCountLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
 
         nameTrackerTextField.delegate = self
@@ -272,9 +309,13 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
             
             editTrackerMinusButton.heightAnchor.constraint(equalToConstant: 34),
             editTrackerMinusButton.widthAnchor.constraint(equalToConstant: 34),
+            editTrackerMinusLabel.centerXAnchor.constraint(equalTo: editTrackerMinusButton.centerXAnchor),
+            editTrackerMinusLabel.centerYAnchor.constraint(equalTo: editTrackerMinusButton.centerYAnchor),
             
             editTrackerPlusButton.heightAnchor.constraint(equalToConstant: 34),
             editTrackerPlusButton.widthAnchor.constraint(equalToConstant: 34),
+            editTrackerPlusLabel.centerXAnchor.constraint(equalTo: editTrackerPlusButton.centerXAnchor),
+            editTrackerPlusLabel.centerYAnchor.constraint(equalTo: editTrackerPlusButton.centerYAnchor),
             
             cancelButton.topAnchor.constraint(equalTo: emojiAndColorCollectionView.bottomAnchor, constant: 46),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
