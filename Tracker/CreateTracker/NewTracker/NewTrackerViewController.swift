@@ -183,13 +183,11 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         
         titleLabel.text = "Новая привычка"
         
-//        view.addSubview(titleLabel)
         view.addSubview(nameTrackerTextField)
         view.addSubview(settingsTrackerTableView)
         view.addSubview(emojiAndColorCollectionView)
         view.addSubview(createButton)
         view.addSubview(cancelButton)
-       // view.addSubview(editTrackerView)
         editTrackerView.addArrangedSubview(editTrackerMinusButton)
         editTrackerView.addArrangedSubview(editTrackerCountLabel)
         editTrackerView.addArrangedSubview(editTrackerPlusButton)
@@ -257,9 +255,6 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
             titleStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             titleStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             titleStackView.bottomAnchor.constraint(equalTo: nameTrackerTextField.topAnchor, constant: -40),
-            
-//            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
-//            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 
             nameTrackerTextField.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: 38),
             nameTrackerTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),

@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by macOS on 30.05.2023.
+  
+*/
+
+"trackers" = "Trackers";
+"filters" = "Filters";
+"statistics" = "Statistics";
+"days" = "days";

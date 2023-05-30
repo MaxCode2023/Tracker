@@ -40,7 +40,8 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
     var delegate: TrackerCellDelegate?
     var count = 0 {
         didSet {
-            countLabel.text = "\(count) дней"
+            let daysLabel = NSLocalizedString("days", comment: "")
+            countLabel.text = "\(count) \(daysLabel)"
         }
     }
     

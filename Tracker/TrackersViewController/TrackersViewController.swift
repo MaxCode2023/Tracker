@@ -143,7 +143,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         emptyTrackersView.addArrangedSubview(emptyTrackersImageView)
         emptyTrackersView.addArrangedSubview(emptyTrackersLabel)
                 
-        trackersLabel.text = "Трекеры"
+        trackersLabel.text = NSLocalizedString("trackers", comment: "")
         trackersLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         trackersLabel.textColor = UIColor(named: "black")
         datePicker.datePickerMode = .date
