@@ -126,6 +126,10 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
         tracker.unattachedCategory = nil
         try? addTracker(categoryName: unattachedCategory, tracker: tracker)
     }
+    
+    func actualCategory(tracker: TrackerCoreData) -> TrackerCategory? {
+        return try? makeCategory(from: tracker.category!)
+    }
 }
 
 protocol TrackerCategoryStoreDelegate: AnyObject {

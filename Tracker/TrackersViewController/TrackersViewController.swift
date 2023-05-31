@@ -307,15 +307,17 @@ extension TrackersViewController: TrackerCellDelegate {
     func didEditTracker(cell: TrackerCollectionViewCell) {
         analyticsService.reportEvent(name: "EditTracker", event: .click, screen: self, item: "edit")
         guard let indexPath = self.trackersCollectionView.indexPath(for: cell) else { return }
-        if let tracker = try? self.trackerStore.tracker(at: indexPath) {
+        if let tracker = try? self.trackerStore.tracker(at: indexPath),
+           let trackerCoreData = try? self.trackerStore.getTrackerCoreData(by: indexPath) {
+            
+            let trackerCategory = try? self.trackerCategoryStore.actualCategory(tracker: trackerCoreData)
             
             let typeTracker: TypeTracker = tracker.schedule == Week.allCases ? .event : .habit
-            let vc = NewTrackerViewController(type: typeTracker, tracker)
+            let vc = NewTrackerViewController(type: typeTracker, tracker, trackerCategory, completedTrackers)
             present(vc, animated: true)
         }
     }
     
-
     func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker) {
         if currentDate <= Calendar.current.startOfDay(for: Date()) {
             if let a = completedTrackers.first(where: { $0.date == currentDate && $0.trackerId == tracker.id }) {

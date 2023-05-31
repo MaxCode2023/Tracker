@@ -166,6 +166,17 @@ extension TrackerStore: TrackerStoreProtocol {
         context.delete(tracker)
         try context.save()
     }
+    
+    func editTracker(oldTracker: Tracker, newTracker: Tracker, category: TrackerCategory) throws {
+        let categoryCoreData = try trackerCategoryStore.categoryCoreData(with: category.id)
+        let trackerCoreData = try getTrackerCoreData(by: oldTracker.id)
+        trackerCoreData?.name = newTracker.name
+        trackerCoreData?.category = categoryCoreData
+        trackerCoreData?.schedule = Week.code(newTracker.schedule)
+        trackerCoreData?.emoji = newTracker.emoji
+        trackerCoreData?.color = uiColorMarshalling.hexString(from: newTracker.color)
+        try context.save()
+    }
 }
 
 protocol TrackerStoreDelegate: AnyObject {

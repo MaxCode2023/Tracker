@@ -14,6 +14,7 @@ final class ScheduleViewController: UIViewController {
     private let confirmButton = UIButton()
     
     private var scheduleList: [ScheduleElement] = []
+    private var choosedWeekdays: [Week]?
     
     var delegate: ScheduleViewControllerDelegate? = nil
     
@@ -26,14 +27,23 @@ final class ScheduleViewController: UIViewController {
         setUi()
     }
     
+    init(choosedWeekdays: [Week]? = nil) {
+        self.choosedWeekdays = choosedWeekdays
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func createCheduleList() -> [ScheduleElement] {
-        [ScheduleElement(weekDay: .monday, isChoosen: false),
-         ScheduleElement(weekDay: .tuesday, isChoosen: false),
-         ScheduleElement(weekDay: .wednesday, isChoosen: false),
-         ScheduleElement(weekDay: .thursday, isChoosen: false),
-         ScheduleElement(weekDay: .friday, isChoosen: false),
-         ScheduleElement(weekDay: .saturday, isChoosen: false),
-         ScheduleElement(weekDay: .sunday, isChoosen: false)]
+        [ScheduleElement(weekDay: .monday, isChoosen: choosedWeekdays?.contains(where: { $0 == .monday}) ?? false),
+         ScheduleElement(weekDay: .tuesday, isChoosen: choosedWeekdays?.contains(where: { $0 == .tuesday}) ?? false),
+         ScheduleElement(weekDay: .wednesday, isChoosen: choosedWeekdays?.contains(where: { $0 == .wednesday}) ?? false),
+         ScheduleElement(weekDay: .thursday, isChoosen: choosedWeekdays?.contains(where: { $0 == .thursday}) ?? false),
+         ScheduleElement(weekDay: .friday, isChoosen: choosedWeekdays?.contains(where: { $0 == .friday}) ?? false),
+         ScheduleElement(weekDay: .saturday, isChoosen: choosedWeekdays?.contains(where: { $0 == .saturday}) ?? false),
+         ScheduleElement(weekDay: .sunday, isChoosen: choosedWeekdays?.contains(where: { $0 == .sunday}) ?? false)]
     }
     
     private func setUi() {

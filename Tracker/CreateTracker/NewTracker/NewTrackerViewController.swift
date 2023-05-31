@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class NewTrackerViewController: UIViewController, UITextFieldDelegate, ScheduleViewControllerDelegate, ChooseCategoryViewControllerDelegate {
+final class NewTrackerViewController: UIViewController, UITextFieldDelegate, ScheduleViewControllerDelegate, ChooseCategoryViewControllerDelegate, TrackerRecordStoreDelegate {
     
     private let titleStackView = UIStackView()
     private let titleLabel = UILabel()
@@ -22,7 +22,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     private let nameTrackerTextField = UITextField()
     private let settingsTrackerTableView = UITableView()
     private let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    private let scheduleViewController = ScheduleViewController()
+    private var scheduleViewController = ScheduleViewController()
     private let createButton = UIButton()
     private let cancelButton = UIButton()
     private var choosedWeekday: [Week]?
@@ -31,11 +31,16 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     private var choosedColor: UIColor?
     
     private let trackerStore = TrackerStore()
+    private let trackerRecordStore = TrackerRecordStore()
     
     var selectedIndexPaths: [Int: IndexPath] = [:]
     
     var type: TypeTracker
-    var editableTracker: Tracker? = nil
+    private var editableTracker: Tracker? = nil
+    private var editableTrackerCategory: TrackerCategory? = nil
+    private var countDays: Int?
+    private let daysLabel = NSLocalizedString("days", comment: "")
+    private var completedTrackers: Set<TrackerRecord>? = nil
     
     private let tableNames = ["Категория", "Расписание"]
     
@@ -53,9 +58,11 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     
     private let params: GeometricParams = GeometricParams(cellCount: 6, leftInset: 12, rightInset: 12, cellSpacing: 5)
     
-    init(type: TypeTracker, _ editableTracker: Tracker?) {
+    init(type: TypeTracker, _ editableTracker: Tracker? = nil, _ editableTrackerCategory: TrackerCategory? = nil, _ completedTrackers: Set<TrackerRecord>? = nil) {
         self.type = type
         self.editableTracker = editableTracker
+        self.editableTrackerCategory = editableTrackerCategory
+        self.completedTrackers = completedTrackers
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -77,6 +84,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         editTrackerPlusButton.addGestureRecognizer(tapPlusButton)
         
         scheduleViewController.delegate = self
+        trackerRecordStore.delegate = self
         
         settingsTrackerTableView.delegate = self
         settingsTrackerTableView.dataSource = self
@@ -85,8 +93,18 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         settingsTrackerTableView.register(NewTrackerTableViewCell.self, forCellReuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if editableTracker != nil {
+            setEmojiAndColor()
+        }
+    }
+    
     @objc private func nameDidChanged() {
         checkUnblockedButton()
+    }
+    
+    func didUpdateRecords(_ records: Set<TrackerRecord>) {
+        self.completedTrackers = records
     }
     
     func checkUnblockedButton() {
@@ -123,10 +141,12 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     }
     
     @objc private func clickCreate() {
+        guard let choosedColor = choosedColor,
+              let choosedEmoji = choosedEmoji,
+              let choosedCategory = choosedCategory else {return}
+        
         if editableTracker == nil {
-            guard let choosedColor = choosedColor,
-                  let choosedEmoji = choosedEmoji,
-                  let choosedCategory = choosedCategory else {return}
+            
             var newTracker: Tracker
             
             if type == .habit {
@@ -151,7 +171,16 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
 
             try? trackerStore.addTracker(newTracker, with: choosedCategory)
         } else {
-            
+            if let editableTracker = editableTracker {
+                let newTracker = Tracker(id: editableTracker.id,
+                                         name: nameTrackerTextField.text ?? "",
+                                         color: choosedColor,
+                                         emoji: choosedEmoji,
+                                         completedDaysCount: countDays ?? 0,
+                                         schedule: choosedWeekday,
+                                         isAttached: false)
+                try? trackerStore.editTracker(oldTracker: editableTracker, newTracker: newTracker, category: choosedCategory)
+            }
         }
         
         NotificationCenter.default
@@ -168,11 +197,29 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     }
     
     @objc private func clickMinusButton() {
+        if var count = countDays {
+            if count > 0 {
+                count = count - 1
+            }
+            countDays = count
+            editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
+        }
         
+        if let a = completedTrackers?.first(where: { $0.trackerId == editableTracker?.id }) {
+            try? trackerRecordStore.remove(a)
+        }
     }
     
     @objc private func clickPlusButton() {
-        
+        if var count = countDays {
+            if count >= 0 {
+                count = count + 1
+            }
+            countDays = count
+            editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
+        }
+        let trackerRecord = TrackerRecord(id: UUID(), trackerId: editableTracker?.id ?? UUID(), date: Calendar.current.startOfDay(for: Date()))
+        try? trackerRecordStore.addRecord(trackerRecord)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -196,7 +243,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         titleStackView.spacing = 24
         titleStackView.alignment = .center
         
-        if editableTracker != nil {
+        if editableTracker != nil && editableTrackerCategory != nil {
             titleLabel.text = "Редактирование привычки"
             editTrackerView.isHidden = false
             createButton.setTitle("Сохранить", for: .normal)
@@ -204,9 +251,10 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
             choosedWeekday = editableTracker?.schedule
             choosedColor = editableTracker?.color
             choosedEmoji = editableTracker?.emoji
-            let daysLabel = NSLocalizedString("days", comment: "")
-            editTrackerCountLabel.text = "\(String(describing: editableTracker?.completedDaysCount ?? 0)) \(daysLabel)"
-            
+            countDays = editableTracker?.completedDaysCount
+            editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
+            didConfirmCategory(category: editableTrackerCategory!)
+            self.scheduleViewController = ScheduleViewController(choosedWeekdays: editableTracker?.schedule)
         } else {
             titleLabel.text = "Новая привычка"
             editTrackerView.isHidden = true
@@ -330,6 +378,45 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
             createButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
         ])
     }
+    
+    func setEmojiAndColor() {
+        
+        for (index, _) in emojies.enumerated() {
+            
+            if emojies[index] == editableTracker?.emoji {
+                let indexPath = IndexPath(row: index, section: 0)
+                selectedIndexPaths[indexPath.section] = indexPath
+                emojiAndColorCollectionView.reloadItems(at: [indexPath])
+            }
+        }
+        
+        for (index, color) in colors.enumerated() {
+            
+            if compareColors(color1: color, color2: editableTracker?.color ?? .blue) {
+                let indexPath = IndexPath(row: index, section: 1)
+                selectedIndexPaths[indexPath.section] = indexPath
+                emojiAndColorCollectionView.reloadItems(at: [indexPath])
+            }
+        }
+        
+        checkUnblockedButton()
+    }
+    
+    func compareColors (color1: UIColor, color2: UIColor) -> Bool {
+        var red: CGFloat = 0
+        var green: CGFloat  = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat  = 0
+        color1.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        var red2: CGFloat = 0
+        var green2: CGFloat  = 0
+        var blue2: CGFloat = 0
+        var alpha2: CGFloat  = 0
+        color2.getRed(&red2, green: &green2, blue: &blue2, alpha: &alpha2)
+
+        return (Int(red*255) == Int(red2*255) && Int(green*255) == Int(green2*255) && Int(blue*255) == Int(blue2*255) )
+    }
 }
 
 extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
@@ -436,7 +523,7 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDa
             
         } else if indexPath.section == 1 {
             let colorCell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCell
-            colorCell.configCell(color: colors[indexPath.row])
+            colorCell.configCell(color: colors[indexPath.row] ?? .blue)
             
             if let selectedIndexPath = selectedIndexPaths[indexPath.section], indexPath == selectedIndexPath {
                 colorCell.toggleCell(false)
