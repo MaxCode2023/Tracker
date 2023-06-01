@@ -14,7 +14,9 @@ final class LaunchScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         setUI()
-        setTabBarController()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.setTabBarController()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

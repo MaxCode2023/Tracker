@@ -8,6 +8,7 @@
 import Foundation
 
 public struct TrackerRecord: Hashable {
-    let id: UInt
+    let id: UUID
+    let trackerId: UUID
     let date: Date
 }

@@ -7,25 +7,48 @@
 
 import UIKit
 
-final class NewTrackerViewController: UIViewController, ScheduleViewControllerDelegate {
-    
+final class NewTrackerViewController: UIViewController, UITextFieldDelegate, ScheduleViewControllerDelegate {
+      
     let titleLabel = UILabel()
     let nameTrackerTextField = UITextField()
     let settingsTrackerTableView = UITableView()
-    let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
+    let emojiAndColorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     let scheduleViewController = ScheduleViewController()
     let createButton = UIButton()
     let cancelButton = UIButton()
     private var choosedWeekday: [Week]?
+    private var choosedEmoji: String?
+    private var choosedColor: UIColor?
+    
+    private let trackerStore = TrackerStore()
+    
+    var selectedIndexPaths: [Int: IndexPath] = [:]
     
     var type: TypeTracker
     var vc: TrackersViewController
+    var trackerCategoryStore: TrackerCategoryStore
+    private lazy var category: TrackerCategory? = trackerCategoryStore.categories.randomElement()
     
     private let tableNames = ["Категория", "Расписание"]
     
-    init(type: TypeTracker, vc: TrackersViewController) {
+    private let emojies = [
+        "🙂", "😻", "🌺", "🐶", "❤️", "😱",
+        "😇", "😡", "🥶", "🤔", "🙌", "🍔",
+        "🥦", "🏓", "🥇", "🎸", "🏝", "😪",
+    ]
+    
+    private let colors = [
+        #colorLiteral(red: 0.9921568627, green: 0.2980392157, blue: 0.2862745098, alpha: 1), #colorLiteral(red: 1, green: 0.5333333333, blue: 0.1176470588, alpha: 1), #colorLiteral(red: 0, green: 0.4823529412, blue: 0.9803921569, alpha: 1), #colorLiteral(red: 0.431372549, green: 0.2666666667, blue: 0.9960784314, alpha: 1), #colorLiteral(red: 0.2, green: 0.8117647059, blue: 0.4117647059, alpha: 1), #colorLiteral(red: 0.9019607843, green: 0.4274509804, blue: 0.831372549, alpha: 1),
+        #colorLiteral(red: 0.9764705882, green: 0.831372549, blue: 0.831372549, alpha: 1), #colorLiteral(red: 0.2039215686, green: 0.6549019608, blue: 0.9960784314, alpha: 1), #colorLiteral(red: 0.2745098039, green: 0.9019607843, blue: 0.6156862745, alpha: 1), #colorLiteral(red: 0.2078431373, green: 0.2039215686, blue: 0.4862745098, alpha: 1), #colorLiteral(red: 1, green: 0.4039215686, blue: 0.3019607843, alpha: 1), #colorLiteral(red: 1, green: 0.6, blue: 0.8, alpha: 1),
+        #colorLiteral(red: 0.9647058824, green: 0.768627451, blue: 0.5450980392, alpha: 1), #colorLiteral(red: 0.4745098039, green: 0.5803921569, blue: 0.9607843137, alpha: 1), #colorLiteral(red: 0.5137254902, green: 0.1725490196, blue: 0.9450980392, alpha: 1), #colorLiteral(red: 0.6784313725, green: 0.337254902, blue: 0.8549019608, alpha: 1), #colorLiteral(red: 0.5529411765, green: 0.4470588235, blue: 0.9019607843, alpha: 1), #colorLiteral(red: 0.1843137255, green: 0.8156862745, blue: 0.3450980392, alpha: 1),
+    ]
+    
+    private let params: GeometricParams = GeometricParams(cellCount: 6, leftInset: 12, rightInset: 12, cellSpacing: 5)
+    
+    init(type: TypeTracker, vc: TrackersViewController, trackerCategoryStore: TrackerCategoryStore) {
         self.type = type
         self.vc = vc
+        self.trackerCategoryStore = trackerCategoryStore
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -35,6 +58,8 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
 
     override func viewDidLoad() {
         setUI()
+        
+        setCollection()
         
         if type == .habit {
             //тут надо сделать вкладку "расписание" в таблице
@@ -56,47 +81,92 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         settingsTrackerTableView.register(NewTrackerTableViewCell.self, forCellReuseIdentifier: NewTrackerTableViewCell.reuseIdentifier)
     }
     
+    func checkUnblockedButton() {
+        
+        let checkForEvent = choosedEmoji == nil || choosedColor == nil || nameTrackerTextField.text?.isEmpty ?? true || nameTrackerTextField.text == " "
+        let checkForHabit = checkForEvent || choosedWeekday == nil
+        
+        if type == .event {
+            if checkForEvent {
+                createButton.blockedButton()
+            } else {
+                createButton.unblockedButton()
+            }
+        } else if type == .habit {
+            if checkForHabit {
+                createButton.blockedButton()
+            } else {
+                createButton.unblockedButton()
+            }
+        }
+    }
+    
     func didFinishPickingWeekDays(weekDayList: [Week]) {
         choosedWeekday = weekDayList
         settingsTrackerTableView.reloadData()
+        checkUnblockedButton()
     }
     
-    @objc func clickCreate() {
+    @objc private func clickCreate() {
+        
         let existTrackerCategory = vc.categories.first {
             //тут вместо "" надо будет вставить выбранную категорию из таблицы
             $0.head == ""
         }
     
+        var newTracker: Tracker
         var newCategory: TrackerCategory
         
         if type == .habit {
             if existTrackerCategory != nil {
-                newCategory = TrackerCategory(head: existTrackerCategory!.head,
-                                              trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
-                                                                 name: nameTrackerTextField.text ?? "",
-                                                                 color: .green,
-                                                                 emoji: "",
-                                                                 schedule: choosedWeekday ?? [])])
+                newTracker = Tracker(id: UUID(),
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor!,
+                                     emoji: choosedEmoji!,
+                                     completedDaysCount: 0,
+                                     schedule: choosedWeekday ?? [])
+                newCategory = TrackerCategory(id: existTrackerCategory?.id ?? UUID(),
+                                              head: existTrackerCategory!.head,
+                                              trackers: [newTracker])
             } else {
-                newCategory = TrackerCategory(head: "Новая категория",
-                                              trackers: [Tracker(id: 0,
-                                                                 name: nameTrackerTextField.text ?? "",
-                                                                 color: .green,
-                                                                 emoji: "",
-                                                                 schedule: choosedWeekday ?? [])])
+                newTracker = Tracker(id: UUID(),
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor!,
+                                     emoji: choosedEmoji!,
+                                     completedDaysCount: 0,
+                                     schedule: choosedWeekday ?? [])
+                newCategory = TrackerCategory(id: category?.id ?? UUID(),
+                                              head: category?.head ?? "",
+                                              trackers: [newTracker])
             }
         } else {
-            newCategory = TrackerCategory(head: existTrackerCategory!.head,
-                                          trackers: [Tracker(id: UInt(existTrackerCategory!.trackers.count+1),
-                                                             name: nameTrackerTextField.text ?? "",
-                                                             color: .green,
-                                                             emoji: "",
-                                                             schedule: [.wednesday, .tuesday, .thursday, .sunday, .saturday, .monday, .friday])])
+            if existTrackerCategory != nil {
+                newTracker = Tracker(id: UUID(),
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor!,
+                                     emoji: choosedEmoji!,
+                                     completedDaysCount: 0,
+                                     schedule: Week.allCases)
+                newCategory = TrackerCategory(id: existTrackerCategory?.id ?? UUID(),
+                                              head: existTrackerCategory!.head,
+                                              trackers: [newTracker])
+            } else {
+                newTracker = Tracker(id: UUID(),
+                                     name: nameTrackerTextField.text ?? "",
+                                     color: choosedColor!,
+                                     emoji: choosedEmoji!,
+                                     completedDaysCount: 0,
+                                     schedule: Week.allCases)
+                newCategory = TrackerCategory(id: category?.id ?? UUID(),
+                                              head: category?.head ?? "",
+                                              trackers: [newTracker])
+            }
         }
         
         var updateCategoryList = vc.categories
         updateCategoryList.append(newCategory)
         vc.categories = updateCategoryList
+        try? trackerStore.addTracker(newTracker, with: newCategory)
         
         NotificationCenter.default
             .post(
@@ -107,12 +177,21 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         dismiss(animated: true)
     }
     
-    @objc func clickCancel() {
+    @objc private func clickCancel() {
         dismiss(animated: true)
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        checkUnblockedButton()
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        checkUnblockedButton()
+    }
+    
     private func setUI() {
-        
         view.backgroundColor = UIColor(named: "white")
         titleLabel.text = "Новая привычка"
         
@@ -152,6 +231,8 @@ final class NewTrackerViewController: UIViewController, ScheduleViewControllerDe
         
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
+        nameTrackerTextField.delegate = self
+        
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         nameTrackerTextField.translatesAutoresizingMaskIntoConstraints = false
         settingsTrackerTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -224,6 +305,104 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
             scheduleViewController.modalPresentationStyle = .automatic
             present(scheduleViewController, animated: true)
         }
+    }
+}
+
+extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    private func setCollection() {
+        emojiAndColorCollectionView.delegate = self
+        emojiAndColorCollectionView.dataSource = self
+        emojiAndColorCollectionView.allowsMultipleSelection = false
+        emojiAndColorCollectionView.register(EmojiCell.self, forCellWithReuseIdentifier: "emojiCell")
+        emojiAndColorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: "colorCell")
+        emojiAndColorCollectionView.register(SupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        var count: Int?
+        count = section == 0 ? emojies.count : colors.count
+        return count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as! SupplementaryView
+        if indexPath.section == 0 {
+            view.titleLabel.text = "Emoji"
+        } else if indexPath.section == 1 {
+            view.titleLabel.text = "Цвет"
+        }
+        return view
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        
+        let indexPath = IndexPath(row: 0, section: section)
+        let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
+        
+        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
+                                                         height: UIView.layoutFittingExpandedSize.height),
+                                                  withHorizontalFittingPriority: .required,
+                                                  verticalFittingPriority: .fittingSizeLevel)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        var cell: UICollectionViewCell?
+        
+        if indexPath.section == 0 {
+            let emojiCell = collectionView.dequeueReusableCell(withReuseIdentifier: "emojiCell", for: indexPath) as! EmojiCell
+            emojiCell.emoji.text = emojies[indexPath.row]
+            
+            if let selectedIndexPath = selectedIndexPaths[indexPath.section], indexPath == selectedIndexPath {
+                emojiCell.toggleCell(false)
+                choosedEmoji = emojiCell.emoji.text
+            } else {
+                emojiCell.toggleCell(true)
+            }
+            cell = emojiCell
+            
+        } else if indexPath.section == 1 {
+            let colorCell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCell
+            colorCell.configCell(color: colors[indexPath.row])
+            
+            if let selectedIndexPath = selectedIndexPaths[indexPath.section], indexPath == selectedIndexPath {
+                colorCell.toggleCell(false)
+                choosedColor = colorCell.color
+            } else {
+                colorCell.toggleCell(true)
+            }
+            cell = colorCell
+        }
+        return cell ?? UICollectionViewCell()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if let selectedIndexPath = selectedIndexPaths[indexPath.section] {
+            selectedIndexPaths[indexPath.section] = nil
+            collectionView.reloadItems(at: [selectedIndexPath])
+        }
+        selectedIndexPaths[indexPath.section] = indexPath
+        collectionView.reloadItems(at: [indexPath])
+        checkUnblockedButton()
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 49, height: 49)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return params.cellSpacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        UIEdgeInsets(top: 10, left: params.leftInset, bottom: 10, right: params.rightInset)
     }
 }
 

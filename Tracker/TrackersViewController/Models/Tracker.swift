@@ -8,14 +8,15 @@
 import UIKit
 
 public struct Tracker {
-    let id: UInt
+    let id: UUID
     let name: String
     let color: UIColor
     let emoji: String
-    let schedule: [Week]
+    let completedDaysCount: Int
+    let schedule: [Week]?
 }
 
-public enum Week: Int {
+public enum Week: Int, CaseIterable {
     
     case monday = 2
     case tuesday = 3
@@ -62,5 +63,31 @@ public enum Week: Int {
             return "Вск"
         }
     }
+}
+
+extension Week {
+    static func code(_ weekdays: [Week]?) -> String? {
+        guard let weekdays else { return nil }
+        let indexes = weekdays.map { Self.allCases.firstIndex(of: $0) }
+        var result = ""
+        for i in 0..<7 {
+            if indexes.contains(i) {
+                result += "1"
+            } else {
+                result += "0"
+            }
+        }
+        return result
+    }
     
+    static func decode(from string: String?) -> [Week]? {
+        guard let string else { return nil }
+        var weekdays = [Week]()
+        for (index, value) in string.enumerated() {
+            guard value == "1" else { continue }
+            let weekday = Self.allCases[index]
+            weekdays.append(weekday)
+        }
+        return weekdays
+    }
 }
