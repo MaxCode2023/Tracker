@@ -11,7 +11,7 @@ protocol TrackerCellDelegate {
     func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker)
     func didAttachTracker(cell: TrackerCollectionViewCell)
     func didUnattachTracker(cell: TrackerCollectionViewCell)
-    func didDeleteTracker(cell: TrackerCollectionViewCell)
+    func didDeleteTracker(tracker: Tracker)
     func didEditTracker(cell: TrackerCollectionViewCell)
 }
 
@@ -196,7 +196,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
                 },
                 UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
                     guard let self = self else {return}
-                    self.delegate?.didDeleteTracker(cell: self)
+                    if let tracker = tracker {
+                        self.delegate?.didDeleteTracker(tracker: tracker)
+                    }
                 }
             ])
         })

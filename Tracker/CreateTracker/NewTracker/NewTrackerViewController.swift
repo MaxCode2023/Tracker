@@ -41,6 +41,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     private var countDays: Int?
     private let daysLabel = NSLocalizedString("days", comment: "")
     private var completedTrackers: Set<TrackerRecord>? = nil
+    private var currentDate: Date? = nil
     
     private let tableNames = ["Категория", "Расписание"]
     
@@ -58,11 +59,12 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     
     private let params: GeometricParams = GeometricParams(cellCount: 6, leftInset: 12, rightInset: 12, cellSpacing: 5)
     
-    init(type: TypeTracker, _ editableTracker: Tracker? = nil, _ editableTrackerCategory: TrackerCategory? = nil, _ completedTrackers: Set<TrackerRecord>? = nil) {
+    init(type: TypeTracker, _ editableTracker: Tracker? = nil, _ editableTrackerCategory: TrackerCategory? = nil, _ completedTrackers: Set<TrackerRecord>? = nil, _ currentDate: Date? = nil) {
         self.type = type
         self.editableTracker = editableTracker
         self.editableTrackerCategory = editableTrackerCategory
         self.completedTrackers = completedTrackers
+        self.currentDate = currentDate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -197,29 +199,45 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     }
     
     @objc private func clickMinusButton() {
-        if var count = countDays {
-            if count > 0 {
-                count = count - 1
-            }
-            countDays = count
-            editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
-        }
         
-        if let a = completedTrackers?.first(where: { $0.trackerId == editableTracker?.id }) {
-            try? trackerRecordStore.remove(a)
+        if currentDate ?? Date() <= Calendar.current.startOfDay(for: Date()) {
+            if let a = completedTrackers?.first(where: { $0.date == currentDate && $0.trackerId == editableTracker?.id }) {
+                try? trackerRecordStore.remove(a)
+                
+                if var count = countDays {
+                    if count > 0 {
+                        count = count - 1
+                    }
+                    countDays = count
+                    editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
+                }
+                editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(0.6)
+                editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(1)
+            }
         }
     }
     
     @objc private func clickPlusButton() {
-        if var count = countDays {
-            if count >= 0 {
-                count = count + 1
+        
+        if currentDate ?? Date() <= Calendar.current.startOfDay(for: Date()) {
+            if let _ = completedTrackers?.first(where: { $0.date == currentDate && $0.trackerId == editableTracker?.id }) {
+                
+            } else {
+                let trackerRecord = TrackerRecord(id: UUID(), trackerId: editableTracker?.id ?? UUID(), date: currentDate)
+                try? trackerRecordStore.addRecord(trackerRecord)
+                
+                if var count = countDays {
+                    if count >= 0 {
+                        count = count + 1
+                    }
+                    countDays = count
+                    editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
+                }
+                
+                editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(1)
+                editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(0.6)
             }
-            countDays = count
-            editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
         }
-        let trackerRecord = TrackerRecord(id: UUID(), trackerId: editableTracker?.id ?? UUID(), date: Calendar.current.startOfDay(for: Date()))
-        try? trackerRecordStore.addRecord(trackerRecord)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -255,6 +273,13 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
             editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
             didConfirmCategory(category: editableTrackerCategory!)
             self.scheduleViewController = ScheduleViewController(choosedWeekdays: editableTracker?.schedule)
+            if let _ = completedTrackers?.first(where: { $0.date == currentDate && $0.trackerId == editableTracker?.id }) {
+                editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(1)
+                editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(0.6)
+            } else {
+                editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(0.6)
+                editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(1)
+            }
         } else {
             titleLabel.text = "Новая привычка"
             editTrackerView.isHidden = true
@@ -305,13 +330,11 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         editTrackerView.spacing = 24
         editTrackerView.alignment = .center
         
-        editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")
         editTrackerMinusButton.layer.cornerRadius = 17
         editTrackerMinusLabel.text = "-"
         editTrackerMinusLabel.textColor = UIColor(named: "always white")
         editTrackerMinusLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         
-        editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")
         editTrackerPlusButton.layer.cornerRadius = 17
         editTrackerPlusLabel.text = "+"
         editTrackerPlusLabel.textColor = UIColor(named: "always white")
@@ -523,7 +546,7 @@ extension NewTrackerViewController: UICollectionViewDelegate, UICollectionViewDa
             
         } else if indexPath.section == 1 {
             let colorCell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorCell", for: indexPath) as! ColorCell
-            colorCell.configCell(color: colors[indexPath.row] ?? .blue)
+            colorCell.configCell(color: colors[indexPath.row])
             
             if let selectedIndexPath = selectedIndexPaths[indexPath.section], indexPath == selectedIndexPath {
                 colorCell.toggleCell(false)

@@ -161,10 +161,11 @@ extension TrackerStore: TrackerStoreProtocol {
         try context.save()
     }
     
-    func deleteTracker(_ indexPath: IndexPath) throws {
-        let tracker = fetchedResultsController.object(at: indexPath)
-        context.delete(tracker)
-        try context.save()
+    func deleteTracker(_ tracker: Tracker) throws {
+        if let tracker = try getTrackerCoreData(by: tracker.id) {
+            context.delete(tracker)
+            try context.save()
+        }
     }
     
     func editTracker(oldTracker: Tracker, newTracker: Tracker, category: TrackerCategory) throws {
@@ -190,7 +191,7 @@ protocol TrackerStoreProtocol {
     func headerLabelInSection(_ section: Int) -> String?
     func tracker(at indexPath: IndexPath) -> Tracker?
     func addTracker(_ tracker: Tracker, with category: TrackerCategory) throws
-    func deleteTracker(_ indexPath: IndexPath) throws
+    func deleteTracker(_ tracker: Tracker) throws
 }
 
 enum TrackeStoreError: Error {

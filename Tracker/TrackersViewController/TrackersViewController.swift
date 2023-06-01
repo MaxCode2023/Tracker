@@ -296,11 +296,18 @@ extension TrackersViewController: TrackerCellDelegate {
         }
     }
     
-    func didDeleteTracker(cell: TrackerCollectionViewCell) {
+    func didDeleteTracker(tracker: Tracker) {
         analyticsService.reportEvent(name: "DeleteTracker", event: .click, screen: self, item: "delete")
-        guard let indexPath = self.trackersCollectionView.indexPath(for: cell) else { return }
         showAlert {
-            try? self.trackerStore.deleteTracker(indexPath)
+            
+            if let allCompletedTrackers = try? self.trackerRecordStore.getAllCompletedTrackers() {
+                for _ in allCompletedTrackers {
+                    if let removedRecord = self.completedTrackers.first(where: { $0.trackerId == tracker.id }) {
+                        try? self.trackerRecordStore.remove(removedRecord)
+                    }
+                }
+            }
+            try? self.trackerStore.deleteTracker(tracker)
         }
     }
     
@@ -313,7 +320,7 @@ extension TrackersViewController: TrackerCellDelegate {
             let trackerCategory = try? self.trackerCategoryStore.actualCategory(tracker: trackerCoreData)
             
             let typeTracker: TypeTracker = tracker.schedule == Week.allCases ? .event : .habit
-            let vc = NewTrackerViewController(type: typeTracker, tracker, trackerCategory, completedTrackers)
+            let vc = NewTrackerViewController(type: typeTracker, tracker, trackerCategory, completedTrackers, currentDate)
             present(vc, animated: true)
         }
     }

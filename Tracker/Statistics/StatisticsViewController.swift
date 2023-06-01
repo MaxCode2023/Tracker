@@ -27,6 +27,26 @@ final class StatisticsViewController: UIViewController {
         setUI()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        try? trackersCompleteCount.text = String(trackerRecordStore.getCompletedTrackersCount())
+        
+        setGradientOnView(trackersCompleteBackgroundView)
+    }
+    
+    private func setGradientOnView(_ view: UIView) {
+        let gradient = CAGradientLayer()
+        gradient.frame = CGRect(origin: .zero, size: CGSize(width: view.frame.size.width, height: view.frame.size.height))
+        gradient.colors = [
+            UIColor(named: "gradient2")?.cgColor ?? UIColor.green,
+            UIColor(named: "gradient3")?.cgColor ?? UIColor.red,
+            UIColor(named: "gradient1")?.cgColor ?? UIColor.blue,
+        ]
+        gradient.startPoint = CGPoint(x: 0, y: 0)
+        gradient.endPoint = CGPoint(x: 1, y: 0)
+        gradient.cornerRadius = 16
+        view.layer.insertSublayer(gradient, at: 0)
+    }
+    
     private func setUI() {
         view.addSubview(titleLabel)
         view.addSubview(emptyStatisticsView)
@@ -38,6 +58,43 @@ final class StatisticsViewController: UIViewController {
         trackersCompleteView.addSubview(trackersCompleteCount)
         trackersCompleteView.addSubview(trackersCompleteLabel)
         
+        activateConstraint()
+        
+        titleLabel.text = "Статистика"
+        titleLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        titleLabel.textColor = UIColor(named: "black")
+        
+        emptyStatisticsLabel.text = "Анализировать пока нечего"
+        emptyStatisticsLabel.textColor = UIColor(named: "black")
+        emptyStatisticsLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        emptyStatisticsImage.image = UIImage(named: "emptyStatistics")
+        
+        if trackerStore.numberOfTrackers == 0 {
+            emptyStatisticsView.isHidden = false
+            trackersCompleteBackgroundView.isHidden = true
+        } else {
+            emptyStatisticsView.isHidden = true
+            trackersCompleteBackgroundView.isHidden = false
+        }
+
+        trackersCompleteView.backgroundColor = UIColor(named: "white")
+        trackersCompleteView.layer.cornerRadius = 16
+        trackersCompleteBackgroundView.layer.cornerRadius = 16
+        
+        
+        trackersCompleteCount.textColor = UIColor(named: "black")
+        trackersCompleteCount.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        
+        trackersCompleteLabel.text = "Трекеров завершено"
+        trackersCompleteLabel.textColor = UIColor(named: "black")
+        trackersCompleteLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        
+        emptyStatisticsView.spacing = 8
+        emptyStatisticsView.axis = .vertical
+        emptyStatisticsView.alignment = .center
+    }
+    
+    private func activateConstraint() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         emptyStatisticsView.translatesAutoresizingMaskIntoConstraints = false
         emptyStatisticsImage.translatesAutoresizingMaskIntoConstraints = false
@@ -78,56 +135,6 @@ final class StatisticsViewController: UIViewController {
             
             emptyStatisticsImage.widthAnchor.constraint(equalToConstant: 80),
             emptyStatisticsImage.heightAnchor.constraint(equalToConstant: 80),
-
         ])
-        
-        titleLabel.text = "Статистика"
-        titleLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
-        titleLabel.textColor = UIColor(named: "black")
-        
-        emptyStatisticsLabel.text = "Анализировать пока нечего"
-        emptyStatisticsLabel.textColor = UIColor(named: "black")
-        emptyStatisticsLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        emptyStatisticsImage.image = UIImage(named: "emptyStatistics")
-        
-        if trackerStore.numberOfTrackers == 0 {
-            emptyStatisticsView.isHidden = false
-            trackersCompleteBackgroundView.isHidden = true
-        } else {
-            emptyStatisticsView.isHidden = true
-            trackersCompleteBackgroundView.isHidden = false
-        }
-
-        trackersCompleteView.backgroundColor = UIColor(named: "white")
-        trackersCompleteView.layer.cornerRadius = 16
-        trackersCompleteBackgroundView.layer.cornerRadius = 16
-        
-        
-        trackersCompleteCount.textColor = UIColor(named: "black")
-        trackersCompleteCount.font = UIFont.systemFont(ofSize: 34, weight: .bold)
-        
-        trackersCompleteLabel.text = "Трекеров завершено"
-        trackersCompleteLabel.textColor = UIColor(named: "black")
-        trackersCompleteLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        
-        emptyStatisticsView.spacing = 8
-        emptyStatisticsView.axis = .vertical
-        emptyStatisticsView.alignment = .center
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        try? trackersCompleteCount.text = String(trackerRecordStore.getCompletedTrackersCount())
-        
-        let gradient = CAGradientLayer()
-        gradient.frame = CGRect(origin: .zero, size: CGSize(width: trackersCompleteBackgroundView.frame.size.width, height: trackersCompleteBackgroundView.frame.size.height))
-        gradient.colors = [
-            UIColor(named: "gradient2")?.cgColor ?? UIColor.green,
-            UIColor(named: "gradient3")?.cgColor ?? UIColor.red,
-            UIColor(named: "gradient1")?.cgColor ?? UIColor.blue,
-        ]
-        gradient.startPoint = CGPoint(x: 0, y: 0)
-        gradient.endPoint = CGPoint(x: 1, y: 0)
-        gradient.cornerRadius = 16
-        trackersCompleteBackgroundView.layer.insertSublayer(gradient, at: 0)
     }
 }
