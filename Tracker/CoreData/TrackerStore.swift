@@ -145,7 +145,7 @@ extension TrackerStore: TrackerStoreProtocol {
         let categoryCoreData = try trackerCategoryStore.categoryCoreData(with: category.id)
         let trackerCoreData = TrackerCoreData(context: context)
         trackerCoreData.idTracker = tracker.id.uuidString
-        trackerCoreData.createdAt = Date()
+        trackerCoreData.createdAt = Calendar.current.startOfDay(for: Date())
         trackerCoreData.name = tracker.name
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)

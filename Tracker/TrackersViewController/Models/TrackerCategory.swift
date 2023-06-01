@@ -7,8 +7,7 @@
 
 import Foundation
 
-public struct TrackerCategory {
+public struct TrackerCategory: Equatable {
     public let id: UUID
-    public let head: String
-    public let trackers: [Tracker]
+    public var head: String
 }

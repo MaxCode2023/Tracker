@@ -24,9 +24,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     private let emptyTrackersImageView = UIImageView()
     private let emptyTrackersLabel = UILabel()
     private let trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    
-    public var categories: [TrackerCategory] = [TrackerCategory]()
-    private var visibleCategories: [TrackerCategory] = [TrackerCategory]()
+
     private var completedTrackers: Set<TrackerRecord> = []
     private var completedTrackerIds = Set<UInt>()
 
@@ -34,7 +32,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
 
-    private var currentDate: Date = Date()
+    private var currentDate = Calendar.current.startOfDay(for: Date())
     
     static let didChangeCollectionNotification = Notification.Name(rawValue: "TrackersCollectionDidChange")
     private var trackersCollectionObserver: NSObjectProtocol?
@@ -49,6 +47,9 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        print("TIME \(currentDate)")
+        
         setUI()
         setCollection()
 
@@ -103,7 +104,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        currentDate = datePicker.date
+        currentDate = Calendar.current.startOfDay(for: datePicker.date)
         do {
             try trackerStore.loadFilteredTrackers(date: currentDate, searchString: searchText)
             try trackerRecordStore.loadCompletedTrackers(by: currentDate)
@@ -245,11 +246,7 @@ extension TrackersViewController: UISearchBarDelegate {
 extension TrackersViewController: TrackerCellDelegate {
 
     func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker) {
-        
-        if currentDate > Date() {
-            return
-        } else {
-            
+        if currentDate <= Calendar.current.startOfDay(for: Date()) {
             if let a = completedTrackers.first(where: { $0.date == currentDate && $0.trackerId == tracker.id }) {
                 try? trackerRecordStore.remove(a)
                 cell.toggleDoneButton(false)
