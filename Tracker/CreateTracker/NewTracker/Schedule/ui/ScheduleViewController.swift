@@ -51,7 +51,7 @@ final class ScheduleViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(confirmButton)
         
-        view.backgroundColor = UIColor(named: "white")
+        view.backgroundColor = UIColor(named: Constants.ColorNames.white)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -63,12 +63,12 @@ final class ScheduleViewController: UIViewController {
         confirmButton.setTitle("Готово", for: .normal)
         confirmButton.titleLabel?.font = .systemFont(ofSize: 16)
         confirmButton.layer.cornerRadius = 16
-        confirmButton.backgroundColor = UIColor(named: "black")
+        confirmButton.backgroundColor = UIColor(named: Constants.ColorNames.black)
         confirmButton.addTarget(self, action: #selector(clickConfirm), for: .touchUpInside)
         
         titleLabel.text = "Расписание"
         titleLabel.font = .systemFont(ofSize: 16)
-        titleLabel.textColor = UIColor(named: "black")
+        titleLabel.textColor = UIColor(named: Constants.ColorNames.black)
         
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),

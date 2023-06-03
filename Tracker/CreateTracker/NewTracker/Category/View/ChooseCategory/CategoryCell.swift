@@ -20,10 +20,10 @@ final class CategoryCell: UITableViewCell {
         contentView.addSubview(name)
         contentView.addSubview(checkImage)
 
-        contentView.backgroundColor = UIColor(named: "background view")?.withAlphaComponent(0.3)
+        contentView.backgroundColor = UIColor(named: Constants.ColorNames.background)?.withAlphaComponent(0.3)
         
-        checkImage.image = UIImage(named: "check")
-        name.textColor = UIColor(named: "black")
+        checkImage.image = UIImage(named: Constants.ImageNames.check)
+        name.textColor = UIColor(named: Constants.ColorNames.black)
         name.font = UIFont.systemFont(ofSize: 17)
         
         name.translatesAutoresizingMaskIntoConstraints = false

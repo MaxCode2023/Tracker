@@ -35,11 +35,12 @@ final class StatisticsViewController: UIViewController {
     
     private func setGradientOnView(_ view: UIView) {
         let gradient = CAGradientLayer()
-        gradient.frame = CGRect(origin: .zero, size: CGSize(width: view.frame.size.width, height: view.frame.size.height))
+        gradient.frame = CGRect(origin: .zero, size: CGSize(width: view.frame.size.width,
+                                                            height: view.frame.size.height))
         gradient.colors = [
-            UIColor(named: "gradient2")?.cgColor ?? UIColor.green,
-            UIColor(named: "gradient3")?.cgColor ?? UIColor.red,
-            UIColor(named: "gradient1")?.cgColor ?? UIColor.blue,
+            UIColor(named: Constants.ColorNames.gradient2)?.cgColor ?? UIColor.green,
+            UIColor(named: Constants.ColorNames.gradient3)?.cgColor ?? UIColor.red,
+            UIColor(named: Constants.ColorNames.gradient1)?.cgColor ?? UIColor.blue,
         ]
         gradient.startPoint = CGPoint(x: 0, y: 0)
         gradient.endPoint = CGPoint(x: 1, y: 0)
@@ -62,12 +63,12 @@ final class StatisticsViewController: UIViewController {
         
         titleLabel.text = "Статистика"
         titleLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
-        titleLabel.textColor = UIColor(named: "black")
+        titleLabel.textColor = UIColor(named: Constants.ColorNames.black)
         
         emptyStatisticsLabel.text = "Анализировать пока нечего"
-        emptyStatisticsLabel.textColor = UIColor(named: "black")
+        emptyStatisticsLabel.textColor = UIColor(named: Constants.ColorNames.black)
         emptyStatisticsLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        emptyStatisticsImage.image = UIImage(named: "emptyStatistics")
+        emptyStatisticsImage.image = UIImage(named: Constants.ImageNames.emptyStatistics)
         
         if trackerStore.numberOfTrackers == 0 {
             emptyStatisticsView.isHidden = false
@@ -77,16 +78,15 @@ final class StatisticsViewController: UIViewController {
             trackersCompleteBackgroundView.isHidden = false
         }
 
-        trackersCompleteView.backgroundColor = UIColor(named: "white")
+        trackersCompleteView.backgroundColor = UIColor(named: Constants.ColorNames.white)
         trackersCompleteView.layer.cornerRadius = 16
         trackersCompleteBackgroundView.layer.cornerRadius = 16
         
-        
-        trackersCompleteCount.textColor = UIColor(named: "black")
+        trackersCompleteCount.textColor = UIColor(named: Constants.ColorNames.black)
         trackersCompleteCount.font = UIFont.systemFont(ofSize: 34, weight: .bold)
         
         trackersCompleteLabel.text = "Трекеров завершено"
-        trackersCompleteLabel.textColor = UIColor(named: "black")
+        trackersCompleteLabel.textColor = UIColor(named: Constants.ColorNames.black)
         trackersCompleteLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         
         emptyStatisticsView.spacing = 8
@@ -95,15 +95,7 @@ final class StatisticsViewController: UIViewController {
     }
     
     private func activateConstraint() {
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        emptyStatisticsView.translatesAutoresizingMaskIntoConstraints = false
-        emptyStatisticsImage.translatesAutoresizingMaskIntoConstraints = false
-        emptyStatisticsLabel.translatesAutoresizingMaskIntoConstraints = false
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        trackersCompleteBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        trackersCompleteView.translatesAutoresizingMaskIntoConstraints = false
-        trackersCompleteCount.translatesAutoresizingMaskIntoConstraints = false
-        trackersCompleteLabel.translatesAutoresizingMaskIntoConstraints = false
+        setAutolayout()
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -119,22 +111,45 @@ final class StatisticsViewController: UIViewController {
             trackersCompleteBackgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             trackersCompleteBackgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            trackersCompleteView.leadingAnchor.constraint(equalTo: trackersCompleteBackgroundView.leadingAnchor, constant: 1),
-            trackersCompleteView.trailingAnchor.constraint(equalTo: trackersCompleteBackgroundView.trailingAnchor, constant: -1),
-            trackersCompleteView.topAnchor.constraint(equalTo: trackersCompleteBackgroundView.topAnchor, constant: 1),
-            trackersCompleteView.bottomAnchor.constraint(equalTo: trackersCompleteBackgroundView.bottomAnchor, constant: -1),
+            trackersCompleteView.leadingAnchor.constraint(equalTo: trackersCompleteBackgroundView.leadingAnchor,
+                                                          constant: 1),
+            trackersCompleteView.trailingAnchor.constraint(equalTo: trackersCompleteBackgroundView.trailingAnchor,
+                                                           constant: -1),
+            trackersCompleteView.topAnchor.constraint(equalTo: trackersCompleteBackgroundView.topAnchor,
+                                                      constant: 1),
+            trackersCompleteView.bottomAnchor.constraint(equalTo: trackersCompleteBackgroundView.bottomAnchor,
+                                                         constant: -1),
             
-            trackersCompleteCount.leadingAnchor.constraint(equalTo: trackersCompleteView.leadingAnchor, constant: 12),
-            trackersCompleteCount.trailingAnchor.constraint(equalTo: trackersCompleteView.trailingAnchor, constant: -12),
-            trackersCompleteCount.topAnchor.constraint(equalTo: trackersCompleteView.topAnchor, constant: 12),
+            trackersCompleteCount.leadingAnchor.constraint(equalTo: trackersCompleteView.leadingAnchor,
+                                                           constant: 12),
+            trackersCompleteCount.trailingAnchor.constraint(equalTo: trackersCompleteView.trailingAnchor,
+                                                            constant: -12),
+            trackersCompleteCount.topAnchor.constraint(equalTo: trackersCompleteView.topAnchor,
+                                                       constant: 12),
 
-            trackersCompleteLabel.leadingAnchor.constraint(equalTo: trackersCompleteView.leadingAnchor, constant: 12),
-            trackersCompleteLabel.topAnchor.constraint(equalTo: trackersCompleteCount.bottomAnchor, constant: 7),
-            trackersCompleteLabel.bottomAnchor.constraint(equalTo: trackersCompleteView.bottomAnchor, constant: -12),
-            trackersCompleteLabel.trailingAnchor.constraint(equalTo: trackersCompleteView.trailingAnchor, constant: -12),
+            trackersCompleteLabel.leadingAnchor.constraint(equalTo: trackersCompleteView.leadingAnchor,
+                                                           constant: 12),
+            trackersCompleteLabel.topAnchor.constraint(equalTo: trackersCompleteCount.bottomAnchor,
+                                                       constant: 7),
+            trackersCompleteLabel.bottomAnchor.constraint(equalTo: trackersCompleteView.bottomAnchor,
+                                                          constant: -12),
+            trackersCompleteLabel.trailingAnchor.constraint(equalTo: trackersCompleteView.trailingAnchor,
+                                                            constant: -12),
             
             emptyStatisticsImage.widthAnchor.constraint(equalToConstant: 80),
             emptyStatisticsImage.heightAnchor.constraint(equalToConstant: 80),
         ])
+    }
+    
+    private func setAutolayout() {
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        emptyStatisticsView.translatesAutoresizingMaskIntoConstraints = false
+        emptyStatisticsImage.translatesAutoresizingMaskIntoConstraints = false
+        emptyStatisticsLabel.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        trackersCompleteBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        trackersCompleteView.translatesAutoresizingMaskIntoConstraints = false
+        trackersCompleteCount.translatesAutoresizingMaskIntoConstraints = false
+        trackersCompleteLabel.translatesAutoresizingMaskIntoConstraints = false
     }
 }

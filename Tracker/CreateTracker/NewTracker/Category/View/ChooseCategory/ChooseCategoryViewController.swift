@@ -108,7 +108,7 @@ final class ChooseCategoryViewController: UIViewController, CategoryViewModelDel
     }
     
     private func setUI() {
-        view.backgroundColor = UIColor(named: "white")
+        view.backgroundColor = UIColor(named: Constants.ColorNames.white)
         view.addSubview(titleView)
         view.addSubview(tableCategory)
         view.addSubview(addCategoryButton)
@@ -130,14 +130,14 @@ final class ChooseCategoryViewController: UIViewController, CategoryViewModelDel
         tableCategory.separatorStyle = .singleLine
         tableCategory.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     
-        emptyCategoryImage.image = UIImage(named: "emptyTrackers")
+        emptyCategoryImage.image = UIImage(named: Constants.ImageNames.emptyTrackers)
         emptyCategoryLabel.text = "Привычки и события можно объединять по смыслу"
         emptyCategoryLabel.numberOfLines = 2
         emptyCategoryLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         emptyCategoryLabel.textAlignment = .center
         
         addCategoryButton.setTitle("Добавить категорию", for: .normal)
-        addCategoryButton.backgroundColor = UIColor(named: "black")
+        addCategoryButton.backgroundColor = UIColor(named: Constants.ColorNames.black)
         addCategoryButton.layer.cornerRadius = 16
         
         titleView.translatesAutoresizingMaskIntoConstraints = false

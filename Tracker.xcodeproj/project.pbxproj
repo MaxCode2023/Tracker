@@ -36,6 +36,7 @@
 		5086B04729EB1ECA00B1DFD6 /* SupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5086B04629EB1ECA00B1DFD6 /* SupplementaryView.swift */; };
 		50A810AC2A251B060097C72D /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A810AB2A251B060097C72D /* AnalyticsService.swift */; };
 		50A810AE2A251B120097C72D /* AnalyticsServiceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A810AD2A251B120097C72D /* AnalyticsServiceImpl.swift */; };
+		50AEBC882A2B055F00B12BCE /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50AEBC872A2B055F00B12BCE /* Const.swift */; };
 		50C372DE2A21F91000994125 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 506322C52A21DD44009DFFC0 /* XCTest.framework */; platformFilter = ios; };
 		50C372E22A21F95D00994125 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 50C372E12A21F95D00994125 /* SnapshotTesting */; };
 		50C633EA2A234D4A0020C8E4 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C633E92A234D4A0020C8E4 /* StatisticsViewController.swift */; };
@@ -117,6 +118,7 @@
 		5086B04629EB1ECA00B1DFD6 /* SupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupplementaryView.swift; sourceTree = "<group>"; };
 		50A810AB2A251B060097C72D /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		50A810AD2A251B120097C72D /* AnalyticsServiceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsServiceImpl.swift; sourceTree = "<group>"; };
+		50AEBC872A2B055F00B12BCE /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		50C633E92A234D4A0020C8E4 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
 		50E3247F29D997E200C454F9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		50EB7C312A04311900055502 /* ChooseCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseCategoryViewController.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 			children = (
 				22A17F942A014AE9003D49B3 /* ButtonExtension.swift */,
 				22EEB7432A04F71000521FDA /* StringExtension.swift */,
+				50AEBC872A2B055F00B12BCE /* Const.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -595,6 +598,7 @@
 				B217110F29EA75E200C6325A /* ScheduleElement.swift in Sources */,
 				506351482A03D18700709D87 /* OnboardingViewController.swift in Sources */,
 				5033715929E1AB5300681B3B /* TrackerCategory.swift in Sources */,
+				50AEBC882A2B055F00B12BCE /* Const.swift in Sources */,
 				504A849D29F6F43B00F23212 /* ColorCell.swift in Sources */,
 				50E3248029D997E200C454F9 /* TabBarController.swift in Sources */,
 				500C65C829CF37A80066BB76 /* AppDelegate.swift in Sources */,

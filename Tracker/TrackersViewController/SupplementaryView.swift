@@ -14,7 +14,7 @@ final class SupplementaryView: UICollectionReusableView {
         super.init(frame: frame)
         
         titleLabel.font = UIFont.systemFont(ofSize: 19, weight: .bold)
-        titleLabel.textColor = UIColor(named: "black")
+        titleLabel.textColor = UIColor(named: Constants.ColorNames.black)
         
         addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

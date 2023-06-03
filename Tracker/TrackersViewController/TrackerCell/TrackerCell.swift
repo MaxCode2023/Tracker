@@ -98,12 +98,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
         backView.layer.cornerRadius = 16
         plusButton.layer.cornerRadius = 17
         title.text = "рандомная ячейка"
-        title.textColor = UIColor(named: "always white")
-        plusButtonTittle.textColor = UIColor(named: "white")
+        title.textColor = UIColor(named: Constants.ColorNames.alwaysWhite)
+        plusButtonTittle.textColor = UIColor(named: Constants.ColorNames.white)
         emojiView.backgroundColor = color?.withAlphaComponent(0.3)
         emojiView.layer.cornerRadius = 12
-        attachedImage.image = UIImage(named: "attached")
-        countLabel.textColor = UIColor(named: "black")
+        attachedImage.image = UIImage(named: Constants.ImageNames.attached)
+        countLabel.textColor = UIColor(named: Constants.ColorNames.black)
         
         contentView.addSubview(backView)
         backView.addSubview(emojiView)
@@ -115,7 +115,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
         emoji.text = ""
         plusButtonTittle.text = "+"
         plusButtonImage.isHidden = true
-        plusButtonImage.image = UIImage(named: "Done")
+        plusButtonImage.image = UIImage(named: Constants.ImageNames.done)
         
         contentView.addSubview(countLabel)
         contentView.addSubview(plusButton)

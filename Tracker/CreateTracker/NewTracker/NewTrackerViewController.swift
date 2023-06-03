@@ -211,8 +211,8 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
                     countDays = count
                     editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
                 }
-                editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(0.6)
-                editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(1)
+                editTrackerMinusButton.backgroundColor = UIColor(named: Constants.ColorNames.collectionOrange1)?.withAlphaComponent(0.6)
+                editTrackerPlusButton.backgroundColor = UIColor(named: Constants.ColorNames.collectionOrange1)?.withAlphaComponent(1)
             }
         }
     }
@@ -234,8 +234,8 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
                     editTrackerCountLabel.text = "\(String(describing: countDays ?? 0)) \(daysLabel)"
                 }
                 
-                editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(1)
-                editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(0.6)
+                editTrackerMinusButton.backgroundColor = UIColor(named: Constants.ColorNames.collectionOrange1)?.withAlphaComponent(1)
+                editTrackerPlusButton.backgroundColor = UIColor(named: Constants.ColorNames.collectionOrange1)?.withAlphaComponent(0.6)
             }
         }
     }
@@ -251,7 +251,7 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
     }
     
     private func setUI() {
-        view.backgroundColor = UIColor(named: "white")
+        view.backgroundColor = UIColor(named: Constants.ColorNames.white)
         
         view.addSubview(titleStackView)
         titleStackView.addArrangedSubview(titleLabel)
@@ -274,11 +274,11 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
             didConfirmCategory(category: editableTrackerCategory!)
             self.scheduleViewController = ScheduleViewController(choosedWeekdays: editableTracker?.schedule)
             if let _ = completedTrackers?.first(where: { $0.date == currentDate && $0.trackerId == editableTracker?.id }) {
-                editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(1)
-                editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(0.6)
+                editTrackerMinusButton.backgroundColor = UIColor(named: Constants.ColorNames.collectionOrange1)?.withAlphaComponent(1)
+                editTrackerPlusButton.backgroundColor = UIColor(named: Constants.ColorNames.collectionOrange1)?.withAlphaComponent(0.6)
             } else {
-                editTrackerMinusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(0.6)
-                editTrackerPlusButton.backgroundColor = UIColor(named: "collection orange")?.withAlphaComponent(1)
+                editTrackerMinusButton.backgroundColor = UIColor(named: Constants.ColorNames.collectionOrange1)?.withAlphaComponent(0.6)
+                editTrackerPlusButton.backgroundColor = UIColor(named: Constants.ColorNames.collectionOrange1)?.withAlphaComponent(1)
             }
         } else {
             titleLabel.text = "Новая привычка"
@@ -297,22 +297,22 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         editTrackerMinusButton.addSubview(editTrackerMinusLabel)
         editTrackerPlusButton.addSubview(editTrackerPlusLabel)
         
-        createButton.backgroundColor = UIColor(named: "grey")
+        createButton.backgroundColor = UIColor(named: Constants.ColorNames.grey)
         createButton.layer.cornerRadius = 16
         
-        createButton.setTitleColor(UIColor(named: "white"), for: .normal)
+        createButton.setTitleColor(UIColor(named: Constants.ColorNames.white), for: .normal)
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
-        cancelButton.backgroundColor = UIColor(named: "white")
+        cancelButton.backgroundColor = UIColor(named: Constants.ColorNames.white)
         cancelButton.setTitle("Отменить", for: .normal)
         cancelButton.layer.borderWidth = 1
-        cancelButton.layer.borderColor = UIColor(named: "red")?.cgColor
+        cancelButton.layer.borderColor = UIColor(named: Constants.ColorNames.red)?.cgColor
         cancelButton.layer.cornerRadius = 16
         cancelButton.setTitleColor(UIColor(named: "red"), for: .normal)
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
         nameTrackerTextField.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        nameTrackerTextField.backgroundColor = UIColor(named: "background view")
+        nameTrackerTextField.backgroundColor = UIColor(named: Constants.ColorNames.background)
         nameTrackerTextField.layer.cornerRadius = 16
         nameTrackerTextField.placeholder = "Введите название трекера"
         
@@ -332,12 +332,12 @@ final class NewTrackerViewController: UIViewController, UITextFieldDelegate, Sch
         
         editTrackerMinusButton.layer.cornerRadius = 17
         editTrackerMinusLabel.text = "-"
-        editTrackerMinusLabel.textColor = UIColor(named: "always white")
+        editTrackerMinusLabel.textColor = UIColor(named: Constants.ColorNames.alwaysWhite)
         editTrackerMinusLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         
         editTrackerPlusButton.layer.cornerRadius = 17
         editTrackerPlusLabel.text = "+"
-        editTrackerPlusLabel.textColor = UIColor(named: "always white")
+        editTrackerPlusLabel.textColor = UIColor(named: Constants.ColorNames.alwaysWhite)
         editTrackerPlusLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         
         editTrackerCountLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
@@ -467,7 +467,7 @@ extension NewTrackerViewController: UITableViewDelegate, UITableViewDataSource {
             cell.choosedParams.text = weekString
         }
         
-        cell.backgroundColor = UIColor(named: "background view")
+        cell.backgroundColor = UIColor(named: Constants.ColorNames.background)
 
         return cell
     }

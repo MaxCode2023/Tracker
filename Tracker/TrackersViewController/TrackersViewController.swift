@@ -145,13 +145,13 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
                 
         trackersLabel.text = NSLocalizedString("trackers", comment: "")
         trackersLabel.font = UIFont.systemFont(ofSize: 34, weight: .bold)
-        trackersLabel.textColor = UIColor(named: "black")
+        trackersLabel.textColor = UIColor(named: Constants.ColorNames.black)
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
-        emptyTrackersImageView.image = UIImage(named: "emptyTrackers")
+        emptyTrackersImageView.image = UIImage(named: Constants.ImageNames.emptyTrackers)
         emptyTrackersLabel.text = "Что будем отслеживать?"
         emptyTrackersLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        emptyTrackersLabel.textColor = UIColor(named: "black")
+        emptyTrackersLabel.textColor = UIColor(named: Constants.ColorNames.black)
         emptyTrackersView.axis = .vertical
         emptyTrackersView.alignment = .center
         emptyTrackersView.spacing = 8
@@ -159,24 +159,24 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         searchTrackersBar.layer.cornerRadius = 10
         searchTrackersBar.searchBarStyle = .minimal
         searchTrackersBar.placeholder = "Поиск"
-        searchTrackersBar.tintColor = UIColor(named: "datePicker background")
-        trackersCollectionView.backgroundColor = UIColor(named: "white")
+        searchTrackersBar.tintColor = UIColor(named: Constants.ColorNames.datePickerBackground)
+        trackersCollectionView.backgroundColor = UIColor(named: Constants.ColorNames.white)
         
         datePicker.clipsToBounds = true
         datePicker.layer.cornerRadius = 8
         if let datePickerView = datePicker.subviews.first {
             let labels = findLabelsInDatePicker(view: datePickerView)
             for label in labels {
-                label.textColor = UIColor(named: "always black")
+                label.textColor = UIColor(named: Constants.ColorNames.alwaysBlack)
             }
         }
-        datePicker.backgroundColor = UIColor(named: "datePicker background")
+        datePicker.backgroundColor = UIColor(named: Constants.ColorNames.datePickerBackground)
 
-        view.backgroundColor = UIColor(named: "white")
+        view.backgroundColor = UIColor(named: Constants.ColorNames.white)
 
-        let addButton = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(addButtonTapped))
+        let addButton = UIBarButtonItem(image: UIImage(named: Constants.ImageNames.plus), style: .plain, target: self, action: #selector(addButtonTapped))
         navigationItem.leftBarButtonItem = addButton
-        addButton.tintColor = UIColor(named: "black")
+        addButton.tintColor = UIColor(named: Constants.ColorNames.black)
         
         trackersLabel.translatesAutoresizingMaskIntoConstraints = false
         datePicker.translatesAutoresizingMaskIntoConstraints = false
