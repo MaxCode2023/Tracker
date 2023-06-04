@@ -14,6 +14,7 @@ final class TrackerTests: XCTestCase {
 
     var managedObjectContext: NSManagedObjectContext!
     var testTrackerCategory: TrackerCategory?
+    var testTracker: Tracker?
 
     override func setUp() {
         super.setUp()
@@ -33,7 +34,7 @@ final class TrackerTests: XCTestCase {
         managedObjectContext.persistentStoreCoordinator = persistentStoreCoordinator
         
         //Добавляем тестовый трекер на экран
-        let newTracker = Tracker(id: UUID(),
+        testTracker = Tracker(id: UUID(),
                                  name: "test",
                                  color: .blue,
                                  emoji: "🙂",
@@ -43,16 +44,18 @@ final class TrackerTests: XCTestCase {
         
         testTrackerCategory = (try? TrackerCategoryStore().addCategory(name: "testHead"))!
         
-        if let testTrackerCategory = testTrackerCategory {
-            try? TrackerStore().addTracker(newTracker, with: testTrackerCategory)
+        if let testTrackerCategory = testTrackerCategory,
+           let testTracker = testTracker {
+            try? TrackerStore().addTracker(testTracker, with: testTrackerCategory)
         }
     }
     
     override func tearDown() {
         super.tearDown()
         //удаляем тестовый трекер и тестовую категорию
-        if let testTrackerCategory = testTrackerCategory {
-            try? TrackerStore().deleteTracker(IndexPath(row: 0, section: 0))
+        if let testTrackerCategory = testTrackerCategory,
+           let testTracker = testTracker {
+            try? TrackerStore().deleteTracker(testTracker)
             try? TrackerCategoryStore().removeDataCategory(data: testTrackerCategory)
         }
     }
