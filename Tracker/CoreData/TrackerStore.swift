@@ -57,7 +57,6 @@ final class TrackerStore: NSObject {
             let emoji = coreData.emoji,
             let colorHex = coreData.color,
             let completedDaysCount = coreData.records
-           // let isAttached = coreData.isAttached
         else { throw TrackeStoreError.decodingError }
         let color = uiColorMarshalling.color(from: colorHex)
         let scheduleString = coreData.schedule

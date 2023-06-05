@@ -30,6 +30,14 @@ final class StatisticsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         try? trackersCompleteCount.text = String(trackerRecordStore.getCompletedTrackersCount())
         
+        if trackerStore.numberOfTrackers == 0 {
+            emptyStatisticsView.isHidden = false
+            trackersCompleteBackgroundView.isHidden = true
+        } else {
+            emptyStatisticsView.isHidden = true
+            trackersCompleteBackgroundView.isHidden = false
+        }
+        
         setGradientOnView(trackersCompleteBackgroundView)
     }
     
@@ -69,14 +77,6 @@ final class StatisticsViewController: UIViewController {
         emptyStatisticsLabel.textColor = UIColor(named: Constants.ColorNames.black)
         emptyStatisticsLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         emptyStatisticsImage.image = UIImage(named: Constants.ImageNames.emptyStatistics)
-        
-        if trackerStore.numberOfTrackers == 0 {
-            emptyStatisticsView.isHidden = false
-            trackersCompleteBackgroundView.isHidden = true
-        } else {
-            emptyStatisticsView.isHidden = true
-            trackersCompleteBackgroundView.isHidden = false
-        }
 
         trackersCompleteView.backgroundColor = UIColor(named: Constants.ColorNames.white)
         trackersCompleteView.layer.cornerRadius = 16
