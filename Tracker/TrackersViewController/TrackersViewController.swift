@@ -25,6 +25,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     private let emptyTrackersImageView = UIImageView()
     private let emptyTrackersLabel = UILabel()
     private let trackersCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let filterButton = UIButton()
 
     private var completedTrackers: Set<TrackerRecord> = []
     private var completedTrackerIds = Set<UInt>()
@@ -56,6 +57,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         addObserverForCollection()
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        filterButton.addTarget(self, action: #selector(clickFilterButton(_:)), for: .touchUpInside)
         searchTrackersBar.delegate = self
         
         trackerRecordStore.delegate = self
@@ -122,6 +124,10 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         trackersCollectionView.reloadData()
     }
     
+    @objc private func clickFilterButton(_ sender: UIButton) {
+        analyticsService.reportEvent(name: "TapOnFilter", event: .click, screen: self, item: "filter")
+    }
+    
     func findLabelsInDatePicker(view: UIView) -> [UILabel] {
         var labels: [UILabel] = []
         for subview in view.subviews {
@@ -140,6 +146,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         view.addSubview(searchTrackersBar)
         view.addSubview(trackersCollectionView)
         view.addSubview(emptyTrackersView)
+        view.addSubview(filterButton)
         emptyTrackersView.addArrangedSubview(emptyTrackersImageView)
         emptyTrackersView.addArrangedSubview(emptyTrackersLabel)
                 
@@ -161,6 +168,9 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         searchTrackersBar.placeholder = "Поиск"
         searchTrackersBar.tintColor = UIColor(named: Constants.ColorNames.datePickerBackground)
         trackersCollectionView.backgroundColor = UIColor(named: Constants.ColorNames.white)
+        filterButton.backgroundColor = UIColor(named: Constants.ColorNames.blue)
+        filterButton.layer.cornerRadius = 16
+        filterButton.setTitle(NSLocalizedString("filters", comment: ""), for: .normal)
         
         datePicker.clipsToBounds = true
         datePicker.layer.cornerRadius = 8
@@ -185,6 +195,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
         emptyTrackersImageView.translatesAutoresizingMaskIntoConstraints = false
         emptyTrackersLabel.translatesAutoresizingMaskIntoConstraints = false
         trackersCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             trackersLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -200,7 +211,12 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
             trackersCollectionView.topAnchor.constraint(equalTo: searchTrackersBar.bottomAnchor, constant: 34),
             trackersCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             trackersCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            trackersCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            trackersCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            
+            filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filterButton.widthAnchor.constraint(equalToConstant: 114),
+            filterButton.heightAnchor.constraint(equalToConstant: 50),
+            filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -17),
         ])
     }
 }
