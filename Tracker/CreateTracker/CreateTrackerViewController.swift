@@ -35,19 +35,19 @@ final class CreateTrackerViewController: UIViewController {
     
     @objc private func clickHabit() {
 
-        let vc = NewTrackerViewController(type: .habit, vc: self.vc, trackerCategoryStore: trackerCategoryStore)
+        let vc = NewTrackerViewController(type: .habit)
         vc.modalPresentationStyle = .automatic
         self.present(vc, animated: true)
     }
     
     @objc private func clickEvent() {
-        let vc = NewTrackerViewController(type: .event, vc: self.vc, trackerCategoryStore: trackerCategoryStore)
+        let vc = NewTrackerViewController(type: .event)
         vc.modalPresentationStyle = .automatic
         self.present(vc, animated: true)
     }
     
     private func setUI() {
-        view.backgroundColor = UIColor(named: "white")
+        view.backgroundColor = UIColor(named: Constants.ColorNames.white)
         
         view.addSubview(titleLabel)
         view.addSubview(createHabit)
@@ -60,8 +60,8 @@ final class CreateTrackerViewController: UIViewController {
         createEvent.setTitle("Нерегулярное событие", for: .normal)
         createEvent.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createHabit.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        createHabit.backgroundColor = UIColor(named: "black")
-        createEvent.backgroundColor = UIColor(named: "black")
+        createHabit.backgroundColor = UIColor(named: Constants.ColorNames.black)
+        createEvent.backgroundColor = UIColor(named: Constants.ColorNames.black)
         createHabit.layer.cornerRadius = 16
         createEvent.layer.cornerRadius = 16
         

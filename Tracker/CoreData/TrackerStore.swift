@@ -66,7 +66,8 @@ final class TrackerStore: NSObject {
                        color: color,
                        emoji: emoji,
                        completedDaysCount: completedDaysCount.count,
-                       schedule: schedule)
+                       schedule: schedule,
+                       isAttached: coreData.isAttached)
     }
     
     func getTrackerCoreData(by id: UUID) throws -> TrackerCoreData? {
@@ -76,6 +77,10 @@ final class TrackerStore: NSObject {
         )
         try fetchedResultsController.performFetch()
         return fetchedResultsController.fetchedObjects?.first
+    }
+    
+    func getTrackerCoreData(by indexPath: IndexPath) throws -> TrackerCoreData? {
+        return fetchedResultsController.object(at: indexPath)
     }
     
     func loadFilteredTrackers(date: Date, searchString: String) throws {
@@ -151,6 +156,25 @@ extension TrackerStore: TrackerStoreProtocol {
         trackerCoreData.color = uiColorMarshalling.hexString(from: tracker.color)
         trackerCoreData.schedule = Week.code(tracker.schedule)
         trackerCoreData.category = categoryCoreData
+        trackerCoreData.isAttached = tracker.isAttached
+        try context.save()
+    }
+    
+    func deleteTracker(_ tracker: Tracker) throws {
+        if let tracker = try getTrackerCoreData(by: tracker.id) {
+            context.delete(tracker)
+            try context.save()
+        }
+    }
+    
+    func editTracker(oldTracker: Tracker, newTracker: Tracker, category: TrackerCategory) throws {
+        let categoryCoreData = try trackerCategoryStore.categoryCoreData(with: category.id)
+        let trackerCoreData = try getTrackerCoreData(by: oldTracker.id)
+        trackerCoreData?.name = newTracker.name
+        trackerCoreData?.category = categoryCoreData
+        trackerCoreData?.schedule = Week.code(newTracker.schedule)
+        trackerCoreData?.emoji = newTracker.emoji
+        trackerCoreData?.color = uiColorMarshalling.hexString(from: newTracker.color)
         try context.save()
     }
 }
@@ -166,6 +190,7 @@ protocol TrackerStoreProtocol {
     func headerLabelInSection(_ section: Int) -> String?
     func tracker(at indexPath: IndexPath) -> Tracker?
     func addTracker(_ tracker: Tracker, with category: TrackerCategory) throws
+    func deleteTracker(_ tracker: Tracker) throws
 }
 
 enum TrackeStoreError: Error {

@@ -19,15 +19,15 @@ final class ScheduleCell: UITableViewCell {
     
     func configCell(for element: ScheduleElement) {
         scheduleElement = element
-        backgroundColor = UIColor(named: "background view")?.withAlphaComponent(0.3)
+        backgroundColor = UIColor(named: Constants.ColorNames.background)?.withAlphaComponent(0.3)
         
         contentView.addSubview(weekDayLabel)
         contentView.addSubview(weekDaySwitch)
         weekDayLabel.text = element.weekDay.getName()
         weekDayLabel.font = .systemFont(ofSize: 17)
-        weekDayLabel.textColor = UIColor(named: "black")
+        weekDayLabel.textColor = UIColor(named: Constants.ColorNames.black)
         weekDaySwitch.isOn = element.isChoosen
-        weekDaySwitch.onTintColor = UIColor(named: "blue")
+        weekDaySwitch.onTintColor = UIColor(named: Constants.ColorNames.blue)
         weekDaySwitch.addTarget(self, action: #selector(self.switchStateDidChange(_:)), for: .valueChanged)
         weekDaySwitch.isEnabled = true
         

@@ -9,7 +9,7 @@ import UIKit
 
 final class LaunchScreenViewController: UIViewController {
     
-    private let image = UIImageView(image: UIImage(named: "Logo"))
+    private let image = UIImageView(image: UIImage(named: Constants.ImageNames.logo))
     private let tabBarViewControllerIdentifier = "TabBarViewController"
     
     override func viewDidLoad() {
@@ -34,7 +34,7 @@ final class LaunchScreenViewController: UIViewController {
 
     
     private func setUI() {
-        view.backgroundColor = UIColor(named: "blue")
+        view.backgroundColor = UIColor(named: Constants.ColorNames.blue)
         
         view.addSubview(image)
         image.center = view.center

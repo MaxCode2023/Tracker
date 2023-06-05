@@ -14,6 +14,7 @@ public struct Tracker {
     let emoji: String
     let completedDaysCount: Int
     let schedule: [Week]?
+    let isAttached: Bool
 }
 
 public enum Week: Int, CaseIterable {

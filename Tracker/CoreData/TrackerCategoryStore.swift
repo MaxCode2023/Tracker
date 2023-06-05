@@ -76,6 +76,20 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
         return category
     }
     
+    func addTracker(categoryName: String, tracker: TrackerCoreData) throws {
+        fetchedResultsController.fetchRequest.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryCoreData.head), categoryName)
+        
+        try fetchedResultsController.performFetch()
+        if let category = fetchedResultsController.fetchedObjects?.first {
+            category.addToTrackers(tracker)
+        } else {
+            let category = TrackerCategoryCoreData(context: context)
+            category.head = categoryName
+            category.addToTrackers(tracker)
+        }
+        try context.save()
+    }
+
     private func getCategoryCoreData(by id: UUID) throws -> TrackerCategoryCoreData {
         fetchedResultsController.fetchRequest.predicate = NSPredicate(
             format: "%K == %@",
@@ -98,6 +112,23 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
         let categoryToDelete = try getCategoryCoreData(by: data.id)
         context.delete(categoryToDelete)
         try context.save()
+    }
+    
+    func attachTracker(tracker: TrackerCoreData) {
+        tracker.isAttached = true
+        tracker.unattachedCategory = tracker.category?.head
+        try? addTracker(categoryName: "Закреплённые", tracker: tracker)
+    }
+    
+    func unattachTracker(tracker: TrackerCoreData) {
+        guard let unattachedCategory = tracker.unattachedCategory else { return }
+        tracker.isAttached = false
+        tracker.unattachedCategory = nil
+        try? addTracker(categoryName: unattachedCategory, tracker: tracker)
+    }
+    
+    func actualCategory(tracker: TrackerCoreData) -> TrackerCategory? {
+        return try? makeCategory(from: tracker.category!)
     }
 }
 

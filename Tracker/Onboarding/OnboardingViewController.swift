@@ -9,8 +9,8 @@ import UIKit
 
 final class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     lazy var pages: [UIViewController] = {
-        guard let bg1 = UIImage(named: "onboarding bg1"),
-              let bg2 = UIImage(named: "onboarding bg2") else {return []}
+        guard let bg1 = UIImage(named: Constants.ImageNames.onboardingBackground1),
+              let bg2 = UIImage(named: Constants.ImageNames.onboardingBackground2) else {return []}
         
         let firstVC = OnboardingViewController(bgImage: bg1, labelText: "Отслеживайте только то, что хотите")
         let secondVC = OnboardingViewController(bgImage: bg2, labelText: "Даже если это не литры воды и йога")
@@ -23,8 +23,8 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
         
-        pageControl.currentPageIndicatorTintColor = UIColor(named: "black")
-        pageControl.pageIndicatorTintColor = UIColor(named: "grey")
+        pageControl.currentPageIndicatorTintColor = UIColor(named: Constants.ColorNames.black)
+        pageControl.pageIndicatorTintColor = UIColor(named: Constants.ColorNames.grey)
         
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         return pageControl
@@ -52,7 +52,7 @@ final class OnboardingPageViewController: UIPageViewController, UIPageViewContro
         skipButton.translatesAutoresizingMaskIntoConstraints = false
         
         skipButton.setTitle("Вот это технологии!", for: .normal)
-        skipButton.backgroundColor = UIColor(named: "black")
+        skipButton.backgroundColor = UIColor(named: Constants.ColorNames.black)
         skipButton.layer.cornerRadius = 16
         
         NSLayoutConstraint.activate([

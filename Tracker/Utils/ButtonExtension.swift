@@ -10,11 +10,11 @@ import UIKit
 extension UIButton {
     func blockedButton() {
         self.isUserInteractionEnabled = false
-        self.backgroundColor = UIColor(named: "grey")
+        self.backgroundColor = UIColor(named: Constants.ColorNames.grey)
     }
     
     func unblockedButton() {
         self.isUserInteractionEnabled = true
-        self.backgroundColor = UIColor(named: "black")
+        self.backgroundColor = UIColor(named: Constants.ColorNames.black)
     }
 }

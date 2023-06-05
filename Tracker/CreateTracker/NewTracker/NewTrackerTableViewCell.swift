@@ -24,8 +24,8 @@ final class NewTrackerTableViewCell: UITableViewCell {
         
         stackView.axis = .vertical
         stackView.spacing = 2
-        arrow.image = UIImage(named: "arrow")
-        choosedParams.textColor = UIColor(named: "grey")
+        arrow.image = UIImage(named: Constants.ImageNames.arrow)
+        choosedParams.textColor = UIColor(named: Constants.ColorNames.grey)
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
         arrow.translatesAutoresizingMaskIntoConstraints = false

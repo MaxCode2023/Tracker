@@ -9,9 +9,13 @@ import UIKit
 
 protocol TrackerCellDelegate {
     func clickDoneButton(cell: TrackerCollectionViewCell, tracker: Tracker)
+    func didAttachTracker(cell: TrackerCollectionViewCell)
+    func didUnattachTracker(cell: TrackerCollectionViewCell)
+    func didDeleteTracker(tracker: Tracker)
+    func didEditTracker(cell: TrackerCollectionViewCell)
 }
 
-final class TrackerCollectionViewCell: UICollectionViewCell {
+final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuInteractionDelegate {
     
     public var color: UIColor? {
         didSet {
@@ -24,17 +28,23 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     private let emojiView = UIView()
     private let emoji = UILabel()
     private let title = UILabel()
+    private let attachedImage = UIImageView()
     private let countLabel = UILabel()
     private let plusButton = UIView()
     private let plusButtonTittle = UILabel()
     private let plusButtonImage = UIImageView()
     private var tracker: Tracker?
+    private var attachState: AttachState?
     
     var id: UInt?
     var delegate: TrackerCellDelegate?
     var count = 0 {
         didSet {
-            countLabel.text = "\(count) дней"
+            let daysLabel = String.localizedStringWithFormat(
+                NSLocalizedString("days count", comment: "Number of tracked days"),
+                count
+            )
+            countLabel.text = daysLabel
         }
     }
     
@@ -44,6 +54,10 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(clickPlus))
         plusButton.addGestureRecognizer(tapGesture)
         setUI()
+        
+        let interaction = UIContextMenuInteraction(delegate: self)
+        backView.addInteraction(interaction)
+        
     }
     
     func configCell(tracker: Tracker, count: Int, isCompleted: Bool) {
@@ -52,7 +66,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         color = tracker.color
         title.text = tracker.name
         emoji.text = tracker.emoji
+        attachedImage.isHidden = !tracker.isAttached
         toggleDoneButton(isCompleted)
+        attachState = tracker.isAttached ? .attach : .unattach
     }
     
     func toggleDoneButton(_ isCompleted: Bool) {
@@ -85,21 +101,24 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         backView.layer.cornerRadius = 16
         plusButton.layer.cornerRadius = 17
         title.text = "рандомная ячейка"
-        title.textColor = UIColor(named: "white")
-        plusButtonTittle.textColor = UIColor(named: "white")
+        title.textColor = UIColor(named: Constants.ColorNames.alwaysWhite)
+        plusButtonTittle.textColor = UIColor(named: Constants.ColorNames.white)
         emojiView.backgroundColor = color?.withAlphaComponent(0.3)
         emojiView.layer.cornerRadius = 12
+        attachedImage.image = UIImage(named: Constants.ImageNames.attached)
+        countLabel.textColor = UIColor(named: Constants.ColorNames.black)
         
         contentView.addSubview(backView)
         backView.addSubview(emojiView)
         backView.addSubview(title)
+        backView.addSubview(attachedImage)
         emojiView.addSubview(emoji)
         plusButton.addSubview(plusButtonTittle)
         plusButton.addSubview(plusButtonImage)
         emoji.text = ""
         plusButtonTittle.text = "+"
         plusButtonImage.isHidden = true
-        plusButtonImage.image = UIImage(named: "Done")
+        plusButtonImage.image = UIImage(named: Constants.ImageNames.done)
         
         contentView.addSubview(countLabel)
         contentView.addSubview(plusButton)
@@ -108,6 +127,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         emojiView.translatesAutoresizingMaskIntoConstraints = false
         emoji.translatesAutoresizingMaskIntoConstraints = false
         title.translatesAutoresizingMaskIntoConstraints = false
+        attachedImage.translatesAutoresizingMaskIntoConstraints = false
         countLabel.translatesAutoresizingMaskIntoConstraints = false
         plusButton.translatesAutoresizingMaskIntoConstraints = false
         plusButtonTittle.translatesAutoresizingMaskIntoConstraints = false
@@ -131,6 +151,11 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             title.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 12),
             title.trailingAnchor.constraint(equalTo: backView.trailingAnchor),
             
+            attachedImage.widthAnchor.constraint(equalToConstant: 24),
+            attachedImage.heightAnchor.constraint(equalToConstant: 24),
+            attachedImage.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -4),
+            attachedImage.topAnchor.constraint(equalTo: backView.topAnchor, constant: 12),
+            
             plusButton.topAnchor.constraint(equalTo: backView.bottomAnchor, constant: 8),
             plusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             plusButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
@@ -148,4 +173,44 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             
         ])
     }
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        let configuration = UIContextMenuConfiguration(actionProvider: { _ in
+            
+            let titleAttach = self.attachState == .attach ? "Открепить" : "Закрепить"
+            
+            return UIMenu(children: [
+                UIAction(title: titleAttach) { [weak self] _ in
+                    guard let self = self,
+                          let attachState = self.attachState else {return}
+                    
+                    switch attachState {
+                    case .attach:
+                        self.attachState = .unattach
+                        self.delegate?.didUnattachTracker(cell: self)
+                    case .unattach:
+                        self.attachState = .attach
+                        self.delegate?.didAttachTracker(cell: self)
+                    }
+                },
+                UIAction(title: "Редактировать") { [weak self] _ in
+                    guard let self = self else {return}
+                    self.delegate?.didEditTracker(cell: self)
+                },
+                UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+                    guard let self = self else {return}
+                    if let tracker = self.tracker {
+                        self.delegate?.didDeleteTracker(tracker: tracker)
+                    }
+                }
+            ])
+        })
+        
+        return configuration
+    }
+}
+
+private enum AttachState {
+    case attach
+    case unattach
 }

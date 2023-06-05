@@ -52,7 +52,7 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func setUI() {
-        view.backgroundColor = UIColor(named: "white")
+        view.backgroundColor = UIColor(named: Constants.ColorNames.white)
         view.addSubview(titleView)
         view.addSubview(nameCategory)
         view.addSubview(completeButton)
@@ -61,7 +61,7 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         titleView.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
         completeButton.setTitle("Готово", for: .normal)
-        completeButton.backgroundColor = UIColor(named: "black")
+        completeButton.backgroundColor = UIColor(named: Constants.ColorNames.black)
         completeButton.layer.cornerRadius = 16
         
         titleView.translatesAutoresizingMaskIntoConstraints = false
@@ -69,7 +69,7 @@ final class NewCategoryViewController: UIViewController, UITextFieldDelegate {
         completeButton.translatesAutoresizingMaskIntoConstraints = false
         
         nameCategory.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        nameCategory.backgroundColor = UIColor(named: "background view")
+        nameCategory.backgroundColor = UIColor(named: Constants.ColorNames.background)
         nameCategory.layer.cornerRadius = 16
         nameCategory.placeholder = "Введите название категории"
         nameCategory.delegate = self

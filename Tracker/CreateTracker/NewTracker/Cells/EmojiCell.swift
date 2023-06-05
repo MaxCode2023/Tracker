@@ -23,9 +23,9 @@ final public class EmojiCell: UICollectionViewCell {
     
     func toggleCell(_ isSelected: Bool) {
         if isSelected {
-            contentView.backgroundColor = UIColor(named: "white")
+            contentView.backgroundColor = UIColor(named: Constants.ColorNames.white)
         } else {
-            contentView.backgroundColor = UIColor(named: "lightGray")
+            contentView.backgroundColor = UIColor(named: Constants.ColorNames.lightGrey)
         }
     }
     

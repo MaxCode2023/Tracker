@@ -10,5 +10,5 @@ import Foundation
 public struct TrackerRecord: Hashable {
     let id: UUID
     let trackerId: UUID
-    let date: Date
+    let date: Date?
 }

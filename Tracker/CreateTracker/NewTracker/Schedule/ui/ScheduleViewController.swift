@@ -14,6 +14,7 @@ final class ScheduleViewController: UIViewController {
     private let confirmButton = UIButton()
     
     private var scheduleList: [ScheduleElement] = []
+    private var choosedWeekdays: [Week]?
     
     var delegate: ScheduleViewControllerDelegate? = nil
     
@@ -26,14 +27,23 @@ final class ScheduleViewController: UIViewController {
         setUi()
     }
     
+    init(choosedWeekdays: [Week]? = nil) {
+        self.choosedWeekdays = choosedWeekdays
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func createCheduleList() -> [ScheduleElement] {
-        [ScheduleElement(weekDay: .monday, isChoosen: false),
-         ScheduleElement(weekDay: .tuesday, isChoosen: false),
-         ScheduleElement(weekDay: .wednesday, isChoosen: false),
-         ScheduleElement(weekDay: .thursday, isChoosen: false),
-         ScheduleElement(weekDay: .friday, isChoosen: false),
-         ScheduleElement(weekDay: .saturday, isChoosen: false),
-         ScheduleElement(weekDay: .sunday, isChoosen: false)]
+        if let choosedWeekdays {
+            return Week.allCases.map { dayOfWeek in
+                ScheduleElement(weekDay: dayOfWeek, isChoosen: choosedWeekdays.contains(where: {$0 == dayOfWeek}))
+            }
+        } else {
+            return Week.allCases.map { ScheduleElement(weekDay: $0, isChoosen: false) }
+        }
     }
     
     private func setUi() {
@@ -41,7 +51,7 @@ final class ScheduleViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(confirmButton)
         
-        view.backgroundColor = UIColor(named: "white")
+        view.backgroundColor = UIColor(named: Constants.ColorNames.white)
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -53,12 +63,12 @@ final class ScheduleViewController: UIViewController {
         confirmButton.setTitle("Готово", for: .normal)
         confirmButton.titleLabel?.font = .systemFont(ofSize: 16)
         confirmButton.layer.cornerRadius = 16
-        confirmButton.backgroundColor = UIColor(named: "black")
+        confirmButton.backgroundColor = UIColor(named: Constants.ColorNames.black)
         confirmButton.addTarget(self, action: #selector(clickConfirm), for: .touchUpInside)
         
         titleLabel.text = "Расписание"
         titleLabel.font = .systemFont(ofSize: 16)
-        titleLabel.textColor = UIColor(named: "black")
+        titleLabel.textColor = UIColor(named: Constants.ColorNames.black)
         
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
