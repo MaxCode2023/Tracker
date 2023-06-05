@@ -308,6 +308,8 @@ extension TrackersViewController: TrackerCellDelegate {
                 }
             }
             try? self.trackerStore.deleteTracker(tracker)
+            try? self.trackerStore.loadFilteredTrackers(date: self.currentDate, searchString: self.searchText)
+            self.didUpdate()
         }
     }
     

@@ -196,7 +196,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell, UIContextMenuIntera
                 },
                 UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
                     guard let self = self else {return}
-                    if let tracker = tracker {
+                    if let tracker = self.tracker {
                         self.delegate?.didDeleteTracker(tracker: tracker)
                     }
                 }
