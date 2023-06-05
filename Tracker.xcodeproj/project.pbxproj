@@ -52,6 +52,7 @@
 		B217111629EAA15B00C6325A /* ScheduleCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B217111529EAA15B00C6325A /* ScheduleCellDelegate.swift */; };
 		B217111829EAA27C00C6325A /* ScheduleViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B217111729EAA27C00C6325A /* ScheduleViewControllerDelegate.swift */; };
 		D64A215255C663D024D7D98A /* Pods_TrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF07AD72365B4CE076638DB /* Pods_TrackerTests.framework */; };
+		E60F6B0D2A2DEF1F00C3BE69 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = E60F6B0F2A2DEF1F00C3BE69 /* Localizable.stringsdict */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +134,8 @@
 		B217111529EAA15B00C6325A /* ScheduleCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCellDelegate.swift; sourceTree = "<group>"; };
 		B217111729EAA27C00C6325A /* ScheduleViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewControllerDelegate.swift; sourceTree = "<group>"; };
 		B7660F05539577C6CA18FBDF /* Pods-TrackerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackerTests.release.xcconfig"; path = "Target Support Files/Pods-TrackerTests/Pods-TrackerTests.release.xcconfig"; sourceTree = "<group>"; };
+		E60F6B0E2A2DEF1F00C3BE69 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		E60F6B102A2DEF2300C3BE69 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -272,6 +275,7 @@
 			isa = PBXGroup;
 			children = (
 				504F8B2A2A2668CE00645C09 /* Localizable.strings */,
+				E60F6B0F2A2DEF1F00C3BE69 /* Localizable.stringsdict */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -516,6 +520,7 @@
 				500C65D729CF37AA0066BB76 /* LaunchScreen.storyboard in Resources */,
 				504F8B282A2668CE00645C09 /* Localizable.strings in Resources */,
 				500C65D429CF37AA0066BB76 /* Assets.xcassets in Resources */,
+				E60F6B0D2A2DEF1F00C3BE69 /* Localizable.stringsdict in Resources */,
 				500C65CF29CF37A80066BB76 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -665,6 +670,15 @@
 				504F8B2B2A2668D600645C09 /* en */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		E60F6B0F2A2DEF1F00C3BE69 /* Localizable.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E60F6B0E2A2DEF1F00C3BE69 /* ru */,
+				E60F6B102A2DEF2300C3BE69 /* en */,
+			);
+			name = Localizable.stringsdict;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
