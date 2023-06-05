@@ -77,11 +77,13 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        analyticsService.reportEvent(name: "OpenMainScreen", event: .open, screen: self, item: nil)
+        super.viewDidAppear(animated)
+        analyticsService.reportEvent(name: "OpenMainScreen", event: .open, screen: .trackersVC, item: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        analyticsService.reportEvent(name: "CloseMainScreen", event: .close, screen: self, item: nil)
+        super.viewDidDisappear(animated)
+        analyticsService.reportEvent(name: "CloseMainScreen", event: .close, screen: .trackersVC, item: nil)
     }
     
     private func checkTrackers() {
@@ -108,7 +110,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     }
     
     @objc private func addButtonTapped() {
-        analyticsService.reportEvent(name: "AddTrackerTap", event: .click, screen: self, item: "add_track")
+        analyticsService.reportEvent(name: "AddTrackerTap", event: .click, screen: .trackersVC, item: "add_track")
 
         let vc = CreateTrackerViewController(vc: self, trackerCategoryStore: trackerCategoryStore)
         vc.title = "Создание трекера"
@@ -125,7 +127,7 @@ final class TrackersViewController: UIViewController, TrackerRecordStoreDelegate
     }
     
     @objc private func clickFilterButton(_ sender: UIButton) {
-        analyticsService.reportEvent(name: "TapOnFilter", event: .click, screen: self, item: "filter")
+        analyticsService.reportEvent(name: "TapOnFilter", event: .click, screen: .trackersVC, item: "filter")
     }
     
     func findLabelsInDatePicker(view: UIView) -> [UILabel] {
@@ -313,7 +315,7 @@ extension TrackersViewController: TrackerCellDelegate {
     }
     
     func didDeleteTracker(tracker: Tracker) {
-        analyticsService.reportEvent(name: "DeleteTracker", event: .click, screen: self, item: "delete")
+        analyticsService.reportEvent(name: "DeleteTracker", event: .click, screen: .trackersVC, item: "delete")
         showAlert {
             
             if let allCompletedTrackers = try? self.trackerRecordStore.getAllCompletedTrackers() {
@@ -330,7 +332,7 @@ extension TrackersViewController: TrackerCellDelegate {
     }
     
     func didEditTracker(cell: TrackerCollectionViewCell) {
-        analyticsService.reportEvent(name: "EditTracker", event: .click, screen: self, item: "edit")
+        analyticsService.reportEvent(name: "EditTracker", event: .click, screen: .trackersVC, item: "edit")
         guard let indexPath = self.trackersCollectionView.indexPath(for: cell) else { return }
         if let tracker = try? self.trackerStore.tracker(at: indexPath),
            let trackerCoreData = try? self.trackerStore.getTrackerCoreData(by: indexPath) {
@@ -355,7 +357,7 @@ extension TrackersViewController: TrackerCellDelegate {
                 cell.toggleDoneButton(true)
                 cell.increaseCount()
             }
-            analyticsService.reportEvent(name: "TapOnTracker", event: .click, screen: self, item: "track")
+            analyticsService.reportEvent(name: "TapOnTracker", event: .click, screen: .trackersVC, item: "track")
         }
     }
     

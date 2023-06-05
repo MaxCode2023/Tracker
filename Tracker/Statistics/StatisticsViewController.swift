@@ -8,15 +8,15 @@
 import UIKit
 
 final class StatisticsViewController: UIViewController {
-    let titleLabel = UILabel()
-    let emptyStatisticsView = UIStackView()
-    let emptyStatisticsImage = UIImageView()
-    let emptyStatisticsLabel = UILabel()
-    let stackView = UIStackView()
-    let trackersCompleteBackgroundView = UIView()
-    let trackersCompleteView = UIView()
-    let trackersCompleteCount = UILabel()
-    let trackersCompleteLabel = UILabel()
+    private let titleLabel = UILabel()
+    private let emptyStatisticsView = UIStackView()
+    private let emptyStatisticsImage = UIImageView()
+    private let emptyStatisticsLabel = UILabel()
+    private let stackView = UIStackView()
+    private  let trackersCompleteBackgroundView = UIView()
+    private  let trackersCompleteView = UIView()
+    private  let trackersCompleteCount = UILabel()
+    private  let trackersCompleteLabel = UILabel()
     
     let trackerStore = TrackerStore()
     let trackerRecordStore = TrackerRecordStore()

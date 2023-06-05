@@ -17,19 +17,13 @@ class AnalyticsServiceImpl: AnalyticsService {
         YMMYandexMetrica.activate(with: configuration)
     }
     
-    func reportEvent(name: String, event: EventType, screen: UIViewController, item: String?) {
+    func reportEvent(name: String, event: EventType, screen: ScreenName, item: String?) {
         let params : [AnyHashable : Any] = [
             "event": event.rawValue,
-            "screen": NSStringFromClass(type(of: screen)).components(separatedBy: ".").last ?? "",
+            "screen": screen.rawValue,
             "item": item ?? "none"]
         YMMYandexMetrica.reportEvent(name, parameters: params, onFailure: { error in
             print("REPORT ERROR: %@", error.localizedDescription)
         })
     }
-}
-
-public enum EventType: String {
-    case open = "open"
-    case close = "close"
-    case click = "click"
 }

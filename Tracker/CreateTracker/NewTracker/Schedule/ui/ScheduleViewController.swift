@@ -37,13 +37,13 @@ final class ScheduleViewController: UIViewController {
     }
     
     private func createCheduleList() -> [ScheduleElement] {
-        [ScheduleElement(weekDay: .monday, isChoosen: choosedWeekdays?.contains(where: { $0 == .monday}) ?? false),
-         ScheduleElement(weekDay: .tuesday, isChoosen: choosedWeekdays?.contains(where: { $0 == .tuesday}) ?? false),
-         ScheduleElement(weekDay: .wednesday, isChoosen: choosedWeekdays?.contains(where: { $0 == .wednesday}) ?? false),
-         ScheduleElement(weekDay: .thursday, isChoosen: choosedWeekdays?.contains(where: { $0 == .thursday}) ?? false),
-         ScheduleElement(weekDay: .friday, isChoosen: choosedWeekdays?.contains(where: { $0 == .friday}) ?? false),
-         ScheduleElement(weekDay: .saturday, isChoosen: choosedWeekdays?.contains(where: { $0 == .saturday}) ?? false),
-         ScheduleElement(weekDay: .sunday, isChoosen: choosedWeekdays?.contains(where: { $0 == .sunday}) ?? false)]
+        if let choosedWeekdays {
+            return Week.allCases.map { dayOfWeek in
+                ScheduleElement(weekDay: dayOfWeek, isChoosen: choosedWeekdays.contains(where: {$0 == dayOfWeek}))
+            }
+        } else {
+            return Week.allCases.map { ScheduleElement(weekDay: $0, isChoosen: false) }
+        }
     }
     
     private func setUi() {

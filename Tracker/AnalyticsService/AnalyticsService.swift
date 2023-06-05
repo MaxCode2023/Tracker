@@ -9,5 +9,5 @@ import UIKit
 
 protocol AnalyticsService {
     func activate()
-    func reportEvent(name: String, event: EventType, screen: UIViewController, item: String?)
+    func reportEvent(name: String, event: EventType, screen: ScreenName, item: String?)
 }
