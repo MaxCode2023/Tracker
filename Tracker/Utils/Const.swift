@@ -39,7 +39,7 @@ public struct Constants {
         static let gradient2 = "gradient2"
         static let gradient3 = "gradient3"
         static let grey = "grey"
-        static let lightGrey = "lightGrey"
+        static let lightGrey = "lightGray"
         static let red = "red"
     }
 
